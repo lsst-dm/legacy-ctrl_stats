@@ -4,16 +4,12 @@ class ShadowException(Record):
     def __init__(self, lines):
         Record.__init__(self,lines)
 
-        if lines[1].strip() == pat:
-            pat = r"Error from (?P<slot>[\w]+@[\d]+@[\w\-.]+): (?P<reason>[.])($)"
-            print "lines[2] = ",lines[2]
-            values = self.extractValues(pat,lines[2])
-            self.slot = values["slot"]
-            self.reason = values["reason"]
-        else:
-            print "wtf?"
-            print "lines[1] = ",lines[1].strip()
-            sys.exit(0)
+        
+        print "lines[1] = ",lines[1]
+        pat = r"Error from (?P<slot>[\w]+@[\d]+@[\w\-.]+): (?P<reason>.+?)($)"
+        values = self.extractValues(pat,lines[1])
+        self.slot = values["slot"]
+        self.reason = values["reason"]
 
     def printAll(self):
         Record.printAll(self)
