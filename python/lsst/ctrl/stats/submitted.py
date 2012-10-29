@@ -5,9 +5,17 @@ class Submitted(Record):
     def __init__(self, lines):
         Record.__init__(self,lines)
 
-        regex = ur"DAG Node: (.+?)$"
-        worker = re.findall(regex,lines[1])[0]
-        print "worker = ",worker
+        
+        pat = r"\<(?P<host>\d+.\d+.\d+.\d+:\d+)\>"
+
+        values = re.search(pat,lines[0]).groupdict()
+        self.host = values["host"]
+
+        pat = "DAG Node: (?P<dag>\w+)"
+        values = re.search(pat,lines[1]).groupdict()
+        self.dag = values["dag"]
 
     def printAll(self):
-        print "S",self.lines
+        Record.printAll(self)
+        print "host = ",self.host
+        print "dag= ",self.dag
