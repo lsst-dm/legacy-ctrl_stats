@@ -34,8 +34,8 @@ class Terminated(Record):
 
         print "userTotalRemoteUsage = ", self.userTotalRemoteUsage
         print "sysTotalRemoteUsage = ", self.sysTotalRemoteUsage
-        print "userTotalLocaleUsage = ", self.userTotalLocalUsage
-        print "sysTotalLocaleUsage = ", self.sysTotalLocalUsage
+        print "userTotalLocalUsage = ", self.userTotalLocalUsage
+        print "sysTotalLocalUsage = ", self.sysTotalLocalUsage
 
         print "runBytesSent ",self.runBytesSent
         print "runBytesReceived ",self.runBytesReceived

@@ -11,7 +11,6 @@ class Disconnected(Record):
 
         if lines[1].strip() == pat:
             pat = r"(?P<slot>[\w]+@[\d]+@[\w\-.]+) \<(?P<hostAddr>[\d.:]+)\>"
-            print "lines[2] = ",lines[2]
             values = self.extractValues(pat,lines[2])
             self.slot = values["slot"]
             self.hostAddr = values["hostAddr"]

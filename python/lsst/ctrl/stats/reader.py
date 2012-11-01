@@ -9,11 +9,14 @@ from aborted import Aborted
 from evicted import Evicted
 from reconnectionFailed import ReconnectionFailed
 from shadowException import ShadowException
+from held import Held
+from recordList import RecordList
 
 class Reader(object):
     def __init__(self, inputFile):
         file = open(inputFile)
 
+        recordList = RecordList()
         recordLines = []
         while 1:
             lines = file.readlines(100000)
@@ -24,7 +27,7 @@ class Reader(object):
                 if line == "...":
                     rec = self.classify(recordLines)
                     if rec is not None:
-                        rec.printAll()
+                        recordList.append(rec)
                     else:
                         print "couldn't classify:"
                         print recordLines
@@ -32,54 +35,50 @@ class Reader(object):
                     recordLines = []
                 else:
                     recordLines.append(line)
+        print recordList
+        recordList.printGroups()
 
     def classify(self, lines):
-        print "lines = ",lines
         match = re.search(r'Job submitted from host:', lines[0])
         rec = None
         if match:
-            print "Submitted: ",lines[0]
             rec = Submitted(lines)
             return rec
         match = re.search(r'Job executing on host:', lines[0])
         if match:
-            print "Executing: ",lines[0]
             rec = Executing(lines)
             return rec
         match = re.search(r'Image size of job updated:', lines[0])
         if match:
-            print "Updated: ",lines[0]
             rec = Updated(lines)
             return rec
         match = re.search(r'Job terminated.', lines[0])
         if match:
-            print "Terminated: ",lines[0]
             rec = Terminated(lines)
             return rec
         match = re.search(r'Job disconnected, attempting to reconnect', lines[0])
         if match:
-            print "Disconnected: ",lines[0]
             rec = Disconnected(lines)
             return rec
         match = re.search(r'Job was aborted by the user', lines[0])
         if match:
-            print "Aborted: ",lines[0]
             rec = Aborted(lines)
             return rec
         match = re.search(r'Job was evicted.', lines[0])
         if match:
-            print "Evicted: ",lines[0]
             rec = Evicted(lines)
             return rec
         match = re.search(r'Job reconnection failed', lines[0])
         if match:
-            print "reconnectionFailed: ",lines[0]
             rec = ReconnectionFailed(lines)
             return rec
         match = re.search(r'Shadow exception', lines[0])
         if match:
-            print "shadowException: ",lines[0]
             rec = ShadowException(lines)
+            return rec
+        match = re.search(r'Job was held', lines[0])
+        if match:
+            rec = Held(lines)
             return rec
         return  rec
         

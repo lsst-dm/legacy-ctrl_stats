@@ -1,4 +1,5 @@
 import re
+import sys
 
 class Record(object):
     def __init__(self,lines):
@@ -12,7 +13,6 @@ class Record(object):
         info = re.search(pat,lines[0])
         if info is not None:
             values = info.groupdict()
-            print values
         self.num = values["num"]
         self.jobNum = values["jobNum"]
         self.date = values["date"]
@@ -26,8 +26,12 @@ class Record(object):
 
 
     def extractValues(self,pat,line):
-        values = re.search(pat,line).groupdict()
-        return values
+        try:
+            values = re.search(pat,line).groupdict()
+            return values
+        except AttributeError:
+            print "exiting"
+            sys.exit(100)
 
     def extract(self,pat,line,tag):
         values = re.search(pat,line).groupdict()
@@ -35,11 +39,7 @@ class Record(object):
         return val
 
     def extractPair(self, pat, line, tag1, tag2):
-        print line
         values = self.extractValues(pat, line)
-        print "values = ",values
-        print "tag1",tag1
-        print "tag2",tag2
         val1 = values[tag1]
         val2 = values[tag2]
         return val1, val2
