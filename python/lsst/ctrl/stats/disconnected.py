@@ -3,8 +3,8 @@ import re
 from record import Record
 
 class Disconnected(Record):
-    def __init__(self, lines):
-        Record.__init__(self,lines)
+    def __init__(self, year, lines):
+        Record.__init__(self, year, lines)
 
         
         pat = "Socket between submit and execute hosts closed unexpectedly"

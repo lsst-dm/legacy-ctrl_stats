@@ -2,7 +2,7 @@ import re
 from record import Record
 # TODO: check for other cases of this, and handle this better
 class ReconnectionFailed(Record):
-    def __init__(self, lines):
+    def __init__(self, year, lines):
         Record.__init__(self,lines)
         self.reason = lines[1]
         self.reason2 = lines[2]

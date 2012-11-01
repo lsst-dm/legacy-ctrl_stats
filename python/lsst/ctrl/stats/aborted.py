@@ -1,8 +1,8 @@
 import re
 from record import Record
 class Aborted(Record):
-    def __init__(self, lines):
-        Record.__init__(self,lines)
+    def __init__(self, year, lines):
+        Record.__init__(self, year, lines)
 
         #pat = r"removed because (?P<reason>.+?)($)"
         #info = re.search(pat,lines[1])

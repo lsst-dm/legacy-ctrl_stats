@@ -2,26 +2,30 @@ import re
 import sys
 
 class Record(object):
-    def __init__(self,lines):
+    def __init__(self, year, lines):
         self.lines = list(lines)
 
+        print lines[0]
         pat = r"(?P<num>\d+) " + \
             r"\((?P<jobNum>.+?.)\) " + \
-            r"(?P<date>\d+\/\d+) " + \
+            r"(?P<month>\d+)\/(?P<day>\d+) " + \
             r"(?P<timestamp>\d+:\d+:\d+) "
 
         info = re.search(pat,lines[0])
+        values = {}
         if info is not None:
             values = info.groupdict()
-        self.num = values["num"]
-        self.jobNum = values["jobNum"]
-        self.date = values["date"]
-        self.timestamp = values["timestamp"]
+            self.num = values["num"]
+            self.jobNum = values["jobNum"]
+            self.timestamp = str(year)+"-"+values["month"]+"-"+values["day"]+" "+values["timestamp"]
+        else:
+            print "error parsing record:"
+            print lines[0]
+            sys.exit(10)
 
     def printAll(self):
         print "num ",self.num
         print "jobNum ",self.jobNum
-        print "date ",self.date
         print "timestamp ",self.timestamp
 
 

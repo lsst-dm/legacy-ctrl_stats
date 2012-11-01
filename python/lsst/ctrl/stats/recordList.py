@@ -14,6 +14,9 @@ class RecordList(object):
             list.append(rec)
             self.records[jobNum] = list
 
+    def getRecords(self):
+        return self.records
+
     def printAll(self):
         for i in self.records:
             print i 
@@ -24,5 +27,5 @@ class RecordList(object):
         for i in self.records:
             
            for rec in self.records[i]:
-                print i, rec.__class__.__name__,rec.date,rec.timestamp
+                print i, rec.__class__.__name__, rec.timestamp
            print

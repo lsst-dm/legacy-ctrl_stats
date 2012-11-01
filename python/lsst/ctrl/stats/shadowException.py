@@ -1,8 +1,8 @@
 import re
 from record import Record
 class ShadowException(Record):
-    def __init__(self, lines):
-        Record.__init__(self,lines)
+    def __init__(self, year, lines):
+        Record.__init__(self, year, lines)
 
         
         print "lines[1] = ",lines[1]

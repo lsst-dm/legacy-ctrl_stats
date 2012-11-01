@@ -1,8 +1,8 @@
 import re
 from record import Record
 class Held(Record):
-    def __init__(self, lines):
-        Record.__init__(self,lines)
+    def __init__(self, year, lines):
+        Record.__init__(self, year, lines)
 
         
         pat = r"Error from (?P<slot>[\w@\d\-.]+): (?P<reason>.+?)($)"

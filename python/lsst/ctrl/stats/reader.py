@@ -1,5 +1,7 @@
+import os
 import sys
 import re
+import datetime
 from submitted import Submitted
 from executing import Executing
 from terminated import Terminated
@@ -14,10 +16,17 @@ from recordList import RecordList
 
 class Reader(object):
     def __init__(self, inputFile):
-        file = open(inputFile)
-
-        recordList = RecordList()
+        self.recordList = RecordList()
         recordLines = []
+
+        t = os.path.getmtime(inputFile)
+        fileModified = datetime.datetime.fromtimestamp(t)
+        # For some reason, condor doesn't put the year on the date,
+        # so the nearest guess we can make is by looking at the file modified
+        # info, and use that year.
+        year = fileModified.year
+
+        file = open(inputFile)
         while 1:
             lines = file.readlines(100000)
             if not lines:
@@ -25,9 +34,9 @@ class Reader(object):
             for line in lines:
                 line = line.rstrip('\n')
                 if line == "...":
-                    rec = self.classify(recordLines)
+                    rec = self.classify(year, recordLines)
                     if rec is not None:
-                        recordList.append(rec)
+                        self.recordList.append(rec)
                     else:
                         print "couldn't classify:"
                         print recordLines
@@ -35,50 +44,51 @@ class Reader(object):
                     recordLines = []
                 else:
                     recordLines.append(line)
-        print recordList
-        recordList.printGroups()
 
-    def classify(self, lines):
+    def getRecordList(self):
+        return self.recordList
+
+    def classify(self, year, lines):
         match = re.search(r'Job submitted from host:', lines[0])
         rec = None
         if match:
-            rec = Submitted(lines)
+            rec = Submitted(year, lines)
             return rec
         match = re.search(r'Job executing on host:', lines[0])
         if match:
-            rec = Executing(lines)
+            rec = Executing(year, lines)
             return rec
         match = re.search(r'Image size of job updated:', lines[0])
         if match:
-            rec = Updated(lines)
+            rec = Updated(year, lines)
             return rec
         match = re.search(r'Job terminated.', lines[0])
         if match:
-            rec = Terminated(lines)
+            rec = Terminated(year, lines)
             return rec
         match = re.search(r'Job disconnected, attempting to reconnect', lines[0])
         if match:
-            rec = Disconnected(lines)
+            rec = Disconnected(year, lines)
             return rec
         match = re.search(r'Job was aborted by the user', lines[0])
         if match:
-            rec = Aborted(lines)
+            rec = Aborted(year, lines)
             return rec
         match = re.search(r'Job was evicted.', lines[0])
         if match:
-            rec = Evicted(lines)
+            rec = Evicted(year, lines)
             return rec
         match = re.search(r'Job reconnection failed', lines[0])
         if match:
-            rec = ReconnectionFailed(lines)
+            rec = ReconnectionFailed(year, lines)
             return rec
         match = re.search(r'Shadow exception', lines[0])
         if match:
-            rec = ShadowException(lines)
+            rec = ShadowException(year, lines)
             return rec
         match = re.search(r'Job was held', lines[0])
         if match:
-            rec = Held(lines)
+            rec = Held(year, lines)
             return rec
         return  rec
         

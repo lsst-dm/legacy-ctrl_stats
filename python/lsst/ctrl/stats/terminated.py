@@ -1,8 +1,8 @@
 import re
 from record import Record
 class Terminated(Record):
-    def __init__(self, lines):
-        Record.__init__(self,lines)
+    def __init__(self, year, lines):
+        Record.__init__(self, year, lines)
 
         pat = r"\((?P<term>\d+)\) Normal termination \(return value (?P<returnValue>\d+)\)"
 
