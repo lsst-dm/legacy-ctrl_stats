@@ -10,11 +10,6 @@ if __name__ == "__main__":
 
     for job in records:
         for rec in records[job]:
-            name = rec.__class__.__name__
-            if name == "Submitted":
-                print name
-                rec.printAll()
-            elif name == "Terminated":
-                print name
-                rec.printAll()
+                name = rec.__class__.__name__
+                print name, rec.describe()
         print "-----"

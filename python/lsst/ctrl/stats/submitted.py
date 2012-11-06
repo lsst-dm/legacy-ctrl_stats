@@ -2,13 +2,14 @@ import re
 from record import Record
 
 class Submitted(Record):
+    # event number: 000
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
         
         pat = r"\<(?P<hostAddr>\d+.\d+.\d+.\d+:\d+)\>"
 
         values = re.search(pat,lines[0]).groupdict()
-        self.hostAddr = values["hostAddr"]
+        self.submitHostAddr = values["hostAddr"]
 
         pat = "DAG Node: (?P<dagNode>\w+)"
         values = re.search(pat,lines[1]).groupdict()
@@ -16,5 +17,10 @@ class Submitted(Record):
 
     def printAll(self):
         Record.printAll(self)
-        print "hostAddr = ",self.hostAddr
+        print "submitHostAddr = ",self.submitHostAddr
         print "dagNode = ",self.dagNode
+
+    def describe(self):
+        desc = super(Submitted, self).describe()
+        s = "%s jobNum=%s dagNode=%s" % (self.timestamp, self.jobNum, self.dagNode)
+        return s

@@ -1,6 +1,7 @@
 import re
 from record import Record
 class Evicted(Record):
+    # event number: 004
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
 
@@ -21,12 +22,25 @@ class Evicted(Record):
         self.runBytesReceived = self.extract(pat,lines[5], "bytes")
 
 
-        # TODO: figure out how to deal with the rest of this:
-        # 
-        # Partitionable Resources :    Usage  Request
-        #    Cpus                 :                 1
-        #    Disk (KB)            :       10       10
-        #    Memory (MB)          :               674
+        pat = r":\s+(?P<usage>\d+)\s+(?P<request>\d+)$"
+
+        self.diskUsage = "-1"
+        line = lines[8].strip()
+        values = re.search(pat,line)
+        if values is not None:
+            self.diskUsage, self.diskRequest = self.extractPair(pat,line,"usage","request")
+        else:
+            pat = r":\s+(?P<request>\d+)$"
+            self.diskRequest = self.extract(pat,line,"request")
+
+        self.memoryUsage = "-1"
+        line = lines[9].strip()
+        values = re.search(pat,line)
+        if values is not None:
+            self.memoryUsage, self.memoryRequest = self.extractPair(pat,line,"usage","request")
+        else:
+            pat = r":\s+(?P<request>\d+)$"
+            self.memoryRequest = self.extract(pat,line,"request")
 
     def printAll(self):
         Record.printAll(self)
@@ -41,4 +55,6 @@ class Evicted(Record):
         print "runBytesSent ",self.runBytesSent
         print "runBytesReceived ",self.runBytesReceived
 
-
+    def describe(self):
+        s = "%s " % (self.timestamp)
+        return s

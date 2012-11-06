@@ -5,7 +5,6 @@ class ShadowException(Record):
         Record.__init__(self, year, lines)
 
         
-        print "lines[1] = ",lines[1]
         pat = r"Error from (?P<slot>[\w]+@[\d]+@[\w\-.]+): (?P<reason>.+?)($)"
         self.slot = None
         self.reason = None

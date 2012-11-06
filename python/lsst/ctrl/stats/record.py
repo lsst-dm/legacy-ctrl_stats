@@ -5,8 +5,7 @@ class Record(object):
     def __init__(self, year, lines):
         self.lines = list(lines)
 
-        print lines[0]
-        pat = r"(?P<num>\d+) " + \
+        pat = r"(?P<event>\d+) " + \
             r"\((?P<jobNum>.+?.)\) " + \
             r"(?P<month>\d+)\/(?P<day>\d+) " + \
             r"(?P<timestamp>\d+:\d+:\d+) "
@@ -15,7 +14,7 @@ class Record(object):
         values = {}
         if info is not None:
             values = info.groupdict()
-            self.num = values["num"]
+            self.event = values["event"]
             self.jobNum = values["jobNum"]
             self.timestamp = str(year)+"-"+values["month"]+"-"+values["day"]+" "+values["timestamp"]
         else:
@@ -24,7 +23,7 @@ class Record(object):
             sys.exit(10)
 
     def printAll(self):
-        print "num ",self.num
+        print "event ",self.event
         print "jobNum ",self.jobNum
         print "timestamp ",self.timestamp
 
@@ -54,3 +53,7 @@ class Record(object):
                 r"Sys \d+ " + \
                 r"(?P<sys>\d+:\d+:\d+) "
         return self.extractPair(pat, line, "usr", "sys")
+
+    def describe(self):
+        s = "%s %s" % (self.jobNum, self.timestamp)
+        return s

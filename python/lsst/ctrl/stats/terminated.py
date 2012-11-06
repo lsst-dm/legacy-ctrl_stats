@@ -22,6 +22,27 @@ class Terminated(Record):
         self.totalBytesSent = self.extract(pat,lines[8], "bytes")
         self.totalBytesReceived = self.extract(pat,lines[9], "bytes")
 
+        
+        pat = r":\s+(?P<usage>\d+)\s+(?P<request>\d+)$"
+
+        self.diskUsage = "-"
+        line = lines[12].strip()
+        values = re.search(pat,line)
+        if values is not None:
+            self.diskUsage, self.diskRequest = self.extractPair(pat,line,"usage","request")
+        else:
+            pat = r":\s+(?P<request>\d+)$"
+            self.diskRequest = self.extract(pat,line,"request")
+
+        self.memoryUsage = "-"
+        line = lines[13].strip()
+        values = re.search(pat,line)
+        if values is not None:
+            self.memoryUsage, self.memoryRequest = self.extractPair(pat,line,"usage","request")
+        else:
+            pat = r":\s+(?P<request>\d+)$"
+            self.memoryRequest = self.extract(pat,line,"request")
+
 
     def printAll(self):
         Record.printAll(self)
@@ -41,3 +62,8 @@ class Terminated(Record):
         print "runBytesReceived ",self.runBytesReceived
         print "totalBytesSent ",self.totalBytesSent
         print "totalBytesReceived ",self.totalBytesReceived
+
+    def describe(self):
+        desc = super(Terminated, self).describe()
+        s = "%s returnValue=%s" % (self.timestamp, self.returnValue)
+        return s

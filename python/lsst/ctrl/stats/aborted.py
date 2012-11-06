@@ -15,3 +15,7 @@ class Aborted(Record):
     def printAll(self):
         Record.printAll(self)
         print "reason = ",self.reason
+
+    def describe(self):
+        s = "%s %s" % (self.timestamp, self.reason)
+        return s
