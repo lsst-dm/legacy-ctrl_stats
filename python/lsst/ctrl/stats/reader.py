@@ -71,7 +71,6 @@ class Reader(object):
         pat = r"(?P<event>\d\d\d)"
         values = re.search(pat,lines[0]).groupdict()
         eventNumber = values["event"]
-        print eventNumber
 
         if eventNumber in self.events:
             recType = self.events[eventNumber]
@@ -80,51 +79,5 @@ class Reader(object):
         else:
             return None
 
-#    def classify(self, year, lines):
-#        match = re.search(r'Job submitted from host:', lines[0])
-#        rec = None
-#        if match:
-#            rec = Submitted(year, lines)
-#            return rec
-#        match = re.search(r'Job executing on host:', lines[0])
-#        if match:
-#            rec = Executing(year, lines)
-#            return rec
-#        match = re.search(r'Image size of job updated:', lines[0])
-#        if match:
-#            rec = Updated(year, lines)
-#            return rec
-#        match = re.search(r'Job terminated.', lines[0])
-#        if match:
-#            rec = Terminated(year, lines)
-#            return rec
-#        match = re.search(r'Job disconnected, attempting to reconnect', lines[0])
-#        if match:
-#            rec = Disconnected(year, lines)
-#            return rec
-#        match = re.search(r'Job was aborted by the user', lines[0])
-#        if match:
-#            rec = Aborted(year, lines)
-#            return rec
-#        match = re.search(r'Job was evicted.', lines[0])
-#        if match:
-#            rec = Evicted(year, lines)
-#            return rec
-#        match = re.search(r'Job reconnection failed', lines[0])
-#        if match:
-#            rec = ReconnectionFailed(year, lines)
-#            return rec
-#        match = re.search(r'Shadow exception', lines[0])
-#        if match:
-#            rec = ShadowException(year, lines)
-#            return rec
-#        match = re.search(r'Job was held', lines[0])
-#        if match:
-#            rec = Held(year, lines)
-#            return rec
-#        return  rec
-#        
-#
-#
 if __name__ == "__main__":
     records = Reader(sys.argv[1])
