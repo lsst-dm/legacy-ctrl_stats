@@ -23,9 +23,8 @@ class Record(object):
             sys.exit(10)
 
     def printAll(self):
-        print "event ",self.event
-        print "jobNum ",self.jobNum
-        print "timestamp ",self.timestamp
+        print self.__class__.__name__
+        print lines
 
 
     def extractValues(self,pat,line):

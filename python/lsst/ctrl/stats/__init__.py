@@ -22,3 +22,10 @@ from submittedToGlobus import SubmittedToGlobus
 from globusSubmitFailed import GlobusSubmitFailed
 from globusResourceUp import GlobusResourceUp
 from globusResourceDown import GlobusResourceDown
+from remoteError import RemoteError
+from socketLost import SocketLost
+from socketReestablished import SocketReestablished
+from socketReconnectFailure import SocketReconnectFailure
+from gridResourceUp import GridResourceUp
+from gridResourceDown import GridResourceDown
+from submittedToGrid import SubmittedToGrid
