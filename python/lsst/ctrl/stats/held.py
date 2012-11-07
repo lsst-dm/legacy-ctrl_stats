@@ -1,5 +1,6 @@
 import re
 from record import Record
+
 class Held(Record):
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
@@ -17,3 +18,8 @@ class Held(Record):
         print ">>reason = ",self.reason
         print ">>code = ",self.code
         print ">>subcode = ",self.subcode
+
+    def describe(self):
+        desc = super(Held, self).describe()
+        s = "%s reason=%s" % (self.timestamp, self.reason)
+        return s

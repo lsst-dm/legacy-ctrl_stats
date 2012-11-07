@@ -23,3 +23,8 @@ class Disconnected(Record):
         Record.printAll(self)
         print "slot = ",self.slot
         print "hostAddr = ",self.hostAddr
+
+    def describe(self):
+        desc = super(Disconnected, self).describe()
+        s = "%s returnValue=%s" % (self.timestamp, self.returnValue)
+        return s

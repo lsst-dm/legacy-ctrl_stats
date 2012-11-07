@@ -11,3 +11,8 @@ class ReconnectionFailed(Record):
         Record.printAll(self)
         print "reason = ",self.reason
         print "reason2 = ",self.reason2
+
+    def describe(self):
+        desc = super(Reconnected, self).describe()
+        s = "%s reason=%s" % (self.timestamp, self.reason)
+        return s

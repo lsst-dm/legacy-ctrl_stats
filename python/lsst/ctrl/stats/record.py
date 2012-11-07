@@ -6,7 +6,7 @@ class Record(object):
         self.lines = list(lines)
 
         pat = r"(?P<event>\d+) " + \
-            r"\((?P<jobNum>.+?.)\) " + \
+            r"\((?P<condorId>.+?.)\) " + \
             r"(?P<month>\d+)\/(?P<day>\d+) " + \
             r"(?P<timestamp>\d+:\d+:\d+) "
 
@@ -15,7 +15,7 @@ class Record(object):
         if info is not None:
             values = info.groupdict()
             self.event = values["event"]
-            self.jobNum = values["jobNum"]
+            self.condorId = values["condorId"]
             self.timestamp = str(year)+"-"+values["month"]+"-"+values["day"]+" "+values["timestamp"]
         else:
             print "error parsing record:"
@@ -54,5 +54,5 @@ class Record(object):
         return self.extractPair(pat, line, "usr", "sys")
 
     def describe(self):
-        s = "%s %s" % (self.jobNum, self.timestamp)
+        s = "%s %s %s" % (self.event, self.condorId, self.timestamp)
         return s

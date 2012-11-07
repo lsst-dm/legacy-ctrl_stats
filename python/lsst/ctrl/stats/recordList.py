@@ -5,14 +5,14 @@ class RecordList(object):
         self.records = OrderedDict()
 
     def append(self, rec):
-        jobNum = rec.jobNum
-        if self.records.has_key(jobNum):
-            list = self.records[jobNum]
+        condorId = rec.condorId
+        if self.records.has_key(condorId):
+            list = self.records[condorId]
             list.append(rec)
         else:
             list = []
             list.append(rec)
-            self.records[jobNum] = list
+            self.records[condorId] = list
 
     def getRecords(self):
         return self.records
