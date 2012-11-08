@@ -30,3 +30,4 @@ from gridResourceUp import GridResourceUp
 from gridResourceDown import GridResourceDown
 from submittedToGrid import SubmittedToGrid
 from condorEvents import CondorEvents
+from reader import Reader
