@@ -24,11 +24,3 @@ class Submitted(Record):
         desc = super(Submitted, self).describe()
         s = "%s condorId=%s dagNode=%s" % (self.timestamp, self.condorId, self.dagNode)
         return s
-
-    def fields(self):
-        s = "dagNode, condorId"
-        return s
-
-    def values(self):
-        s = self.dagNode+" "+self.condorId
-        return s

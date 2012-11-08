@@ -65,5 +65,5 @@ class Terminated(Record):
 
     def describe(self):
         desc = super(Terminated, self).describe()
-        s = "%s" % (self.timestamp)
+        s = "%s runUser=%s totalUser=%s" % (self.timestamp, self.userRunRemoteUsage, self.userTotalRemoteUsage)
         return s

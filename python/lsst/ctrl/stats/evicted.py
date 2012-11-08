@@ -56,5 +56,5 @@ class Evicted(Record):
         print "runBytesReceived ",self.runBytesReceived
 
     def describe(self):
-        s = "%s " % (self.timestamp)
+        s = "%s reason=%s" % (self.timestamp, self.reason)
         return s
