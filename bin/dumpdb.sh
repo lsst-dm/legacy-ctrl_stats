@@ -1,12 +1,14 @@
 #!/bin/sh
-scratch=$1
+host=$1
+port=$2
+scratch=$3
 nodes=S2012Pipe.diamond.dag.nodes.log
 for i in `/bin/ls $scratch`
 do
     file=$scratch/$i/$nodes
     if [ -f $file ]
     then
-            python dbDump.py $file
+            python dbDump.py $1 $2 $file
             ret=$?
             if [ $ret != 0 ]
             then

@@ -1,3 +1,4 @@
+import MySQLdb
 class DbRecord(object):
     def __init__(self):
         self.condorId = None
@@ -42,13 +43,13 @@ class DbRecord(object):
                 value = ""
             if first:
                 if type(value) == type(str()):
-                    add = "'"+value+"'"
+                    add = "'"+MySQLdb.escape_string(value)+"'"
                 else:
                     add = str(value)
                 first = False
             else:
                 if type(value) == type(str()):
-                    add = ", '"+value+"'"
+                    add = ", '"+MySQLdb.escape_string(value)+"'"
                 else:
                     add = ", "+str(value)
             cmd = cmd+add
