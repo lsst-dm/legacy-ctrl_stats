@@ -24,7 +24,7 @@ class Record(object):
 
     def printAll(self):
         print self.__class__.__name__
-        print lines
+        print self.lines
 
 
     def extractValues(self,pat,line):
