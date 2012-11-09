@@ -5,7 +5,7 @@ class Evicted(Record):
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
 
-        self.reason = lines[1]
+        self.reason = lines[1].strip()
 
 
 
@@ -17,9 +17,10 @@ class Evicted(Record):
 
         self.userRunLocalUsage,  self.sysRunLocalUsage  = self.extractUsrSysTimes(lines[3])
 
+
         pat = r"(?P<bytes>\d+) "
-        self.runBytesSent = self.extract(pat,lines[4], "bytes")
-        self.runBytesReceived = self.extract(pat,lines[5], "bytes")
+        self.runBytesSent = int(self.extract(pat,lines[4], "bytes"))
+        self.runBytesReceived = int(self.extract(pat,lines[5], "bytes"))
 
 
         pat = r":\s+(?P<usage>\d+)\s+(?P<request>\d+)$"

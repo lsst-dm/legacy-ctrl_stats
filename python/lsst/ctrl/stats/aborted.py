@@ -9,7 +9,7 @@ class Aborted(Record):
         #if info is not None:
         #    self.reason = self.extract(pat,lines[1], "reason")
         #else:
-        self.reason = lines[1]
+        self.reason = lines[1].strip()
 
 
     def printAll(self):

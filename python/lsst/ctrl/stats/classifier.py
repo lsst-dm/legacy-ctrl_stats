@@ -12,7 +12,7 @@ class Classifier(object):
         for rec in records:
             if rec.event == CondorEvents.SubmittedEvent:
                 entry.condorId = rec.condorId
-                self.dagNode = rec.dagNode
+                entry.dagNode = rec.dagNode
                 entry.submitTime = rec.timestamp
             elif rec.event == CondorEvents.ExecutingEvent:
                 if fExecuting is False:
@@ -54,7 +54,7 @@ class Classifier(object):
                 entries.append(entry)
                 nextEntry = DbRecord()
                 nextEntry.condorId = rec.condorId
-                nextEntry.dagNode = rec.condorId
+                nextEntry.dagNode = entry.dagNode
                 nextEntry.submitTime = rec.timestamp
                 entry = nextEntry
         entries.append(entry)

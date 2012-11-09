@@ -8,6 +8,7 @@ class Held(Record):
         
         pat = r"Error from (?P<slot>[\w@\d\-.]+): (?P<reason>.+?)($)"
         self.slot, self.reason = self.extractPair(pat,lines[1], "slot", "reason")
+        self.reason = self.reason.strip()
 
         pat = r"Code (?P<code>[\d]+) Subcode (?P<subcode>[\d]+)"
         self.code, self.subcode = self.extractPair(pat,lines[2],"code","subcode")

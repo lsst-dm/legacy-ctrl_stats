@@ -17,10 +17,10 @@ class Terminated(Record):
         self.userTotalLocalUsage,  self.sysTotalLocalUsage  = self.extractUsrSysTimes(lines[5])
 
         pat = r"(?P<bytes>\d+) "
-        self.runBytesSent = self.extract(pat,lines[6], "bytes")
-        self.runBytesReceived = self.extract(pat,lines[7], "bytes")
-        self.totalBytesSent = self.extract(pat,lines[8], "bytes")
-        self.totalBytesReceived = self.extract(pat,lines[9], "bytes")
+        self.runBytesSent = int(self.extract(pat,lines[6], "bytes"))
+        self.runBytesReceived = int(self.extract(pat,lines[7], "bytes"))
+        self.totalBytesSent = int(self.extract(pat,lines[8], "bytes"))
+        self.totalBytesReceived = int(self.extract(pat,lines[9], "bytes"))
 
         
         pat = r":\s+(?P<usage>\d+)\s+(?P<request>\d+)$"

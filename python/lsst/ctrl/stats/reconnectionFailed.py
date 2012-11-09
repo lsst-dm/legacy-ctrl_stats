@@ -4,8 +4,8 @@ from record import Record
 class ReconnectionFailed(Record):
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
-        self.reason = lines[1]
-        self.reason2 = lines[2]
+        self.reason = lines[1].strip()
+        self.reason2 = lines[2].strip()
 
     def printAll(self):
         Record.printAll(self)
