@@ -14,17 +14,9 @@ if __name__ == "__main__":
     recordList = reader.getRecordList()
     records = recordList.getRecords()
 
-    #
-    # get database authorization info
-    #
-    home = os.getenv("HOME")
-    pol = Policy(home+"/.lsst/db-auth.paf")
-    
     dbAuth = DbAuth()
-    dbAuth.setPolicy(pol)
-    
-    user = dbAuth.username(host,port)
-    password = dbAuth.password(host,port)
+    user = dbAuth.username(host, port)
+    password = dbAuth.password(host, port)
 
     dbm = DatabaseManager(host, int(port))
     dbm.connect(user,password,"Testing")
