@@ -25,10 +25,8 @@ if __name__ == "__main__":
     pol = Policy(os.path.join(home,".lsst","db-auth.paf"))
     
     dbAuth = DbAuth()
-    dbAuth.setPolicy(pol)
-    
-    user = dbAuth.username(host,port)
-    password = dbAuth.password(host,port)
+    user = dbAuth.username(host, port)
+    password = dbAuth.password(host, port)
 
     print "0"
     dbm = DatabaseManager(host, int(port))
