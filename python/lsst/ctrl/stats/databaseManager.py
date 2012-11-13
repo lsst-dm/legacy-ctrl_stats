@@ -11,3 +11,9 @@ class DatabaseManager(MySQLBase):
     def execute(self, ins):
         self.execCommand0(ins)
 
+    def tableExists(self, table):
+        cmd = "SHOW TABLES LIKE '%s'" % table
+        tables = self.execCommand1(cmd)
+        if tables is None:
+            return False
+        return True

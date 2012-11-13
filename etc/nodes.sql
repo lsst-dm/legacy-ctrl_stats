@@ -1,0 +1,22 @@
+CREATE TABLE `nodes` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `condorId` varchar(24) default NULL,
+  `dagNode` varchar(10) default NULL,
+  `submitTime` datetime default NULL,
+  `executionHost` varchar(24) default NULL,
+  `executionStartTime` datetime default NULL,
+  `executionStopTime` datetime default NULL,
+  `imageSize` int(11) default NULL,
+  `memoryUsageMB` int(11) default NULL,
+  `residentSetSize` int(11) default NULL,
+  `userRunRemoteUsage` int(11) default NULL,
+  `sysRunRemoteUsage` int(11) default NULL,
+  `userRunLocalUsage` int(11) default NULL,
+  `sysRunLocalUsage` int(11) default NULL,
+  `bytesSent` int(11) default NULL,
+  `bytesReceived` int(11) default NULL,
+  `terminationTime` datetime default NULL,
+  `terminationCode` varchar(3) default NULL,
+  `terminationReason` varchar(4096) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;

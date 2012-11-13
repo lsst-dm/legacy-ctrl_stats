@@ -1,13 +1,15 @@
+import sys
 from condorEvents import CondorEvents
-from dbRecord import DbRecord
+from nodesRecord import NodesRecord
 
 class Classifier(object):
     def classify(self, records):
         entries = []
 
-        entry = DbRecord()
+        entry = NodesRecord()
 
         fExecuting = False
+        fEnded = False
         imageSize = 0
         for rec in records:
             if rec.event == CondorEvents.SubmittedEvent:
@@ -18,12 +20,11 @@ class Classifier(object):
                 if fExecuting is False:
                     entry.executionHost = rec.executingHostAddr
                     entry.executionStartTime = rec.timestamp
-                #else:
-                #    # TODO: raise an exception here
-                #    print "This shouldn't happend"
                 fExecuting = True
             elif rec.event == CondorEvents.UpdatedEvent:
-               imageSize = imageSize + int(rec.imageSize) 
+               entry.imageSize = rec.imageSize
+               entry.memoryUsageMB = rec.memoryUsageMB
+               entry.residentSetSize = rec.residentSetSize
             elif rec.event == CondorEvents.TerminatedEvent:
                 entry.executionStopTime = rec.timestamp
                 entry.userRunRemoteUsage = rec.userRunRemoteUsage
@@ -35,27 +36,49 @@ class Classifier(object):
                 entry.terminationTime = rec.timestamp
                 entry.terminationCode = rec.event
                 entry.terminationReason = "Terminated normally"
+            elif rec.event == CondorEvents.HeldEvent:
+                fEnded = True
+                entry.terminationCode = rec.event
+                entry.terminationTime = rec.timestamp
+                entry.terminationReason = rec.reason
             elif rec.event == CondorEvents.EvictedEvent:
-                fEvicted = True
-                entry.executionStopTime = rec.timestamp
+                fEnded = True
+                entry.terminationTime = rec.timestamp
+                entry.terminationCode = rec.event
                 entry.terminationReason = rec.reason
                 entry.userRunRemoteUsage = rec.userRunRemoteUsage
                 entry.sysRunRemoteUsage = rec.sysRunRemoteUsage
-                entry.runBytesSent = rec.runBytesSent 
-                entry.runBytesReceived = rec.runBytesReceived
+                entry.bytesSent = rec.runBytesSent 
+                entry.bytesReceived = rec.runBytesReceived
             elif rec.event == CondorEvents.AbortedEvent:
-                if entry.terminationReason == None:
-                    entry.terminationReason = rec.reason
+                if not fEnded:
+                    if entry.terminationReason == None:
+                        entry.terminationReason = rec.reason
+                    entry.terminationCode = rec.event
+                    entry.terminationTime = rec.timestamp
+                fEnded = False
             elif rec.event == CondorEvents.ShadowExceptionEvent:
-                entry.executionStopTime = rec.timestamp
+                entry.terminationCode = rec.event
+                entry.terminationTime = rec.timestamp
                 entry.terminationReason = rec.reason
-            elif rec.event == CondorEvents.SocketReconnectFailureEvent:
-                # this resubmits, so we create a new record
                 entries.append(entry)
-                nextEntry = DbRecord()
+                nextEntry = NodesRecord()
                 nextEntry.condorId = rec.condorId
                 nextEntry.dagNode = entry.dagNode
                 nextEntry.submitTime = rec.timestamp
                 entry = nextEntry
+                fExecuting = False
+            elif rec.event == CondorEvents.SocketReconnectFailureEvent:
+                # this resubmits, so we create a new record
+                entry.terminationCode = rec.event
+                entry.terminationTime = rec.timestamp
+                entry.terminationReason = rec.reason
+                entries.append(entry)
+                nextEntry = NodesRecord()
+                nextEntry.condorId = rec.condorId
+                nextEntry.dagNode = entry.dagNode
+                nextEntry.submitTime = rec.timestamp
+                entry = nextEntry
+                fExecuting = False
         entries.append(entry)
         return entries

@@ -5,7 +5,6 @@ from updated import Updated
 from disconnected import Disconnected
 from aborted import Aborted
 from evicted import Evicted
-from reconnectionFailed import ReconnectionFailed
 from shadowException import ShadowException
 from held import Held
 from recordList import RecordList
@@ -31,3 +30,4 @@ from gridResourceDown import GridResourceDown
 from submittedToGrid import SubmittedToGrid
 from condorEvents import CondorEvents
 from reader import Reader
+from nodesRecord import NodesRecord

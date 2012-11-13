@@ -19,6 +19,7 @@ class Held(Record):
         print ">>reason = ",self.reason
         print ">>code = ",self.code
         print ">>subcode = ",self.subcode
+        print ">>timestamp = ",self.timestamp
 
     def describe(self):
         desc = super(Held, self).describe()

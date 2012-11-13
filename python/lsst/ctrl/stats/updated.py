@@ -5,14 +5,14 @@ class Updated(Record):
 
         pat = "Image size of job updated: (?P<imageSize>[\d]+)"
         
-        self.imageSize = self.extract(pat,lines[0], "imageSize")
+        self.imageSize = int(self.extract(pat,lines[0], "imageSize"))
         
         self.memoryUsageMB = "0"
         if len(lines) == 3:
                 pat = "(?P<memoryUsage>[\d]+)"
-                self.memoryUsageMB = self.extract(pat,lines[1],"memoryUsage")
+                self.memoryUsageMB = int(self.extract(pat,lines[1],"memoryUsage"))
         pat = "(?P<residentSetSize>[\d]+)"
-        self.residentSetSize = self.extract(pat,lines[1],"residentSetSize")
+        self.residentSetSize = int(self.extract(pat,lines[1],"residentSetSize"))
 
 
     def printAll(self):
