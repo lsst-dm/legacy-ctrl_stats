@@ -13,11 +13,15 @@ class Updated(Record):
         self.imageSize = int(self.extract(pat,lines[0], "imageSize"))
         
         self.memoryUsageMB = "0"
+        self.residentSetSizeKB = "0"
         if len(lines) == 3:
-                pat = "(?P<memoryUsage>[\d]+)"
-                self.memoryUsageMB = int(self.extract(pat,lines[1],"memoryUsage"))
-        pat = "(?P<residentSetSize>[\d]+)"
-        self.residentSetSize = int(self.extract(pat,lines[1],"residentSetSize"))
+            pat = "(?P<memoryUsage>[\d]+)"
+            self.memoryUsageMB = int(self.extract(pat,lines[1],"memoryUsage"))
+            pat = "(?P<residentSetSize>[\d]+)"
+            self.residentSetSizeKB = int(self.extract(pat,lines[2],"residentSetSize"))
+        else:
+            pat = "(?P<residentSetSize>[\d]+)"
+            self.residentSetSizeKB = int(self.extract(pat,lines[1],"residentSetSize"))
 
 
     def printAll(self):

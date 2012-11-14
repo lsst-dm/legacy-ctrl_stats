@@ -11,7 +11,7 @@ class NodesRecord(DbRecord):
         self.executionStopTime = "0000-00-00 00:00:00"
         self.updateImageSize = 0
         self.updateMemoryUsageMB = 0
-        self.updateResidentSetSize = 0
+        self.updateResidentSetSizeKB = 0
         self.userRunRemoteUsage = 0
         self.sysRunRemoteUsage = 0
         self.finalMemoryUsageMB = 0

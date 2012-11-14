@@ -24,7 +24,7 @@ class Classifier(object):
             elif rec.event == CondorEvents.UpdatedEvent:
                entry.updateImageSize = rec.imageSize
                entry.updateMemoryUsageMB = rec.memoryUsageMB
-               entry.updateResidentSetSize = rec.residentSetSize
+               entry.updateResidentSetSizeKB = rec.residentSetSizeKB
             elif rec.event == CondorEvents.TerminatedEvent:
                 entry.executionStopTime = rec.timestamp
                 entry.userRunRemoteUsage = rec.userRunRemoteUsage

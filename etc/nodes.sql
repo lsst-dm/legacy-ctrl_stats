@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `nodes` (
   `executionStopTime` datetime default NULL,
   `updateImageSize` int(11) default NULL,
   `updateMemoryUsageMB` int(11) default NULL,
-  `updateResidentSetSize` int(11) default NULL,
+  `updateResidentSetSizeKB` int(11) default NULL,
   `userRunRemoteUsage` int(11) default NULL,
   `sysRunRemoteUsage` int(11) default NULL,
   `finalMemoryUsageMB` int(11) default NULL,
