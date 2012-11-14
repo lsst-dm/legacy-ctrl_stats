@@ -2,6 +2,11 @@ import re
 from record import Record
 
 class Held(Record):
+    """
+    Job was held
+    The job has transitioned to the hold state.
+    This might happen if the user applies the "condor_hold" command to the job.
+    """
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
 

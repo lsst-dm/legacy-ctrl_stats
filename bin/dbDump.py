@@ -43,14 +43,13 @@ if __name__ == "__main__":
     dbm.connect(user,password,database)
         
 
-    print "2"
-    if not dbm.tableExists(tableName):
-        print "a"
-        pkg = eups.productDir("ctrl_stats")
-        filePath = os.path.join(pkg,"etc","nodes.sql")
-        print "b"
-        dbm.loadSqlScript(filePath, user, password, database)
-    print "3"
+    #
+    # This load the nodes.sql, which creates the table
+    # we're writing into.  The table won't be created
+    # if it already exists. (see the SQL for details).
+    pkg = eups.productDir("ctrl_stats")
+    filePath = os.path.join(pkg,"etc","nodes.sql")
+    dbm.loadSqlScript(filePath, user, password, database)
 
     table = database+"."+tableName
 

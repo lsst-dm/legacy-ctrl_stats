@@ -1,6 +1,10 @@
 import re
 from record import Record
 class Terminated(Record):
+    """
+    Job terminated
+    The job has completed.
+    """
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
 

@@ -2,7 +2,10 @@ import re
 from record import Record
 
 class Executing(Record):
-    # event number: 001
+    """
+    Job executing
+    A job is running.  It might occur more than once.
+    """
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
 

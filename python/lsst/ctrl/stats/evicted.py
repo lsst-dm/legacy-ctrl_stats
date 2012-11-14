@@ -1,6 +1,10 @@
 import re
 from record import Record
 class Evicted(Record):
+    """
+    Job evicted from machine
+    A job was removed from a machine before it was finished.
+    """
     # event number: 004
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)

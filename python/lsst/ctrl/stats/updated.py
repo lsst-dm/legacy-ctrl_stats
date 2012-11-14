@@ -1,5 +1,10 @@
 from record import Record
 class Updated(Record):
+    """
+    Image size of job updated
+    An informational event, to update the amount of memory that the job is
+    using while running.  It does not reflect the state of the job.
+    """
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
 

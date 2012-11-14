@@ -22,17 +22,17 @@ class Classifier(object):
                     entry.executionStartTime = rec.timestamp
                 fExecuting = True
             elif rec.event == CondorEvents.UpdatedEvent:
-               entry.imageSize = rec.imageSize
-               entry.memoryUsageMB = rec.memoryUsageMB
-               entry.residentSetSize = rec.residentSetSize
+               entry.updateImageSize = rec.imageSize
+               entry.updateMemoryUsageMB = rec.memoryUsageMB
+               entry.updateResidentSetSize = rec.residentSetSize
             elif rec.event == CondorEvents.TerminatedEvent:
                 entry.executionStopTime = rec.timestamp
                 entry.userRunRemoteUsage = rec.userRunRemoteUsage
                 entry.sysRunRemoteUsage = rec.sysRunRemoteUsage
-                entry.userRunLocalUsage = rec.userRunLocalUsage
-                entry.sysRunLocalUsage = rec.sysRunLocalUsage
                 entry.bytesSent = rec.runBytesSent
                 entry.bytesReceived = rec.runBytesReceived
+                entry.finalMemoryUsageMB = rec.memoryUsage
+                entry.finalMemoryRequestMB = rec.memoryRequest
                 entry.terminationTime = rec.timestamp
                 entry.terminationCode = rec.event
                 entry.terminationReason = "Terminated normally"

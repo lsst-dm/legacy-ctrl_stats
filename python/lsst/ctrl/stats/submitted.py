@@ -2,7 +2,11 @@ import re
 from record import Record
 
 class Submitted(Record):
-    # event number: 000
+    """
+    Job submitted
+    This event occurs when a user submits a job. It is the first event you
+    will see for a job, and it should only occur once.
+    """
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
         

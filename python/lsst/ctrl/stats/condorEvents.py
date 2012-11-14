@@ -31,6 +31,11 @@ class CondorEvents(object):
         GridResourceUpEvent = "025"
         GridResourceDownEvent = "026"
         SubmittedToGridEvent = "027"
+        JobAdInformationEvent = "028"
+        JobRemoteStatusUnknownEvent = "029"
+        JobRemoteStatusKnownAgainEvent = "030"
+        # 031, 032 are marked as "unused" by Condor
+        AttributeUpdateEvent = "033"
 
         events = { 
             SubmittedEvent: Submitted,
@@ -61,4 +66,8 @@ class CondorEvents(object):
             GridResourceUpEvent : GridResourceUp,
             GridResourceDownEvent : GridResourceDown,
             SubmittedToGridEvent : SubmittedToGrid,
+            JobAdInformationEvent : JobAdInformation,
+            JobRemoteStatusUnknownEvent : JobRemoteStatusUnknown,
+            JobRemoteStatusKnownAgainEvent : JobRemoteStatusKnownAgain,
+            AttributeUpdateEvent : AttributeUpdate
         }
