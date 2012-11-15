@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `executions` (
+CREATE TABLE IF NOT EXISTS `updates` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `condorId` varchar(24) default NULL,
   `dagNode` varchar(24) default NULL,
