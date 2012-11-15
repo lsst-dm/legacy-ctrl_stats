@@ -28,18 +28,14 @@ if __name__ == "__main__":
     user = dbAuth.username(host, port)
     password = dbAuth.password(host, port)
 
-    print "0"
     dbm = DatabaseManager(host, int(port))
     dbm.connect(user,password)
 
-    print "1"
     if not dbm.dbExists(database):
-        print "a"
         dbm.createDb(database) 
-        print "b"
     # this second connect is necessary to 
     # connect to the database. It
-    # reuses the connection
+    # reuses the connection.
     dbm.connect(user,password,database)
         
 
@@ -47,6 +43,7 @@ if __name__ == "__main__":
     # This load the nodes.sql, which creates the table
     # we're writing into.  The table won't be created
     # if it already exists. (see the SQL for details).
+
     pkg = eups.productDir("ctrl_stats")
     filePath = os.path.join(pkg,"etc","nodes.sql")
     dbm.loadSqlScript(filePath, user, password, database)
