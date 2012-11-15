@@ -12,6 +12,7 @@ from lsst.pex.policy import Policy
 if __name__ == "__main__":
     submissionsTableName = "submissions"
     totalsTableName = "totals"
+    updatesTableName = "updates"
 
     basename = os.path.basename(sys.argv[0])
 
@@ -67,11 +68,12 @@ if __name__ == "__main__":
     filePath = os.path.join(pkg,"etc","totals.sql")
     dbm.loadSqlScript(filePath, user, password, database)
 
-    filePath = os.path.join(pkg,"etc","executions.sql")
+    filePath = os.path.join(pkg,"etc","updates.sql")
     dbm.loadSqlScript(filePath, user, password, database)
 
     submissionsTable = database+"."+submissionsTableName
     totalsTable = database+"."+totalsTableName
+    updatesTable = database+"."+updatesTableName
 
     classifier = Classifier()
     for job in records:
