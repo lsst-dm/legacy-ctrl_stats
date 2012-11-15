@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `submissions` (
+CREATE TABLE IF NOT EXISTS `totals` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `condorId` varchar(24) default NULL,
   `dagNode` varchar(10) default NULL,
@@ -18,5 +18,15 @@ CREATE TABLE IF NOT EXISTS `submissions` (
   `terminationTime` datetime default NULL,
   `terminationCode` varchar(3) default NULL,
   `terminationReason` varchar(4096) default NULL,
+  `firstSubmitTime` datetime default NULL,
+  `totalBytesSent` int(11) default NULL,
+  `totalBytesReceived` int(11) default NULL,
+  `submissions` int(11) default NULL,
+  `executions` int(11) default NULL,
+  `shadowExceptions` int(11) default NULL,
+  `lostSockets` int(11) default NULL,
+  `socketReconnectionFailures` int(11) default NULL,
+  `slotsUsed` int(11) default NULL,
+  `hostsUsed` int(11) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;

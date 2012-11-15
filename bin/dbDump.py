@@ -10,7 +10,8 @@ from lsst.daf.persistence import DbAuth
 from lsst.pex.policy import Policy
 
 if __name__ == "__main__":
-    tableName = "submissions"
+    submissionsTableName = "submissions"
+    totalsTableName = "totals"
 
     basename = os.path.basename(sys.argv[0])
 
@@ -56,16 +57,31 @@ if __name__ == "__main__":
     # if it already exists. (see the SQL for details).
 
     pkg = eups.productDir("ctrl_stats")
+
+    filePath = os.path.join(pkg,"etc","eventCodes.sql")
+    dbm.loadSqlScript(filePath, user, password, database)
+
     filePath = os.path.join(pkg,"etc","submissions.sql")
     dbm.loadSqlScript(filePath, user, password, database)
 
-    table = database+"."+tableName
+    filePath = os.path.join(pkg,"etc","totals.sql")
+    dbm.loadSqlScript(filePath, user, password, database)
+
+    filePath = os.path.join(pkg,"etc","executions.sql")
+    dbm.loadSqlScript(filePath, user, password, database)
+
+    submissionsTable = database+"."+submissionsTableName
+    totalsTable = database+"."+totalsTableName
 
     classifier = Classifier()
     for job in records:
-        entries = classifier.classify(records[job])
+        entries, totalsRecord = classifier.classify(records[job])
         for ent in entries:
-            ins = ent.getInsertString(table)
+            ins = ent.getInsertString(submissionsTable)
             if args.verbose:
                 print ins
             dbm.execute(ins)
+        ins = totalsRecord.getInsertString(totalsTable)
+        if args.verbose:
+            print ins
+        dbm.execut(ins)

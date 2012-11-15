@@ -33,4 +33,5 @@ from gridResourceDown import GridResourceDown
 from submittedToGrid import SubmittedToGrid
 from condorEvents import CondorEvents
 from reader import Reader
-from nodesRecord import NodesRecord
+from submissionsRecord import SubmissionsRecord
+from totalsRecord import TotalsRecord

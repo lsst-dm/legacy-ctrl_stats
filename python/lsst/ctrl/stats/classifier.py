@@ -4,6 +4,7 @@ from nodesRecord import NodesRecord
 
 class Classifier(object):
     def classify(self, records):
+
         entries = []
 
         entry = NodesRecord()
@@ -23,16 +24,16 @@ class Classifier(object):
                 fExecuting = True
             elif rec.event == CondorEvents.UpdatedEvent:
                entry.updateImageSize = rec.imageSize
-               entry.updateMemoryUsageMB = rec.memoryUsageMB
-               entry.updateResidentSetSizeKB = rec.residentSetSizeKB
+               entry.updateMemoryUsageMb = rec.memoryUsageMb
+               entry.updateResidentSetSizeKb = rec.residentSetSizeKb
             elif rec.event == CondorEvents.TerminatedEvent:
                 entry.executionStopTime = rec.timestamp
                 entry.userRunRemoteUsage = rec.userRunRemoteUsage
                 entry.sysRunRemoteUsage = rec.sysRunRemoteUsage
                 entry.bytesSent = rec.runBytesSent
                 entry.bytesReceived = rec.runBytesReceived
-                entry.finalMemoryUsageMB = rec.memoryUsage
-                entry.finalMemoryRequestMB = rec.memoryRequest
+                entry.finalMemoryUsageMb = rec.memoryUsage
+                entry.finalMemoryRequestMb = rec.memoryRequest
                 entry.terminationTime = rec.timestamp
                 entry.terminationCode = rec.event
                 entry.terminationReason = "Terminated normally"
@@ -81,4 +82,30 @@ class Classifier(object):
                 entry = nextEntry
                 fExecuting = False
         entries.append(entry)
-        return entries
+        totalsRecord = self.tabulate(entries)
+        return entries, totalsRecord
+
+    def tabulate(self, entries):
+        totalsEntry = TotalsRecord(entries[-1])
+        totalsEntry.firstSubmitTime = entries[0].submitTime
+        totalsEntry.submissions = len(entries)
+        hostSet = set()
+        for rec in entries:
+            totalsEntry.totalBytesSent += rec.bytesSent
+            totalsEntry.totalBytesReceived += rec.bytesReceived
+            if rec.executionStartTime != "0000-00-00 00:00:00":
+                totalsEntry.executions += 1
+            if rec.terminationCode == eventCodes.ShadowExeceptionEvent:
+                totalsEntry.shadowExceptions += 1
+            if rec.terminationCode == eventCodes.SocketLostExeceptionEvent:
+                totalsEntry.lostSockets += 1
+            if rec.terminationCode == eventCodes.SocketReconnectionFailureEvent:
+                totalsEntry.socketReconnectionFailures += 1
+            if rec.executionHost is not None:
+                slotSet.add(rec.executionHost)
+        totalsEntry.slotsUsed = len(slotSet)
+        hostSet = set()
+        for slot in slotSet:
+            i = slot.index(":")
+            hostSet.add(slot[:i])
+        totalsEntry.hostsUsed = len(hostSet)
