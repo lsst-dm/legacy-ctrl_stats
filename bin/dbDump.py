@@ -2,6 +2,7 @@
 
 import os, sys
 import eups
+import argparse
 from lsst.ctrl.stats.reader import Reader
 from lsst.ctrl.stats.classifier import Classifier
 from lsst.ctrl.stats.databaseManager import DatabaseManager
@@ -9,12 +10,23 @@ from lsst.daf.persistence import DbAuth
 from lsst.pex.policy import Policy
 
 if __name__ == "__main__":
-    tableName = "nodes"
+    tableName = "submissions"
 
-    host = sys.argv[1]
-    port = sys.argv[2]
-    database = sys.argv[3]
-    reader = Reader(sys.argv[4])
+    basename = os.path.basename(sys.argv[0])
+
+    parser = argparse.ArgumentParser(prog=basename)
+    parser.add_argument("-H", "--host", action="store", default=None, dest="host", help="mysql host", type=str, required=True)
+    parser.add_argument("-p", "--port", action="store", default=None, dest="port", help="mysql port", type=str, required=True)
+    parser.add_argument("-d", "--database", action="store", default=None, dest="database", help="database name", type=str, required=True)
+    parser.add_argument("-f", "--file", action="store", default=None, dest="filename", help="condor log file", type=str, required=True)
+    parser.add_argument("-v", "--verbose", action="store_true", dest="verbose", help="verbose")
+
+    args = parser.parse_args()
+
+    host = args.host
+    port = args.port
+    database = args.database
+    reader = Reader(args.filename)
     recordList = reader.getRecordList()
     records = recordList.getRecords()
 
@@ -38,14 +50,13 @@ if __name__ == "__main__":
     # reuses the connection.
     dbm.connect(user,password,database)
         
-
     #
-    # This load the nodes.sql, which creates the table
+    # This load the submissions.sql, which creates the table
     # we're writing into.  The table won't be created
     # if it already exists. (see the SQL for details).
 
     pkg = eups.productDir("ctrl_stats")
-    filePath = os.path.join(pkg,"etc","nodes.sql")
+    filePath = os.path.join(pkg,"etc","submissions.sql")
     dbm.loadSqlScript(filePath, user, password, database)
 
     table = database+"."+tableName
@@ -55,5 +66,6 @@ if __name__ == "__main__":
         entries = classifier.classify(records[job])
         for ent in entries:
             ins = ent.getInsertString(table)
-            print ins
+            if args.verbose:
+                print ins
             dbm.execute(ins)

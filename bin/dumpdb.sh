@@ -8,7 +8,7 @@ do
     file=$scratch/$i/$nodes
     if [ -f $file ]
     then
-            python dbDump.py $1 $2 condor_scratch $file
+            python dbDump2.py $1 $2 $i $file
             ret=$?
             if [ $ret != 0 ]
             then
