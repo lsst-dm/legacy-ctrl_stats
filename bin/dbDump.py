@@ -28,9 +28,11 @@ if __name__ == "__main__":
     host = args.host
     port = args.port
     database = args.database
+
+    # read and parse in the Condor log
     reader = Reader(args.filename)
-    recordList = reader.getRecordList()
-    records = recordList.getRecords()
+    # get the record groups, which are grouped by job
+    records = reader.getRecords()
 
     #
     # get database authorization info

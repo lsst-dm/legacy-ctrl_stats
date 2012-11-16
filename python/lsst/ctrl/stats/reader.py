@@ -36,8 +36,8 @@ class Reader(object):
                 else:
                     recordLines.append(line)
 
-    def getRecordList(self):
-        return self.recordList
+    def getRecords(self):
+        return self.recordList.getRecords()
 
     def classify(self, year, lines):
         pat = r"(?P<event>\d\d\d)"
