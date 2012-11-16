@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS `submissions` (
   `updateResidentSetSizeKb` int(11) default NULL,
   `userRunRemoteUsage` int(11) default NULL,
   `sysRunRemoteUsage` int(11) default NULL,
+  `finalDiskUsageKb` int(11) default NULL,
+  `finalDiskRequestKb` int(11) default NULL,
   `finalMemoryUsageMb` int(11) default NULL,
   `finalMemoryRequestMb` int(11) default NULL,
   `bytesSent` int(11) default NULL,

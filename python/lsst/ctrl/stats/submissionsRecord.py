@@ -15,6 +15,8 @@ class SubmissionsRecord(DbRecord):
             self.updateResidentSetSizeKb = 0
             self.userRunRemoteUsage = 0
             self.sysRunRemoteUsage = 0
+            self.finalDiskUsageKb = 0
+            self.finalDiskRequestKb = 0
             self.finalMemoryUsageMb = 0
             self.finalMemoryRequestMb = 0
             self.bytesSent = 0
@@ -36,7 +38,9 @@ class SubmissionsRecord(DbRecord):
             self.updateResidentSetSizeKb = rec.updateResidentSetSizeKb
             self.userRunRemoteUsage = rec.userRunRemoteUsage
             self.sysRunRemoteUsage = rec.sysRunRemoteUsage
-            self.finalMemoryUsageMb = rec.finalMemoryusageMb
+            self.finalDiskUsageKb = rec.finalDiskUsageKb
+            self.finalDiskRequestKb = rec.finalDiskRequestKb
+            self.finalMemoryUsageMb = rec.finalMemoryUsageMb
             self.finalMemoryRequestMb = rec.finalMemoryRequestMb
             self.bytesSent = rec.bytesSent
             self.bytesReceived = rec.bytesReceived

@@ -77,13 +77,21 @@ if __name__ == "__main__":
 
     classifier = Classifier()
     for job in records:
-        entries, totalsRecord = classifier.classify(records[job])
+        entries, totalsRecord, updateEntries = classifier.classify(records[job])
+        # add submission records
         for ent in entries:
             ins = ent.getInsertString(submissionsTable)
             if args.verbose:
                 print ins
             dbm.execute(ins)
+        # add update records
+        for ent in updateEntries:
+            ins = ent.getInsertString(updatesTable)
+            if args.verbose:
+                print ins
+            dbm.execute(ins)
+        # add total entry
         ins = totalsRecord.getInsertString(totalsTable)
         if args.verbose:
             print ins
-        dbm.execut(ins)
+        dbm.execute(ins)

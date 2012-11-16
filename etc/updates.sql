@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS `updates` (
   `condorId` varchar(24) default NULL,
   `dagNode` varchar(24) default NULL,
   `executionHost` varchar(24) default NULL,
+  `timestamp` datetime default NULL,
   `imageSize` int(11) default NULL,
   `memoryUsageMb` int(11) default NULL,
   `residentSetSizeKb` int(11) default NULL,

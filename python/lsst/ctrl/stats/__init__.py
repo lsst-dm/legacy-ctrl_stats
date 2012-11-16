@@ -35,3 +35,4 @@ from condorEvents import CondorEvents
 from reader import Reader
 from submissionsRecord import SubmissionsRecord
 from totalsRecord import TotalsRecord
+from updatesRecord import UpdatesRecord

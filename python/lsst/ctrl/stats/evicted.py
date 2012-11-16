@@ -29,7 +29,8 @@ class Evicted(Record):
 
         pat = r":\s+(?P<usage>\d+)\s+(?P<request>\d+)$"
 
-        self.diskUsage = "-1"
+        self.diskUsage = "0"
+        self.diskRequest = "0"
         line = lines[8].strip()
         values = re.search(pat,line)
         if values is not None:
@@ -38,7 +39,8 @@ class Evicted(Record):
             pat = r":\s+(?P<request>\d+)$"
             self.diskRequest = self.extract(pat,line,"request")
 
-        self.memoryUsage = "-1"
+        self.memoryUsage = "0"
+        self.memoryRequest = "0"
         line = lines[9].strip()
         values = re.search(pat,line)
         if values is not None:
