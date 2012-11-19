@@ -20,7 +20,7 @@ if __name__ == "__main__":
     parser.add_argument("-H", "--host", action="store", default=None, dest="host", help="mysql host", type=str, required=True)
     parser.add_argument("-p", "--port", action="store", default=None, dest="port", help="mysql port", type=str, required=True)
     parser.add_argument("-d", "--database", action="store", default=None, dest="database", help="database name", type=str, required=True)
-    parser.add_argument("-f", "--file", action="store", default=None, dest="filename", help="condor log file", type=str, required=True)
+    parser.add_argument("-f", "--file", action="store", default=None, dest="filenames", help="condor log file", nargs='+', type=str, required=True)
     parser.add_argument("-v", "--verbose", action="store_true", dest="verbose", help="verbose")
 
     args = parser.parse_args()
@@ -29,11 +29,12 @@ if __name__ == "__main__":
     port = args.port
     database = args.database
 
-    # read and parse in the Condor log
-    reader = Reader(args.filename)
-    # get the record groups, which are grouped by job
-    records = reader.getRecords()
-
+    print args.filenames
+    for filename in args.filenames:
+        if not os.path.exists(filename):
+            print "%s does not exist." % filename
+            sys.exit(10)
+    
     #
     # get database authorization info
     #
@@ -77,23 +78,30 @@ if __name__ == "__main__":
     totalsTable = database+"."+totalsTableName
     updatesTable = database+"."+updatesTableName
 
-    classifier = Classifier()
-    for job in records:
-        entries, totalsRecord, updateEntries = classifier.classify(records[job])
-        # add submission records
-        for ent in entries:
-            ins = ent.getInsertString(submissionsTable)
+
+    for filename in args.filenames:
+        # read and parse in the Condor log
+        reader = Reader(filename)
+        # get the record groups, which are grouped by job
+        records = reader.getRecords()
+    
+        classifier = Classifier()
+        for job in records:
+            entries, totalsRecord, updateEntries = classifier.classify(records[job])
+            # add submission records
+            for ent in entries:
+                ins = ent.getInsertString(submissionsTable)
+                if args.verbose:
+                    print ins
+                dbm.execute(ins)
+            # add update records
+            for ent in updateEntries:
+                ins = ent.getInsertString(updatesTable)
+                if args.verbose:
+                    print ins
+                dbm.execute(ins)
+            # add total entry
+            ins = totalsRecord.getInsertString(totalsTable)
             if args.verbose:
                 print ins
             dbm.execute(ins)
-        # add update records
-        for ent in updateEntries:
-            ins = ent.getInsertString(updatesTable)
-            if args.verbose:
-                print ins
-            dbm.execute(ins)
-        # add total entry
-        ins = totalsRecord.getInsertString(totalsTable)
-        if args.verbose:
-            print ins
-        dbm.execute(ins)
