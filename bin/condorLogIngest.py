@@ -30,10 +30,10 @@ if __name__ == "__main__":
     database = args.database
 
     print args.filenames
-    for filename in args.filenames:
-        if not os.path.exists(filename):
-            print "%s does not exist." % filename
-            sys.exit(10)
+    if args.verbose:
+        for filename in args.filenames:
+            if not os.path.exists(filename):
+                print "warning: %s does not exist." % filename
     
     #
     # get database authorization info
@@ -80,6 +80,8 @@ if __name__ == "__main__":
 
 
     for filename in args.filenames:
+        if not os.path.exists(filename):
+            continue
         # read and parse in the Condor log
         reader = Reader(filename)
         # get the record groups, which are grouped by job
