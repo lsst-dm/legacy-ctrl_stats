@@ -32,10 +32,6 @@ class Aborted(Record):
         self.reason = lines[1].strip()
 
 
-    def printAll(self):
-        Record.printAll(self)
-        print "reason = ",self.reason
-
     def describe(self):
         s = "%s %s" % (self.timestamp, self.reason)
         return s

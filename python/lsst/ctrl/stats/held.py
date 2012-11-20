@@ -39,14 +39,6 @@ class Held(Record):
         pat = r"Code (?P<code>[\d]+) Subcode (?P<subcode>[\d]+)"
         self.code, self.subcode = self.extractPair(pat,lines[2],"code","subcode")
 
-    def printAll(self):
-        Record.printAll(self)
-        print ">>slot = ",self.slot
-        print ">>reason = ",self.reason
-        print ">>code = ",self.code
-        print ">>subcode = ",self.subcode
-        print ">>timestamp = ",self.timestamp
-
     def describe(self):
         desc = super(Held, self).describe()
         s = "%s reason=%s" % (self.timestamp, self.reason)

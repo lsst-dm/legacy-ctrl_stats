@@ -47,10 +47,3 @@ class ShadowException(Record):
             pat = r"(?P<bytes>[\d]+)"
             self.runBytesSent = int(self.extract(pat,lines[2],"bytes"))
             self.runBytesReceived = int(self.extract(pat,lines[3],"bytes"))
-
-    def printAll(self):
-        Record.printAll(self)
-        print "slot = ",self.slot
-        print "reason = ",self.reason
-        print "runBytesSent = ",self.runBytesSent
-        print "runBytesReceived = ",self.runBytesReceived 

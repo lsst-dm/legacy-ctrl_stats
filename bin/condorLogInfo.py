@@ -36,7 +36,6 @@ def printRecords(job):
     for rec in records[job]:
             name = rec.__class__.__name__
             if args.verbose:
-                print name
                 rec.printAll()
             else:
                 print name, rec.describe()

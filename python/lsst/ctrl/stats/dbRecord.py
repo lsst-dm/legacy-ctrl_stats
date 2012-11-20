@@ -23,12 +23,18 @@ import MySQLdb
 class DbRecord(object):
 
     def printValues(self, obj):
+        """uses introspection to print all values for member variables for
+        subclasses of this class
+        """
         members = [attr for attr in dir(self) if not callable(getattr(self,attr)) and not attr.startswith("__")]
         for mem in members:
             value = getattr(self, mem)
             print mem, "=", value
 
     def getInsertString(self, tableName):
+        """uses introspection to create insert string for values for the
+        classes which subclass this class.
+        """
         members = [attr for attr in dir(self) if not callable(getattr(self,attr)) and not attr.startswith("__")]
         cmd = "INSERT INTO %s (" % (tableName)
         first = True

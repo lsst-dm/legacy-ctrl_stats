@@ -44,8 +44,11 @@ class Record(object):
             sys.exit(10)
 
     def printAll(self):
-        print self.__class__.__name__
-        print self.lines
+        print "class name = %s " % self.__class__.__name__
+        members = [attr for attr in dir(self) if not callable(getattr(self,attr)) and not attr.startswith("__")]
+        for mem in members:
+            value = getattr(self, mem)
+            print mem, "=", value
 
 
     def extractValues(self,pat,line):

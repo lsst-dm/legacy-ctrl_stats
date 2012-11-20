@@ -70,19 +70,6 @@ class Evicted(Record):
             pat = r":\s+(?P<request>\d+)$"
             self.memoryRequest = self.extract(pat,line,"request")
 
-    def printAll(self):
-        Record.printAll(self)
-        print "term = ",self.term
-        print "reason = ",self.reason
-
-        print "userRunRemoteUsage = ", self.userRunRemoteUsage
-        print "sysRunRemoteUsage = ", self.sysRunRemoteUsage
-        print "userRunLocaleUsage = ", self.userRunLocalUsage
-        print "sysRunLocaleUsage = ", self.sysRunLocalUsage
-
-        print "runBytesSent ",self.runBytesSent
-        print "runBytesReceived ",self.runBytesReceived
-
     def describe(self):
         s = "%s reason=%s" % (self.timestamp, self.reason)
         return s

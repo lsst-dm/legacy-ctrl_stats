@@ -45,9 +45,6 @@ class Updated(Record):
             self.residentSetSizeKb = int(self.extract(pat,lines[1],"residentSetSize"))
 
 
-    def printAll(self):
-        print "U",self.lines
-
     def describe(self):
         s = "%s imageSize=%s" % (self.timestamp, self.imageSize)
         return s

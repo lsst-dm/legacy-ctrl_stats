@@ -35,10 +35,6 @@ class Executing(Record):
         values = re.search(pat,lines[0]).groupdict()
         self.executingHostAddr = values["hostAddr"]
 
-    def printAll(self):
-        Record.printAll(self)
-        print "executingHostAddr = ",self.executingHostAddr
-
     def describe(self):
         s = "%s host=%s" % (self.timestamp, self.executingHostAddr)
         return s

@@ -40,10 +40,10 @@ class Submitted(Record):
         values = re.search(pat,lines[1]).groupdict()
         self.dagNode = values["dagNode"]
 
-    def printAll(self):
-        Record.printAll(self)
-        print "submitHostAddr = ",self.submitHostAddr
-        print "dagNode = ",self.dagNode
+#    def printAll(self):
+#        Record.printAll(self)
+#        print "submitHostAddr = ",self.submitHostAddr
+#        print "dagNode = ",self.dagNode
 
     def describe(self):
         desc = super(Submitted, self).describe()

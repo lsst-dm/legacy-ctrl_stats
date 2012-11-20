@@ -42,4 +42,4 @@ postjob=worker-post.log
 nodesfile=$directory/$nodes
 prefile=$directory/logs/$prejob
 postfile=$directory/$postjob
-python condorLogIngest.py -H $host -p $port -d `basename $directory` -f $prefile $nodesfile $postfile
+condorLogIngest.py -v -H $host -p $port -d `basename $directory` -f $prefile $nodesfile $postfile

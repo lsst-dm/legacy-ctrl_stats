@@ -50,43 +50,28 @@ class Terminated(Record):
         
         pat = r":\s+(?P<usage>\d+)\s+(?P<request>\d+)$"
 
-        self.diskUsage = "-"
+        self.diskUsage = 0
         line = lines[12].strip()
         values = re.search(pat,line)
         if values is not None:
-            self.diskUsage, self.diskRequest = self.extractPair(pat,line,"usage","request")
+            val1, val2 = self.extractPair(pat,line,"usage","request")
+            self.diskUsage = int(val1)
+            self.diskRequest = int(val2)
         else:
             pat = r":\s+(?P<request>\d+)$"
-            self.diskRequest = self.extract(pat,line,"request")
+            self.diskRequest = int(self.extract(pat,line,"request"))
 
         self.memoryUsage = "-"
         line = lines[13].strip()
         values = re.search(pat,line)
         if values is not None:
-            self.memoryUsage, self.memoryRequest = self.extractPair(pat,line,"usage","request")
+            val1, val2 = self.extractPair(pat,line,"usage","request")
+            self.memoryUsage = int(val1)
+            self.memoryRequest = int(val2)
         else:
             pat = r":\s+(?P<request>\d+)$"
-            self.memoryRequest = self.extract(pat,line,"request")
+            self.memoryRequest = int(self.extract(pat,line,"request"))
 
-
-    def printAll(self):
-        Record.printAll(self)
-        print "term = ",self.term
-        print "returnValue = ",self.returnValue
-        print "userRunRemoteUsage = ", self.userRunRemoteUsage
-        print "sysRunRemoteUsage = ", self.sysRunRemoteUsage
-        print "userRunLocaleUsage = ", self.userRunLocalUsage
-        print "sysRunLocaleUsage = ", self.sysRunLocalUsage
-
-        print "userTotalRemoteUsage = ", self.userTotalRemoteUsage
-        print "sysTotalRemoteUsage = ", self.sysTotalRemoteUsage
-        print "userTotalLocalUsage = ", self.userTotalLocalUsage
-        print "sysTotalLocalUsage = ", self.sysTotalLocalUsage
-
-        print "runBytesSent ",self.runBytesSent
-        print "runBytesReceived ",self.runBytesReceived
-        print "totalBytesSent ",self.totalBytesSent
-        print "totalBytesReceived ",self.totalBytesReceived
 
     def describe(self):
         desc = super(Terminated, self).describe()

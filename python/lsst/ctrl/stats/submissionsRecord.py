@@ -42,7 +42,7 @@ class SubmissionsRecord(DbRecord):
             self.finalMemoryRequestMb = 0
             self.bytesSent = 0
             self.bytesReceived = 0
-            self.terminationTime = None
+            self.terminationTime = "0000-00-00 00:00:00"
             self.terminationCode = None
             self.terminationReason = None
         else:
