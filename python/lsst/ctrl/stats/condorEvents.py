@@ -3,6 +3,11 @@ from record import Record
 from lsst.ctrl.stats import *
 
 class CondorEvents(object):
+        """
+        Describes all of the Condor logging events that can happen.  Not
+        All of these are used, even by Condor, but are included for
+        completeness.
+        """
         SubmittedEvent = "000"
         ExecutingEvent = "001"
         ExecutableErrorEvent = "002"

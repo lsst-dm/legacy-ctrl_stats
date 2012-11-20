@@ -5,6 +5,10 @@ from totalsRecord import TotalsRecord
 from updatesRecord import UpdatesRecord
 
 class Classifier(object):
+    """
+    Takes a group of records and classifies them into summary groups of
+    summary records
+    """
     def classify(self, records):
 
         entries = []
@@ -21,12 +25,16 @@ class Classifier(object):
                 entry.dagNode = rec.dagNode
                 entry.submitTime = rec.timestamp
             elif rec.event == CondorEvents.ExecutingEvent:
+                # only record the first time this is seen for this
+                # entry records, since Condor can spit out multiple
+                # ExecutingEvents in a row without anything happening
+                # (aborts, restarts, etc) in between.  (As per Condor docs).
                 if fExecuting is False:
                     entry.executionHost = rec.executingHostAddr
                     entry.executionStartTime = rec.timestamp
                 fExecuting = True
             elif rec.event == CondorEvents.UpdatedEvent:
-                # first create a new update record and fill that in
+                # create a new update record and fill that in
                 updateEntry = UpdatesRecord()
                 updateEntry.condorId = entry.condorId
                 updateEntry.dagNode = entry.dagNode
@@ -38,10 +46,13 @@ class Classifier(object):
                 updateEntries.append(updateEntry)
     
                 # update the current records information
+                # for this entry
                 entry.updateImageSize = rec.imageSize
                 entry.updateMemoryUsageMb = rec.memoryUsageMb
                 entry.updateResidentSetSizeKb = rec.residentSetSizeKb
             elif rec.event == CondorEvents.TerminatedEvent:
+                # termination occurred without some kind of Condor
+                # incident.
                 entry.executionStopTime = rec.timestamp
                 entry.userRunRemoteUsage = rec.userRunRemoteUsage
                 entry.sysRunRemoteUsage = rec.sysRunRemoteUsage
@@ -55,11 +66,13 @@ class Classifier(object):
                 entry.terminationCode = rec.event
                 entry.terminationReason = "Terminated normally"
             elif rec.event == CondorEvents.HeldEvent:
+                # the job was held, which means it stopped
                 fEnded = True
                 entry.terminationCode = rec.event
                 entry.terminationTime = rec.timestamp
                 entry.terminationReason = rec.reason
             elif rec.event == CondorEvents.EvictedEvent:
+                # job was removed, either by condor or the user
                 fEnded = True
                 entry.terminationTime = rec.timestamp
                 entry.terminationCode = rec.event
@@ -73,6 +86,7 @@ class Classifier(object):
                 entry.bytesSent = rec.runBytesSent 
                 entry.bytesReceived = rec.runBytesReceived
             elif rec.event == CondorEvents.AbortedEvent:
+                # job was aborted
                 if not fEnded:
                     if entry.terminationReason == None:
                         entry.terminationReason = rec.reason
@@ -80,6 +94,8 @@ class Classifier(object):
                     entry.terminationTime = rec.timestamp
                 fEnded = False
             elif rec.event == CondorEvents.ShadowExceptionEvent:
+                # something happened with the shadow daemon, and this
+                # job is going to be rescheduled.
                 entry.terminationCode = rec.event
                 entry.terminationTime = rec.timestamp
                 entry.terminationReason = rec.reason
@@ -91,6 +107,7 @@ class Classifier(object):
                 entry = nextEntry
                 fExecuting = False
             elif rec.event == CondorEvents.SocketReconnectFailureEvent:
+                # lost communication with execution node
                 # this resubmits, so we create a new record
                 entry.terminationCode = rec.event
                 entry.terminationTime = rec.timestamp
@@ -116,9 +133,9 @@ class Classifier(object):
 
         slotSet = set()
         for rec in entries:
-            # global number of bytesSent for this record set
+            # global number of bytesSent for this record group
             totalsEntry.totalBytesSent += rec.bytesSent
-            # global number of bytesReceived for this record set
+            # global number of bytesReceived for this record group
             totalsEntry.totalBytesReceived += rec.bytesReceived
             # number of times execution started
             if rec.executionStartTime != "0000-00-00 00:00:00":
