@@ -1,0 +1,24 @@
+#!/bin/bash
+#
+# given a Condor work directory, grab the post, pre and worker logs and
+# ingest them into the database.
+#
+set -- $(getopt h:p:d: "$@")
+
+while [ $# -gt -0 ] 
+do
+    case "$1" in
+        (-h) host=$2; shift;;
+        (-p) port=$2; shift;;
+        (-d) directory=$2; shift;;
+    esac
+    shift
+done
+
+nodes=S2012Pipe.diamond.dag.nodes.log
+prejob=worker-pre.log
+postjob=worker-post.log
+nodesfile=$directory/$nodes
+prefile=$directory/logs/$prejob
+postfile=$directory/$postjob
+python condorLogIngest.py -H $host -p $port -d `basename $directory` -f $prefile $nodesfile $postfile
