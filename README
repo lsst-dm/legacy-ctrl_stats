@@ -1,3 +1,10 @@
+==========
+ctrl_stats
+==========
+
+Overview
+========
+
 This package contains commands to ingest Condor log files into databases.
 Condor emits "records" of Condor events that happen during execution. The
 ctrl_stats package commands group all of these records according to Condor
@@ -8,6 +15,8 @@ condor job id.  Note that the dag node can be submitted more than one time
 for a variety of reasons.  All of this information is captured in the
 database records.
 
+Usage
+=====
 The following commands are available:
 
 condorLogIngest.py - Takes a list of log files and ingests them into a
