@@ -29,7 +29,7 @@ set -- $(getopt h:p:d: "$@")
 while [ $# -gt -0 ] 
 do
     case "$1" in
-        (-h) host=$2; shift;;
+        (-H) host=$2; shift;;
         (-p) port=$2; shift;;
         (-d) directory=$2; shift;;
     esac
