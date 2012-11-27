@@ -22,21 +22,21 @@ The following commands are available:
 condorLogIngest.py - Takes a list of log files and ingests them into a
 database 
 
-usage: condorLogIngest.py [-h] -H HOST -p PORT -d DATABASE -f FILENAMES
+usage: condorLogIngest.py [-h] -H HOST [-p PORT] -d DATABASE -f FILENAMES
                           [FILENAMES ...] [-v]
 
 example:
-condorLogIngest.py -h lsst10 -p 3600 -d testing -f worker.log
+condorLogIngest.py -h lsst10 -d testing -f worker.log
 
 -------------
 condorDirectoryIngest - given a directory in ~/condor_scratch, take the
 preJob, worker and postJob log files and add them into a database named
 after the directory.
 
-usage: condorDirectoryIngest -H HOST -p PORT -d directory
+usage: condorDirectoryIngest -H HOST [-p PORT] -d directory
 
 example:
-condorDirectoryIngest -H lsst10 -p 3600 -d srp_2012_0925_160117
+condorDirectoryIngest -H lsst10 -p 3306 -d srp_2012_0925_160117
 
 -------------
 condorLogInfo.py - a debugging utility to view record groups.  This was used

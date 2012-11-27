@@ -24,8 +24,9 @@
 # given a Condor work directory, grab the post, pre and worker logs and
 # ingest them into the database.
 #
-set -- $(getopt h:p:d: "$@")
+set -- $(getopt H:p:d: "$@")
 
+port=3306
 while [ $# -gt -0 ] 
 do
     case "$1" in
@@ -42,4 +43,5 @@ postjob=worker-post.log
 nodesfile=$directory/$nodes
 prefile=$directory/logs/$prejob
 postfile=$directory/$postjob
-condorLogIngest.py -v -H $host -p $port -d `basename $directory` -f $prefile $nodesfile $postfile
+dbname=`basename $directory`
+condorLogIngest.py -H $host -p $port -d $dbname -f $prefile $nodesfile $postfile

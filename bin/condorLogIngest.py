@@ -33,8 +33,8 @@ if __name__ == "__main__":
     basename = os.path.basename(sys.argv[0])
 
     parser = argparse.ArgumentParser(prog=basename)
-    parser.add_argument("-H", "--host", action="store", default=None, dest="host", help="mysql host", type=str, required=True)
-    parser.add_argument("-p", "--port", action="store", default=None, dest="port", help="mysql port", type=str, required=True)
+    parser.add_argument("-H", "--host", action="store", default=None, dest="host", help="mysql server host", type=str, required=True)
+    parser.add_argument("-p", "--port", action="store", default=3306, dest="port", help="mysql server port", type=int)
     parser.add_argument("-d", "--database", action="store", default=None, dest="database", help="database name", type=str, required=True)
     parser.add_argument("-f", "--file", action="store", default=None, dest="filenames", help="condor log files", nargs='+', type=str, required=True)
     parser.add_argument("-v", "--verbose", action="store_true", dest="verbose", help="verbose")
@@ -52,11 +52,11 @@ if __name__ == "__main__":
     pol = Policy(os.path.join(home,".lsst","db-auth.paf"))
     
     dbAuth = DbAuth()
-    user = dbAuth.username(host, port)
-    password = dbAuth.password(host, port)
+    user = dbAuth.username(host, str(port))
+    password = dbAuth.password(host,str(port))
 
     # connect to the database
-    dbm = DatabaseManager(host, int(port), user, password)
+    dbm = DatabaseManager(host, port, user, password)
 
     # create the database if it doesn't exist
     if not dbm.dbExists(database):
