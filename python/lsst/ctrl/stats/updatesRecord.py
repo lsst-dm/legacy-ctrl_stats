@@ -23,6 +23,9 @@ import MySQLdb
 from dbRecord import DbRecord
 
 class UpdatesRecord(DbRecord):
+    """Representation of an "updates" SQL table row.  Note that the names
+    here must match those of the SQL columns.
+    """
     def __init__(self, rec=None):
         if rec == None:
             self.condorId = None

@@ -28,8 +28,7 @@ from lsst.ctrl.stats.logIngestor import LogIngestor
 from lsst.daf.persistence import DbAuth
 from lsst.pex.policy import Policy
 
-if __name__ == "__main__":
-
+def run():
     basename = os.path.basename(sys.argv[0])
 
     parser = argparse.ArgumentParser(prog=basename)
@@ -74,3 +73,7 @@ if __name__ == "__main__":
                 print "warning: %s does not exist." % filename
             continue
         logIngestor.ingest(filename)
+
+if __name__ == "__main__":
+    run()
+

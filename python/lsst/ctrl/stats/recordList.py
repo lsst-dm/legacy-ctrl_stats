@@ -22,10 +22,16 @@
 from collections import OrderedDict
 import itertools
 class RecordList(object):
+    """An ordered list of Record objects
+    """
     def __init__(self):
         self.records = OrderedDict()
 
     def append(self, rec):
+        """Append a record to the list of records corresponding to it's 
+        Condor ID
+        @param rec: a Condor event record object
+        """
         condorId = rec.condorId
         if self.records.has_key(condorId):
             list = self.records[condorId]
@@ -36,15 +42,28 @@ class RecordList(object):
             self.records[condorId] = list
 
     def getRecords(self):
+        """Accessor which returns all the record lists
+        """
         return self.records
 
     def printAll(self):
+        """print long representations of all the records in groups according
+        to Condor Id
+        """
+        for i in self.records:
+            
+           for rec in self.records[i]:
+                print i, rec.__class__.__name__, rec.timestamp
+           print
         for i in self.records:
             print i 
             for rec in self.records[i]:
                 print rec.printAll()
 
     def printGroups(self):
+        """print brief representations of all the records in groups according
+        to Condor Id
+        """
         for i in self.records:
             
            for rec in self.records[i]:

@@ -26,11 +26,16 @@ from totalsRecord import TotalsRecord
 from updatesRecord import UpdatesRecord
 
 class Classifier(object):
-    """
-    Takes a group of records and classifies them into summary groups of
-    summary records
+    """Takes a group of Condor event records and classifies them into 
+    groups of summary records
     """
     def classify(self, records):
+        """Classify a list of Condor event records into secondary 
+        database records, recording statistics about data in the list.
+        @param records: list containing Condor event records
+        @return: list of submissions records, a totalsRecord and a list of updates records
+        return entries, totalsRecord, updateEntries
+        """
 
         entries = []
         updateEntries = []
@@ -145,7 +150,12 @@ class Classifier(object):
         return entries, totalsRecord, updateEntries
 
     def tabulate(self, records, entries):
-        # copy the last record
+        """
+        @param records: a list of Condor Event Records
+        @param entries: a list of summary "submissions" records for the database
+        @return: a record intended for the "totals" table in the database
+        """
+        # copy the last record, and use that as a starting point
         totalsEntry = TotalsRecord(entries[-1])
         # first submission timestamp
         totalsEntry.firstSubmitTime = entries[0].submitTime

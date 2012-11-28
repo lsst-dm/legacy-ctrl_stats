@@ -21,18 +21,31 @@
 #
 
 from lsst.cat.MySQLBase import MySQLBase
-import MySQLdb
 
 class DatabaseManager(MySQLBase):
+    """Convenience class the MySQLBase class with which we hold the
+    the username and password.  We do this so we can pass this object
+    around and not have to pass the user name and password all over 
+    the place.  Note: It was pointed out that this functionality may be
+    better placed in MySQLBase itself, and if that happens this code
+    should be removed and that new code should be used instead.
+    """
     def __init__(self, dbHostName, portNumber, user, password):
+        """Creates a connection to a MySQL server
+        @param dbHostName: a server where the MySQL daemon resides
+        @param portNumber: the port number the MySQL daemon is listening on
+        @param user: the user name to connect as
+        @param password: the users's password
+        """
         MySQLBase.__init__(self, dbHostName, portNumber)
         self.user = user
         self.password = password
 
         self.connect(user,password)
 
-    def execute(self, ins):
-        self.execCommand0(ins)
-
     def loadSql(self, filePath, database):
+        """Load an SQL file into a database
+        @param filePath: the SQL file to load
+        @param database: the database to use
+        """
         self.loadSqlScript(filePath, self.user, self.password, database)

@@ -22,7 +22,7 @@
 import eups
 import os
 import re
-from record import Record
+from lsst.ctrl.stats.records.record import Record
 from lsst.ctrl.stats.reader import Reader
 from lsst.ctrl.stats.classifier import Classifier
 
@@ -33,6 +33,10 @@ class LogIngestor(object):
     tables.
     """
     def __init__(self, dbm, database):
+        """Sets up the database tables which will be written to
+        @param dbm: a database manager object
+        @param database: the database name to write to
+        """
         self.dbm = dbm
 
         submissionsTableName = "submissions"
@@ -63,9 +67,13 @@ class LogIngestor(object):
         self.totalsTable = database+"."+totalsTableName
 
     def ingest(self, filename):
+        """Read in a Condor event log, group records per Condor ID, 
+        consolidate that information, and put it into database tables.
+        @param filename: a Condor event log
+        """
         # read and parse in the Condor log
         reader = Reader(filename)
-        # get the record groups, which are grouped by job
+        # get the record groups, which are grouped by condor id
         records = reader.getRecords()
 
         classifier = Classifier()
@@ -74,12 +82,12 @@ class LogIngestor(object):
             # add submission records
             for ent in entries:
                 ins = ent.getInsertString(self.submissionsTable)
-                self.dbm.execute(ins)
+                self.dbm.execCommand0(ins)
             # add update records
             for ent in updateEntries:
                 ins = ent.getInsertString(self.updatesTable)
-                self.dbm.execute(ins)
+                self.dbm.execCommand0(ins)
             # add total entry
             ins = totalsRecord.getInsertString(self.totalsTable)
-            self.dbm.execute(ins)
+            self.dbm.execCommand0(ins)
 

@@ -31,7 +31,6 @@ from aborted import Aborted
 from evicted import Evicted
 from shadowException import ShadowException
 from held import Held
-from recordList import RecordList
 from executableError import ExecutableError
 from checkpointed import Checkpointed
 from generic import Generic
@@ -52,8 +51,3 @@ from socketReconnectFailure import SocketReconnectFailure
 from gridResourceUp import GridResourceUp
 from gridResourceDown import GridResourceDown
 from submittedToGrid import SubmittedToGrid
-from condorEvents import CondorEvents
-from reader import Reader
-from submissionsRecord import SubmissionsRecord
-from totalsRecord import TotalsRecord
-from updatesRecord import UpdatesRecord

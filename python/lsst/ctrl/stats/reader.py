@@ -27,15 +27,20 @@ from condorEvents import CondorEvents
 from recordList import RecordList
 
 class Reader(object):
+    """Reads in a Condor log file
+    """
     def __init__(self, inputFile):
+        """Read a Condor log file, classifying all the records into Record
+        objects.
+        """
         self.recordList = RecordList()
         recordLines = []
 
-        t = os.path.getmtime(inputFile)
-        fileModified = datetime.datetime.fromtimestamp(t)
         # For some reason, condor doesn't put the year on the date,
         # so the nearest guess we can make is by looking at the file modified
         # info, and use that year.
+        t = os.path.getmtime(inputFile)
+        fileModified = datetime.datetime.fromtimestamp(t)
         year = fileModified.year
 
         file = open(inputFile)
@@ -58,9 +63,22 @@ class Reader(object):
                     recordLines.append(line)
 
     def getRecords(self):
+        """Accessor to a list of all Records
+        """
         return self.recordList.getRecords()
 
     def classify(self, year, lines):
+        """classify a group of text lines into Record type
+        @param year: the year this file was written.
+        @param lines: a group of lines in comprising a record
+        @return a record of the type the lines represent
+        """
+
+        # all records have an event type;  look that up first, to
+        # see what type of object it corresponds to, and hand the
+        # parameters to that object, because it will know how to
+        # parse itself.
+
         pat = r"(?P<event>\d\d\d)"
         values = re.search(pat,lines[0]).groupdict()
         eventNumber = values["event"]

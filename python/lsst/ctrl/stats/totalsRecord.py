@@ -23,6 +23,9 @@ import MySQLdb
 from submissionsRecord import SubmissionsRecord
 
 class TotalsRecord(SubmissionsRecord):
+    """Representation of a "totals" SQL table row.  Note that the names
+    here must match those of the SQL columns.
+    """
     def __init__(self, rec):
         SubmissionsRecord.__init__(self, rec)
         self.firstSubmitTime = "0000-00-00 00:00:00"

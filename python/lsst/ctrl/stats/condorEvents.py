@@ -20,8 +20,7 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 import re
-from record import Record
-from lsst.ctrl.stats import *
+from lsst.ctrl.stats.records import *
 
 class CondorEvents(object):
         """

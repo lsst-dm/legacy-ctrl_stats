@@ -21,10 +21,17 @@
 #
 import MySQLdb
 class DbRecord(object):
+    """Base class for database record objects.  This object uses introspection
+    to discover the names of member variables used in subclasses to create
+    it's output.  This allows the additions/deletions of fields in a
+    subclassed object without having to make changes to methods.  
 
-    def printValues(self, obj):
-        """uses introspection to print all values for member variables for
-        subclasses of this class
+    The names of the fields in those objects are expected to match those 
+    of the database table in which they are being written.
+    """
+
+    def printValues(self):
+        """Print all values for member variables for subclasses of this class
         """
         members = [attr for attr in dir(self) if not callable(getattr(self,attr)) and not attr.startswith("__")]
         for mem in members:
@@ -32,8 +39,9 @@ class DbRecord(object):
             print mem, "=", value
 
     def getInsertString(self, tableName):
-        """uses introspection to create insert string for values for the
-        classes which subclass this class.
+        """Create insert string for values for the member variables of 
+        the class.
+        @param tableName: the table name in which this record will be put
         """
         members = [attr for attr in dir(self) if not callable(getattr(self,attr)) and not attr.startswith("__")]
         cmd = "INSERT INTO %s (" % (tableName)

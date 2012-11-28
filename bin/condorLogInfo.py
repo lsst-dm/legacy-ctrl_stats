@@ -41,7 +41,8 @@ def printRecords(job):
                 print name, rec.describe()
     print
 
-if __name__ == "__main__":
+
+def run():
 
     basename = os.path.basename(sys.argv[0])
 
@@ -71,3 +72,5 @@ if __name__ == "__main__":
                 if job in records:
                     printRecords(job)
         
+if __name__ == "__main__":
+    run()
