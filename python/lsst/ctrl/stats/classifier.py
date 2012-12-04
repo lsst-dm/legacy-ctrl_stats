@@ -163,24 +163,24 @@ class Classifier(object):
         totalsEntry.submissions = len(entries)
 
         slotSet = set()
-        for rec in entries:
+        for ent in entries:
             # global number of bytesSent for this record group
-            totalsEntry.totalBytesSent += rec.bytesSent
+            totalsEntry.totalBytesSent += ent.bytesSent
             # global number of bytesReceived for this record group
-            totalsEntry.totalBytesReceived += rec.bytesReceived
+            totalsEntry.totalBytesReceived += ent.bytesReceived
             # number of times execution started
-            if rec.executionStartTime != "0000-00-00 00:00:00":
+            if ent.executionStartTime != "0000-00-00 00:00:00":
                 totalsEntry.executions += 1
             # number of times termination occurred because of shadow exceptions
-            if rec.terminationCode == CondorEvents.ShadowExceptionEvent:
+            if ent.terminationCode == CondorEvents.ShadowExceptionEvent:
                 totalsEntry.shadowException += 1
             # number of times termination occurred because of socket
             # reconnection failures
-            elif rec.terminationCode == CondorEvents.SocketReconnectFailureEvent:
+            elif ent.terminationCode == CondorEvents.SocketReconnectFailureEvent:
                 totalsEntry.socketReconnectFailure += 1
             # if execution occured, add it to the lists of unique hosts
-            if rec.executionHost is not None:
-                slotSet.add(rec.executionHost)
+            if ent.executionHost is not None:
+                slotSet.add(ent.executionHost)
         # the total number of unique slots used
         totalsEntry.slotsUsed = len(slotSet)
         # the total number of unique hosts used, keeping in mind that one

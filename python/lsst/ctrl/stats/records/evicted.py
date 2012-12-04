@@ -60,6 +60,7 @@ class Evicted(Record):
             pat = r":\s+(?P<request>\d+)$"
             self.diskRequest = self.extract(pat,line,"request")
 
+        pat = r":\s+(?P<usage>\d+)\s+(?P<request>\d+)$"
         self.memoryUsage = "0"
         self.memoryRequest = "0"
         line = lines[9].strip()

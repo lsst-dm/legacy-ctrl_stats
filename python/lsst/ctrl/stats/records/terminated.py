@@ -61,7 +61,7 @@ class Terminated(Record):
             pat = r":\s+(?P<request>\d+)$"
             self.diskRequest = int(self.extract(pat,line,"request"))
 
-        self.memoryUsage = "-"
+        self.memoryUsage = 0
         line = lines[13].strip()
         values = re.search(pat,line)
         if values is not None:

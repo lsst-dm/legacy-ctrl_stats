@@ -44,32 +44,23 @@ class DbRecord(object):
         @param tableName: the table name in which this record will be put
         """
         members = [attr for attr in dir(self) if not callable(getattr(self,attr)) and not attr.startswith("__")]
-        cmd = "INSERT INTO %s (" % (tableName)
-        first = True
-        for mem in members:
-            if first:
-                add = mem
-                first = False
-            else:
-                add = ", "+mem
-            cmd = cmd+add
-        cmd = cmd+") VALUES ("
-        first = True
-        for mem in members:
+
+        # columns names
+        columns = ",".join(members)
+
+        # MySQL escaped strings and values
+        valueList = []
+        for  mem in members:
             value = getattr(self, mem)
             if value is None:
                 value = ""
-            if first:
-                if type(value) == type(str()):
-                    add = "'"+MySQLdb.escape_string(value)+"'"
-                else:
-                    add = str(value)
-                first = False
+            if type(value) == type(str()):
+                value = "'"+MySQLdb.escape_string(value)+"'"
             else:
-                if type(value) == type(str()):
-                    add = ", '"+MySQLdb.escape_string(value)+"'"
-                else:
-                    add = ", "+str(value)
-            cmd = cmd+add
-        cmd = cmd+")"
+                value = str(value)
+            valueList.append(value)
+        values = ",".join(valueList)
+
+        cmd = "INSERT INTO %s (%s) VALUES (%s)" % (tableName, columns, values)
+    
         return cmd

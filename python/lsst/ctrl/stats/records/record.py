@@ -89,8 +89,6 @@ class Record(object):
         sysHours = values["sysHours"]
         sysMinutes = values["sysMinutes"]
         sysSeconds = values["sysSeconds"]
-        #usr = usrHours+":"+usrMinutes+":"+usrSeconds
-        #sys = sysHours+":"+sysMinutes+":"+sysSeconds
         usr = int(usrHours)*3600+int(usrMinutes)*60+int(usrSeconds)
         sys = int(sysHours)*3600+int(sysMinutes)*60+int(sysSeconds)
         return usr, sys
@@ -98,3 +96,6 @@ class Record(object):
     def describe(self):
         s = "%s %s %s" % (self.event, self.condorId, self.timestamp)
         return s
+
+    def str(self):
+        return "%s, %s" % (self.__class__.__name__,rec.timestamp)
