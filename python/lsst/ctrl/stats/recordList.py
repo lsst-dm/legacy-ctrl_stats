@@ -32,16 +32,16 @@ class RecordList(object):
         Condor ID
         @param rec: a Condor event record object
         """
-        #condorId = rec.condorId
-        #if self.records.has_key(condorId):
-        #    recordGroup = self.records[condorId]
-        #    recordGroup.append(rec)
-        #else:
-        #    recordGroup = []
-        #    recordGroup.append(rec)
-        #    self.records[condorId] = recordGroup
-        self.records.get(rec.condorId, []).append(rec)
-        print self.records
+        condorId = rec.condorId
+        if self.records.has_key(condorId):
+            recordGroup = self.records[condorId]
+            recordGroup.append(rec)
+        else:
+            recordGroup = []
+            recordGroup.append(rec)
+            self.records[condorId] = recordGroup
+        # not equivalent
+        #self.records.get(rec.condorId, []).append(rec)
 
     def getRecords(self):
         """Accessor which returns all the record lists

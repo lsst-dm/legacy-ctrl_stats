@@ -29,11 +29,76 @@ class Classifier(object):
     """Takes a group of Condor event records and classifies them into 
     groups of summary records
     """
+    def createUpdatesRecord(self, entry, rec):
+        """Create a new UpdatesRecord and fill that in
+        """
+        updateEntry = UpdatesRecord()
+        updateEntry.condorId = entry.condorId
+        updateEntry.dagNode = entry.dagNode
+        updateEntry.executionHost = entry.executionHost
+        updateEntry.timestamp = rec.timestamp
+        updateEntry.imageSize = rec.imageSize
+        updateEntry.memoryUsageMb = rec.memoryUsageMb
+        updateEntry.residentSetSizeKb = rec.residentSetSizeKb
+        return updateEntry
+
+    def recordTermination(self, entry, rec):
+        """Record fields after we've received a termination record
+        """
+        entry.executionStopTime = rec.timestamp
+        entry.userRunRemoteUsage = rec.userRunRemoteUsage
+        entry.sysRunRemoteUsage = rec.sysRunRemoteUsage
+        entry.bytesSent = rec.runBytesSent
+        entry.bytesReceived = rec.runBytesReceived
+        entry.finalDiskUsageKb = rec.diskUsage
+        entry.finalDiskRequestKb = rec.diskRequest
+        entry.finalMemoryUsageMb = rec.memoryUsage
+        entry.finalMemoryRequestMb = rec.memoryRequest
+        entry.terminationTime = rec.timestamp
+        entry.terminationCode = rec.event
+        entry.terminationReason = "Terminated normally"
+    def recordEviction(self, entry, rec):
+        """Record eviction  information
+        """
+        self.recordTerminationInfo(entry, rec)
+        #entry.terminationTime = rec.timestamp
+        #entry.terminationCode = rec.event
+        #entry.terminationReason = rec.reason
+        entry.userRunRemoteUsage = rec.userRunRemoteUsage
+        entry.sysRunRemoteUsage = rec.sysRunRemoteUsage
+        entry.finalDiskUsageKb = rec.diskUsage
+        entry.finalDiskRequestKb = rec.diskRequest
+        entry.finalMemoryUsageMb = rec.memoryUsage
+        entry.finalMemoryRequestMb = rec.memoryRequest
+        entry.bytesSent = rec.runBytesSent 
+        entry.bytesReceived = rec.runBytesReceived
+
+    def updateJobInformation(self, entry, rec):
+        """Update entry with record's information
+        """
+        entry.updateImageSize = rec.imageSize
+        entry.updateMemoryUsageMb = rec.memoryUsageMb
+        entry.updateResidentSetSizeKb = rec.residentSetSizeKb
+
+    def recordTerminationInfo(self, entry, rec):
+        """Record termination information
+        """
+        entry.terminationCode = rec.event
+        entry.terminationTime = rec.timestamp
+        entry.terminationReason = rec.reason
+
+    def createResubmissionRecord(self, entry, rec):
+        rec = SubmissionsRecord()
+        rec.condorId = rec.condorId
+        rec.dagNode = entry.dagNode
+        rec.submitTime = rec.timestamp
+        return rec
+
     def classify(self, records):
         """Classify a list of Condor event records into secondary 
         database records, recording statistics about data in the list.
         @param records: list containing Condor event records
-        @return: list of submissions records, a totalsRecord and a list of updates records
+        @return: list of submissions, a totalsRecord and a list of updates
         return entries, totalsRecord, updateEntries
         """
 
@@ -51,7 +116,7 @@ class Classifier(object):
                 entry.dagNode = rec.dagNode
                 entry.submitTime = rec.timestamp
             elif rec.event == CondorEvents.ExecutingEvent:
-                # only record the first time this is seen for this
+                # Only record the first time this is seen for this
                 # entry records, since Condor can spit out multiple
                 # ExecutingEvents in a row without anything happening
                 # (aborts, restarts, etc) in between.  (As per Condor docs).
@@ -60,57 +125,23 @@ class Classifier(object):
                     entry.executionStartTime = rec.timestamp
                 fExecuting = True
             elif rec.event == CondorEvents.UpdatedEvent:
-                # create a new update record and fill that in
-                updateEntry = UpdatesRecord()
-                updateEntry.condorId = entry.condorId
-                updateEntry.dagNode = entry.dagNode
-                updateEntry.executionHost = entry.executionHost
-                updateEntry.timestamp = rec.timestamp
-                updateEntry.imageSize = rec.imageSize
-                updateEntry.memoryUsageMb = rec.memoryUsageMb
-                updateEntry.residentSetSizeKb = rec.residentSetSizeKb
+                updateEntry = self.createUpdatesRecord(entry, rec)
                 updateEntries.append(updateEntry)
     
-                # update the current records information
-                # for this entry
-                entry.updateImageSize = rec.imageSize
-                entry.updateMemoryUsageMb = rec.memoryUsageMb
-                entry.updateResidentSetSizeKb = rec.residentSetSizeKb
+                self.updateJobInformation(entry, rec)
             elif rec.event == CondorEvents.TerminatedEvent:
                 # termination occurred without some kind of Condor
                 # incident.
-                entry.executionStopTime = rec.timestamp
-                entry.userRunRemoteUsage = rec.userRunRemoteUsage
-                entry.sysRunRemoteUsage = rec.sysRunRemoteUsage
-                entry.bytesSent = rec.runBytesSent
-                entry.bytesReceived = rec.runBytesReceived
-                entry.finalDiskUsageKb = rec.diskUsage
-                entry.finalDiskRequestKb = rec.diskRequest
-                entry.finalMemoryUsageMb = rec.memoryUsage
-                entry.finalMemoryRequestMb = rec.memoryRequest
-                entry.terminationTime = rec.timestamp
-                entry.terminationCode = rec.event
-                entry.terminationReason = "Terminated normally"
+                self.recordTermination(entry, rec)
             elif rec.event == CondorEvents.HeldEvent:
-                # the job was held, which means it stopped
+                # the job was held, which effectively means it stopped,
+                # in our context
                 fEnded = True
-                entry.terminationCode = rec.event
-                entry.terminationTime = rec.timestamp
-                entry.terminationReason = rec.reason
+                self.recordTerminationInfo(entry, rec)
             elif rec.event == CondorEvents.EvictedEvent:
                 # job was removed, either by condor or the user
                 fEnded = True
-                entry.terminationTime = rec.timestamp
-                entry.terminationCode = rec.event
-                entry.terminationReason = rec.reason
-                entry.userRunRemoteUsage = rec.userRunRemoteUsage
-                entry.sysRunRemoteUsage = rec.sysRunRemoteUsage
-                entry.finalDiskUsageKb = rec.diskUsage
-                entry.finalDiskRequestKb = rec.diskRequest
-                entry.finalMemoryUsageMb = rec.memoryUsage
-                entry.finalMemoryRequestMb = rec.memoryRequest
-                entry.bytesSent = rec.runBytesSent 
-                entry.bytesReceived = rec.runBytesReceived
+                self.recordEviction(entry, rec)
             elif rec.event == CondorEvents.AbortedEvent:
                 # job was aborted
                 if not fEnded:
@@ -120,30 +151,18 @@ class Classifier(object):
                     entry.terminationTime = rec.timestamp
                 fEnded = False
             elif rec.event == CondorEvents.ShadowExceptionEvent:
+                self.recordTerminationInfo(entry, rec)
                 # something happened with the shadow daemon, and this
                 # job is going to be rescheduled.
-                entry.terminationCode = rec.event
-                entry.terminationTime = rec.timestamp
-                entry.terminationReason = rec.reason
                 entries.append(entry)
-                nextEntry = SubmissionsRecord()
-                nextEntry.condorId = rec.condorId
-                nextEntry.dagNode = entry.dagNode
-                nextEntry.submitTime = rec.timestamp
-                entry = nextEntry
+                entry = self.createResubmissionRecord(self, entry, rec)
                 fExecuting = False
             elif rec.event == CondorEvents.SocketReconnectFailureEvent:
+                self.recordTerminationInfo(entry, rec)
                 # lost communication with execution node
                 # this resubmits, so we create a new record
-                entry.terminationCode = rec.event
-                entry.terminationTime = rec.timestamp
-                entry.terminationReason = rec.reason
                 entries.append(entry)
-                nextEntry = SubmissionsRecord()
-                nextEntry.condorId = rec.condorId
-                nextEntry.dagNode = entry.dagNode
-                nextEntry.submitTime = rec.timestamp
-                entry = nextEntry
+                entry = self.createResubmissionRecord(self, entry, rec)
                 fExecuting = False
         entries.append(entry)
         totalsRecord = self.tabulate(records, entries)
