@@ -26,7 +26,7 @@ usage: condorLogIngest.py [-h] -H HOST [-p PORT] -d DATABASE -f FILENAMES
                           [FILENAMES ...] [-v]
 
 example:
-condorLogIngest.py -h lsst10 -d testing -f worker.log
+condorLogIngest.py -H lsst10 -d testing -f worker.log
 
 -------------
 condorDirectoryIngest - given a directory in ~/condor_scratch, take the

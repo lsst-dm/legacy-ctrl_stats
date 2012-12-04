@@ -20,9 +20,20 @@
 # the GNU General Public License along with this program.  If not, 
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-#
-# given a Condor work directory, grab the post, pre and worker logs and
+
+# Given a Condor work directory, grab the post, pre and worker logs and
 # ingest them into the database.
+#
+# usage: condorDirectoryIngest -H HOST [-p PORT] -d directory
+#
+# example:
+# condorDirectoryIngest -H lsst10 -p 3306 -d srp_2012_0925_160117
+#
+# Directory structure:
+#
+# workdir/ - dag and dagman output, error and log files
+# workdir/logs - output logs for jobs plus preJob and postJob condor log files
+# workdir/workers - condor job files and execution scripts used by dagman
 #
 set -- $(getopt H:p:d: "$@")
 

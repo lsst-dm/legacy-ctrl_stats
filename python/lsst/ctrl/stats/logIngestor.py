@@ -50,16 +50,16 @@ class LogIngestor(object):
 
         pkg = eups.productDir("ctrl_stats")
 
-        filePath = os.path.join(pkg,"etc","eventCodes.sql")
+        filePath = os.path.join(pkg,"sql","eventCodes.sql")
         dbm.loadSql(filePath, database)
 
-        filePath = os.path.join(pkg,"etc","submissions.sql")
+        filePath = os.path.join(pkg,"sql","submissions.sql")
         dbm.loadSql(filePath, database)
 
-        filePath = os.path.join(pkg,"etc","totals.sql")
+        filePath = os.path.join(pkg,"sql","totals.sql")
         dbm.loadSql(filePath, database)
 
-        filePath = os.path.join(pkg,"etc","updates.sql")
+        filePath = os.path.join(pkg,"sql","updates.sql")
         dbm.loadSql(filePath, database)
 
         self.submissionsTable = database+"."+submissionsTableName

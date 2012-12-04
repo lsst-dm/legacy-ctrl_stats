@@ -21,6 +21,13 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
+# condorLogIngest - ingest Condor log file(s) into a database
+#
+# examples:
+#
+# condorLogIngest.py -H lsst10 -d testing -f worker.log
+# condorLogIngest.py -H lsst10 -p 3306 -d testing2 -f worker-pre.log worker.log 
+
 import os, sys
 import argparse
 from lsst.ctrl.stats.databaseManager import DatabaseManager
@@ -47,8 +54,6 @@ def run():
     #
     # get database authorization info
     #
-    home = os.getenv("HOME")
-    pol = Policy(os.path.join(home,".lsst","db-auth.paf"))
     
     dbAuth = DbAuth()
     user = dbAuth.username(host, str(port))

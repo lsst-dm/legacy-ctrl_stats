@@ -26,28 +26,35 @@ from lsst.ctrl.stats.reader import Reader
 from lsst.ctrl.stats.condorEvents import CondorEvents
 
 class test1(unittest.TestCase):
-    def setup(self):
-        None
-
-    def test1(self):
+    def setUp(self):
         filename = os.path.join("tests","testfiles","reader_test.log")
         reader = Reader(filename)
-        records = reader.getRecords()
-        self.assertEqual(len(records), 3)
-        self.assertTrue("062.000.000" in records)
-        self.assertTrue("063.000.000" in records)
-        self.assertTrue("064.000.000" in records)
-        rec = records["062.000.000"][0]
+        self.records = reader.getRecords()
+
+    def test1(self):
+        # check to see we have the number of records we expect
+        self.assertEqual(len(self.records), 3)
+
+    def test2(self):
+        # check validity of Submitted record
+        self.assertIn("062.000.000", self.records)
+        rec = self.records["062.000.000"][0]
         self.assertEqual(rec.__class__.__name__, "Submitted")
         self.assertEqual(rec.dagNode, "A1")
         self.assertEqual(rec.event, CondorEvents.SubmittedEvent)
 
-        rec = records["062.000.000"][1]
+    def test3(self):
+        # check validity of Executing record
+        self.assertIn("062.000.000", self.records)
+        rec = self.records["062.000.000"][1]
         self.assertEqual(rec.__class__.__name__, "Executing")
         self.assertEqual(rec.event, CondorEvents.ExecutingEvent)
         self.assertEqual(rec.executingHostAddr, "141.142.225.136:41156")
 
-        rec = records["062.000.000"][2]
+    def test4(self):
+        # check validity of first Updated record
+        self.assertIn("062.000.000", self.records)
+        rec = self.records["062.000.000"][2]
         self.assertEqual(rec.__class__.__name__, "Updated")
         self.assertEqual(rec.event, CondorEvents.UpdatedEvent)
         self.assertEqual(rec.imageSize, 272192)
@@ -55,11 +62,17 @@ class test1(unittest.TestCase):
         self.assertEqual(rec.residentSetSizeKb, 40640)
         self.assertEqual(rec.timestamp, "2012-10-17 20:00:07")
 
-        rec = records["062.000.000"][3]
+    def test5(self):
+        # check validity of second Updated record
+        self.assertIn("062.000.000", self.records)
+        rec = self.records["062.000.000"][3]
         self.assertEqual(rec.__class__.__name__, "Updated")
         self.assertEqual(rec.event, CondorEvents.UpdatedEvent)
 
-        rec = records["062.000.000"][4]
+    def test6(self):
+        # check validity of Terminated record
+        self.assertIn("062.000.000", self.records)
+        rec = self.records["062.000.000"][4]
         self.assertEqual(rec.__class__.__name__, "Terminated")
         self.assertEqual(rec.event, CondorEvents.TerminatedEvent)
         self.assertEqual(rec.memoryRequest, 40)
