@@ -44,3 +44,6 @@ class Submitted(Record):
         desc = super(Submitted, self).describe()
         s = "%s condorId=%s dagNode=%s" % (self.timestamp, self.condorId, self.dagNode)
         return s
+
+eventClass = Submitted
+eventCode = "000"

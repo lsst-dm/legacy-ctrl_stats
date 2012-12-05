@@ -35,3 +35,6 @@ class Aborted(Record):
     def describe(self):
         s = "%s %s" % (self.timestamp, self.reason)
         return s
+
+eventClass = Aborted
+eventCode = "009"

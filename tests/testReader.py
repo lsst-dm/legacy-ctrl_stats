@@ -22,8 +22,8 @@
 #
 import os
 import unittest
+import lsst.ctrl.stats.records as recordslib
 from lsst.ctrl.stats.reader import Reader
-from lsst.ctrl.stats.condorEvents import CondorEvents
 
 class test1(unittest.TestCase):
     def setUp(self):
@@ -41,14 +41,14 @@ class test1(unittest.TestCase):
         rec = self.records["062.000.000"][0]
         self.assertEqual(rec.__class__.__name__, "Submitted")
         self.assertEqual(rec.dagNode, "A1")
-        self.assertEqual(rec.event, CondorEvents.SubmittedEvent)
+        self.assertEqual(rec.event, recordslib.submitted.eventCode)
 
     def test3(self):
         # check validity of Executing record
         self.assertIn("062.000.000", self.records)
         rec = self.records["062.000.000"][1]
         self.assertEqual(rec.__class__.__name__, "Executing")
-        self.assertEqual(rec.event, CondorEvents.ExecutingEvent)
+        self.assertEqual(rec.event, recordslib.executing.eventCode)
         self.assertEqual(rec.executingHostAddr, "141.142.225.136:41156")
 
     def test4(self):
@@ -56,7 +56,7 @@ class test1(unittest.TestCase):
         self.assertIn("062.000.000", self.records)
         rec = self.records["062.000.000"][2]
         self.assertEqual(rec.__class__.__name__, "Updated")
-        self.assertEqual(rec.event, CondorEvents.UpdatedEvent)
+        self.assertEqual(rec.event, recordslib.updated.eventCode)
         self.assertEqual(rec.imageSize, 272192)
         self.assertEqual(rec.memoryUsageMb, 40)
         self.assertEqual(rec.residentSetSizeKb, 40640)
@@ -67,14 +67,14 @@ class test1(unittest.TestCase):
         self.assertIn("062.000.000", self.records)
         rec = self.records["062.000.000"][3]
         self.assertEqual(rec.__class__.__name__, "Updated")
-        self.assertEqual(rec.event, CondorEvents.UpdatedEvent)
+        self.assertEqual(rec.event, recordslib.updated.eventCode)
 
     def test6(self):
         # check validity of Terminated record
         self.assertIn("062.000.000", self.records)
         rec = self.records["062.000.000"][4]
         self.assertEqual(rec.__class__.__name__, "Terminated")
-        self.assertEqual(rec.event, CondorEvents.TerminatedEvent)
+        self.assertEqual(rec.event, recordslib.terminated.eventCode)
         self.assertEqual(rec.memoryRequest, 40)
         self.assertEqual(rec.memoryUsage, 40)
         self.assertEqual(rec.runBytesReceived, 1449)

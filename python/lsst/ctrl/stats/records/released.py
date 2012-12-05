@@ -27,3 +27,6 @@ class Released(Record):
     """
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
+
+eventClass = Released
+eventCode = "013"

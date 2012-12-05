@@ -22,9 +22,9 @@
 #
 import os
 import unittest
+import lsst.ctrl.stats.records as recordslib
 from lsst.ctrl.stats.reader import Reader
 from lsst.ctrl.stats.classifier import Classifier
-from lsst.ctrl.stats.condorEvents import CondorEvents
 
 class test1(unittest.TestCase):
 
@@ -58,7 +58,7 @@ class test1(unittest.TestCase):
         self.assertEqual(rec.bytesSent, 25595)
         self.assertEqual(rec.bytesReceived, 1449)
         self.assertEqual(rec.terminationTime, "2012-10-17 20:00:14")
-        self.assertEqual(rec.terminationCode, CondorEvents.TerminatedEvent)
+        self.assertEqual(rec.terminationCode, recordslib.terminated.eventCode)
 
 
     def test2(self):

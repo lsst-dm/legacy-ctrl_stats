@@ -43,3 +43,6 @@ class Held(Record):
         desc = super(Held, self).describe()
         s = "%s reason=%s" % (self.timestamp, self.reason)
         return s
+
+eventClass = Held
+eventCode = "012"

@@ -20,10 +20,10 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 import sys
-from condorEvents import CondorEvents
 from submissionsRecord import SubmissionsRecord
 from totalsRecord import TotalsRecord
 from updatesRecord import UpdatesRecord
+import lsst.ctrl.stats.records as recordslib
 
 class Classifier(object):
     """Takes a group of Condor event records and classifies them into 
@@ -111,11 +111,11 @@ class Classifier(object):
         fEnded = False
         imageSize = 0
         for rec in records:
-            if rec.event == CondorEvents.SubmittedEvent:
+            if rec.event == recordslib.submitted.eventCode:
                 entry.condorId = rec.condorId
                 entry.dagNode = rec.dagNode
                 entry.submitTime = rec.timestamp
-            elif rec.event == CondorEvents.ExecutingEvent:
+            elif rec.event == recordslib.executing.eventCode:
                 # Only record the first time this is seen for this
                 # entry records, since Condor can spit out multiple
                 # ExecutingEvents in a row without anything happening
@@ -124,25 +124,25 @@ class Classifier(object):
                     entry.executionHost = rec.executingHostAddr
                     entry.executionStartTime = rec.timestamp
                 fExecuting = True
-            elif rec.event == CondorEvents.UpdatedEvent:
+            elif rec.event == recordslib.updated.eventCode:
                 updateEntry = self.createUpdatesRecord(entry, rec)
                 updateEntries.append(updateEntry)
     
                 self.updateJobInformation(entry, rec)
-            elif rec.event == CondorEvents.TerminatedEvent:
+            elif rec.event == recordslib.terminated.eventCode:
                 # termination occurred without some kind of Condor
                 # incident.
                 self.recordTermination(entry, rec)
-            elif rec.event == CondorEvents.HeldEvent:
+            elif rec.event == recordslib.held.eventCode:
                 # the job was held, which effectively means it stopped,
                 # in our context
                 fEnded = True
                 self.recordTerminationInfo(entry, rec)
-            elif rec.event == CondorEvents.EvictedEvent:
+            elif rec.event == recordslib.evicted.eventCode:
                 # job was removed, either by condor or the user
                 fEnded = True
                 self.recordEviction(entry, rec)
-            elif rec.event == CondorEvents.AbortedEvent:
+            elif rec.event == recordslib.aborted.eventCode:
                 # job was aborted
                 if not fEnded:
                     if entry.terminationReason == None:
@@ -150,14 +150,14 @@ class Classifier(object):
                     entry.terminationCode = rec.event
                     entry.terminationTime = rec.timestamp
                 fEnded = False
-            elif rec.event == CondorEvents.ShadowExceptionEvent:
+            elif rec.event == recordslib.shadowException.eventCode:
                 self.recordTerminationInfo(entry, rec)
                 # something happened with the shadow daemon, and this
                 # job is going to be rescheduled.
                 entries.append(entry)
                 entry = self.createResubmissionRecord(self, entry, rec)
                 fExecuting = False
-            elif rec.event == CondorEvents.SocketReconnectFailureEvent:
+            elif rec.event == recordslib.socketReconnectFailure.eventCode:
                 self.recordTerminationInfo(entry, rec)
                 # lost communication with execution node
                 # this resubmits, so we create a new record
@@ -191,11 +191,11 @@ class Classifier(object):
             if ent.executionStartTime != "0000-00-00 00:00:00":
                 totalsEntry.executions += 1
             # number of times termination occurred because of shadow exceptions
-            if ent.terminationCode == CondorEvents.ShadowExceptionEvent:
+            if ent.terminationCode == recordslib.shadowException.eventCode:
                 totalsEntry.shadowException += 1
             # number of times termination occurred because of socket
             # reconnection failures
-            elif ent.terminationCode == CondorEvents.SocketReconnectFailureEvent:
+            elif ent.terminationCode == recordslib.socketReconnectFailure.eventCode:
                 totalsEntry.socketReconnectFailure += 1
             # if execution occured, add it to the lists of unique hosts
             if ent.executionHost is not None:
@@ -213,15 +213,15 @@ class Classifier(object):
         # the number of SocketLost events
         for rec in records:
             # the number of SocketReconnectionReestablished events
-            if rec.event == CondorEvents.SocketReestablishedEvent:
+            if rec.event == recordslib.socketReestablished.eventCode:
                 totalsEntry.socketReestablished += 1
             # the number of SocketLost events
-            elif rec.event == CondorEvents.SocketLostEvent:
+            elif rec.event == recordslib.socketLost.eventCode:
                 totalsEntry.socketLost += 1
             # the number of Evicted Events
-            elif rec.event == CondorEvents.EvictedEvent:
+            elif rec.event == recordslib.evicted.eventCode:
                 totalsEntry.evicted += 1
             # the number of Aborted Events
-            elif rec.event == CondorEvents.AbortedEvent:
+            elif rec.event == recordslib.aborted.eventCode:
                 totalsEntry.aborted += 1
         return totalsEntry

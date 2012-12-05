@@ -38,3 +38,7 @@ class Executing(Record):
     def describe(self):
         s = "%s host=%s" % (self.timestamp, self.executingHostAddr)
         return s
+
+
+eventClass = Executing
+eventCode = "001"

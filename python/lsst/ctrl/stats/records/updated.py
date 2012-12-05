@@ -48,3 +48,6 @@ class Updated(Record):
     def describe(self):
         s = "%s imageSize=%s" % (self.timestamp, self.imageSize)
         return s
+
+eventClass = Updated
+eventCode = "006"

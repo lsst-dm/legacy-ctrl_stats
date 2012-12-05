@@ -29,3 +29,6 @@ class Checkpointed(Record):
     """
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
+
+eventClass = Checkpointed
+eventCode = "003"

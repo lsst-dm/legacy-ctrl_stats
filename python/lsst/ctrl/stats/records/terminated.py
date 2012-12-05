@@ -77,3 +77,7 @@ class Terminated(Record):
         desc = super(Terminated, self).describe()
         s = "%s runUser=%s totalUser=%s" % (self.timestamp, self.userRunRemoteUsage, self.userTotalRemoteUsage)
         return s
+
+
+eventClass = Terminated
+eventCode = "005"

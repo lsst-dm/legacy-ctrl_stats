@@ -74,3 +74,7 @@ class Evicted(Record):
     def describe(self):
         s = "%s reason=%s" % (self.timestamp, self.reason)
         return s
+
+
+eventClass = Evicted
+eventCode = "004"
