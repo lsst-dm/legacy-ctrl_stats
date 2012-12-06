@@ -48,30 +48,8 @@ class Terminated(Record):
         self.totalBytesReceived = int(self.extract(pat,lines[9], "bytes"))
 
         
-        #pat = r":\s+(?P<usage>\d+)\s+(?P<request>\d+)$"
-        #
-        #self.diskUsage = 0
-        #line = lines[12].strip()
-        #values = re.search(pat,line)
-        #if values is not None:
-        #    val1, val2 = self.extractPair(pat,line,"usage","request")
-        #    self.diskUsage = int(val1)
-        #    self.diskRequest = int(val2)
-        #else:
-        #    pat = r":\s+(?P<request>\d+)$"
-        #    self.diskRequest = int(self.extract(pat,line,"request"))
         self.diskUsage, self.diskRequest = self.extractUsageRequest(lines[12])
 
-        #self.memoryUsage = 0
-        #line = lines[13].strip()
-        #values = re.search(pat,line)
-        #if values is not None:
-        #    val1, val2 = self.extractPair(pat,line,"usage","request")
-        #    self.memoryUsage = int(val1)
-        #    self.memoryRequest = int(val2)
-        #else:
-        #    pat = r":\s+(?P<request>\d+)$"
-        #    self.memoryRequest = int(self.extract(pat,line,"request"))
         self.memoryUsage, self.memoryRequest = self.extractUsageRequest(lines[13])
 
 
