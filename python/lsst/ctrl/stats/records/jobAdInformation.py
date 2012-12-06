@@ -29,3 +29,6 @@ class JobAdInformation(Record):
     """
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
+
+eventClass = JobAdInformation
+eventCode = "028"

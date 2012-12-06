@@ -28,3 +28,6 @@ class JobRemoteStatusKnownAgain(Record):
     """
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
+
+eventClass = JobRemoteStatusKnownAgain
+eventCode = "030"

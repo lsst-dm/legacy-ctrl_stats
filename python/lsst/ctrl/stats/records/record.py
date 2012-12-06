@@ -70,12 +70,22 @@ class Record(object):
         val2 = values[tag2]
         return val1, val2
 
-    def extractUsrSysTimesOLD(self, line):
-        pat = r"Usr \d+ " + \
-                r"(?P<usr>\d+:\d+:\d+), "  + \
-                r"Sys \d+ " + \
-                r"(?P<sys>\d+:\d+:\d+) "
-        return self.extractPair(pat, line, "usr", "sys")
+    def extractUsageRequest(self, line):
+        input = line.strip()
+
+        usage = 0
+        request = 0
+
+        pat = r":\s+(?P<usage>\d+)\s+(?P<request>\d+)$"
+        values = re.search(pat,input)
+        if values is not None:
+            val1, val2 = self.extractPair(pat,input,"usage","request")
+            usage = int(val1)
+            request = int(val2)
+        else:
+            pat = r":\s+(?P<request>\d+)$"
+            request = int(self.extract(pat,input,"request"))
+        return usage, request
 
     def extractUsrSysTimes(self, line):
         pat = r"Usr \d+ " + \
@@ -89,8 +99,6 @@ class Record(object):
         sysHours = values["sysHours"]
         sysMinutes = values["sysMinutes"]
         sysSeconds = values["sysSeconds"]
-        #usr = usrHours+":"+usrMinutes+":"+usrSeconds
-        #sys = sysHours+":"+sysMinutes+":"+sysSeconds
         usr = int(usrHours)*3600+int(usrMinutes)*60+int(usrSeconds)
         sys = int(sysHours)*3600+int(sysMinutes)*60+int(sysSeconds)
         return usr, sys
@@ -98,3 +106,6 @@ class Record(object):
     def describe(self):
         s = "%s %s %s" % (self.event, self.condorId, self.timestamp)
         return s
+
+    def str(self):
+        return "%s, %s" % (self.__class__.__name__,rec.timestamp)

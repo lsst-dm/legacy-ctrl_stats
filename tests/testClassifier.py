@@ -22,25 +22,22 @@
 #
 import os
 import unittest
+import lsst.ctrl.stats.records as recordslib
 from lsst.ctrl.stats.reader import Reader
 from lsst.ctrl.stats.classifier import Classifier
-from lsst.ctrl.stats.condorEvents import CondorEvents
 
 class test1(unittest.TestCase):
-    def setup(self):
-        None
 
-    def test1(self):
+    def setUp(self):
         filename = os.path.join("tests","testfiles","reader_test.log")
         reader = Reader(filename)
-        records = reader.getRecords()
+        self.records = reader.getRecords()
 
-        self.assertTrue("062.000.000" in records)
-        self.assertTrue("063.000.000" in records)
-        self.assertTrue("064.000.000" in records)
-
+    def test1(self):
+        # test that entries record is correct
         classifier = Classifier()
-        entries, total, updates = classifier.classify(records["063.000.000"])
+        self.assertIn("063.000.000", self.records)
+        entries, total, updates = classifier.classify(self.records["063.000.000"])
 
         rec = entries[0]
         self.assertEqual(rec.condorId, "063.000.000")
@@ -61,9 +58,14 @@ class test1(unittest.TestCase):
         self.assertEqual(rec.bytesSent, 25595)
         self.assertEqual(rec.bytesReceived, 1449)
         self.assertEqual(rec.terminationTime, "2012-10-17 20:00:14")
-        self.assertEqual(rec.terminationCode, CondorEvents.TerminatedEvent)
+        self.assertEqual(rec.terminationCode, recordslib.terminated.eventCode)
 
 
+    def test2(self):
+        # test that total record is correct
+        classifier = Classifier()
+        self.assertIn("063.000.000", self.records)
+        entries, total, updates = classifier.classify(self.records["063.000.000"])
         self.assertEqual(total.firstSubmitTime, "2012-10-17 19:59:57")
         self.assertEqual(total.totalBytesSent, 25595)
         self.assertEqual(total.totalBytesReceived, 1449)
@@ -78,7 +80,11 @@ class test1(unittest.TestCase):
         self.assertEqual(total.slotsUsed, 1)
         self.assertEqual(total.hostsUsed, 1)
 
-        entries, total, updates = classifier.classify(records["062.000.000"])
+    def test3(self):
+        # test that updates records are correct
+        classifier = Classifier()
+        self.assertIn("062.000.000", self.records)
+        entries, total, updates = classifier.classify(self.records["062.000.000"])
         self.assertEqual(len(updates), 2)
 
         rec0 = updates[0]

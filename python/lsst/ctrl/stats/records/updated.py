@@ -33,8 +33,8 @@ class Updated(Record):
         
         self.imageSize = int(self.extract(pat,lines[0], "imageSize"))
         
-        self.memoryUsageMb = "0"
-        self.residentSetSizeKb = "0"
+        self.memoryUsageMb = 0
+        self.residentSetSizeKb = 0
         if len(lines) == 3:
             pat = "(?P<memoryUsage>[\d]+)"
             self.memoryUsageMb = int(self.extract(pat,lines[1],"memoryUsage"))
@@ -48,3 +48,6 @@ class Updated(Record):
     def describe(self):
         s = "%s imageSize=%s" % (self.timestamp, self.imageSize)
         return s
+
+eventClass = Updated
+eventCode = "006"

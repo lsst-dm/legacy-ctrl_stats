@@ -32,10 +32,10 @@ import os
 import sys
 from lsst.ctrl.stats.reader import Reader
 
-def printRecords(job):
+def printRecords(records, job, verbose):
     for rec in records[job]:
             name = rec.__class__.__name__
-            if args.verbose:
+            if verbose:
                 rec.printAll()
             else:
                 print name, rec.describe()
@@ -51,7 +51,6 @@ def run():
     parser.add_argument("-c", "--condorid", action="store", default=None, dest="condorIds", help="print only condorId(s)", nargs="+", type=str, required=False)
     parser.add_argument("-f", "--filenames", action="store", default=None, dest="filenames", help="condor log files", nargs="+", type=str, required=True)
 
-
     args = parser.parse_args()
 
     for filename in args.filenames:
@@ -65,12 +64,12 @@ def run():
         # print all the records
         if args.condorIds is None:
             for job in records:
-                printRecords(job)
+                printRecords(records, job, args.verbose)
         else:
             # print only the records with these condorIdss
             for job in args.condorIds:
                 if job in records:
-                    printRecords(job)
+                    printRecords(records, job, args.verbose)
         
 if __name__ == "__main__":
     run()

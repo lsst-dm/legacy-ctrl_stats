@@ -47,3 +47,6 @@ class ShadowException(Record):
             pat = r"(?P<bytes>[\d]+)"
             self.runBytesSent = int(self.extract(pat,lines[2],"bytes"))
             self.runBytesReceived = int(self.extract(pat,lines[3],"bytes"))
+
+eventClass = ShadowException
+eventCode = "007"

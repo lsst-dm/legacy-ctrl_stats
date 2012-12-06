@@ -48,28 +48,14 @@ class Evicted(Record):
         self.runBytesReceived = int(self.extract(pat,lines[5], "bytes"))
 
 
-        pat = r":\s+(?P<usage>\d+)\s+(?P<request>\d+)$"
+        self.diskUsage, self.diskRequest = self.extractUsageRequest(lines[8])
 
-        self.diskUsage = "0"
-        self.diskRequest = "0"
-        line = lines[8].strip()
-        values = re.search(pat,line)
-        if values is not None:
-            self.diskUsage, self.diskRequest = self.extractPair(pat,line,"usage","request")
-        else:
-            pat = r":\s+(?P<request>\d+)$"
-            self.diskRequest = self.extract(pat,line,"request")
-
-        self.memoryUsage = "0"
-        self.memoryRequest = "0"
-        line = lines[9].strip()
-        values = re.search(pat,line)
-        if values is not None:
-            self.memoryUsage, self.memoryRequest = self.extractPair(pat,line,"usage","request")
-        else:
-            pat = r":\s+(?P<request>\d+)$"
-            self.memoryRequest = self.extract(pat,line,"request")
+        self.memoryUsage, self.memoryRequest = self.extractUsageRequest(lines[9])
 
     def describe(self):
         s = "%s reason=%s" % (self.timestamp, self.reason)
         return s
+
+
+eventClass = Evicted
+eventCode = "004"

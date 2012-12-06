@@ -28,3 +28,6 @@ class SocketReestablished(Record):
     """
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
+
+eventClass = SocketReestablished
+eventCode = "023"

@@ -23,8 +23,8 @@ import os
 import sys
 import re
 import datetime
-from condorEvents import CondorEvents
 from recordList import RecordList
+import lsst.ctrl.stats.records
 
 class Reader(object):
     """Reads in a Condor log file
@@ -83,12 +83,19 @@ class Reader(object):
         values = re.search(pat,lines[0]).groupdict()
         eventNumber = values["event"]
 
-        if eventNumber in CondorEvents.events:
-            recType = CondorEvents.events[eventNumber]
-            rec = recType(year, lines)
+
+        if eventNumber in lsst.ctrl.stats.records.byCode:
+            rec = lsst.ctrl.stats.records.byCode[eventNumber](year,lines)
             return rec
         else:
             return None
+    
+        #if eventNumber in CondorEvents.events:
+        #    recType = CondorEvents.events[eventNumber]
+        #    rec = recType(year, lines)
+        #    return rec
+        #else:
+        #    return None
 
 if __name__ == "__main__":
     records = Reader(sys.argv[1])

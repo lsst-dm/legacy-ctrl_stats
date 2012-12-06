@@ -29,3 +29,6 @@ class Suspended(Record):
     """
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
+
+eventClass = Suspended
+eventCode = "010"

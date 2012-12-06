@@ -19,6 +19,7 @@
 # the GNU General Public License along with this program.  If not, 
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+
 from jobAdInformation import JobAdInformation
 from jobRemoteStatusUnknown import JobRemoteStatusUnknown
 from jobRemoteStatusKnownAgain import JobRemoteStatusKnownAgain
@@ -51,3 +52,45 @@ from socketReconnectFailure import SocketReconnectFailure
 from gridResourceUp import GridResourceUp
 from gridResourceDown import GridResourceDown
 from submittedToGrid import SubmittedToGrid
+
+import importlib
+__all__ = [
+"submitted",
+"executing",
+"terminated",
+"updated",
+"aborted",
+"evicted",
+"shadowException",
+"held",
+"executableError",
+"checkpointed",
+"generic",
+"unsuspended",
+"suspended",
+"released",
+"parallelNodeExecuted",
+"parallelNodeTerminated",
+"postscriptTerminated",
+"submittedToGlobus",
+"globusSubmitFailed",
+"globusResourceUp",
+"globusResourceDown",
+"remoteError",
+"socketLost",
+"socketReestablished",
+"socketReconnectFailure",
+"gridResourceUp",
+"gridResourceDown",
+"submittedToGrid",
+"jobAdInformation",
+"jobRemoteStatusUnknown",
+"jobRemoteStatusKnownAgain",
+"attributeUpdate"
+]
+
+byCode = {}
+
+for n in __all__:
+    m = importlib.import_module("lsst.ctrl.stats.records." + n)
+    byCode[m.eventCode] = m.eventClass  ## Index by number

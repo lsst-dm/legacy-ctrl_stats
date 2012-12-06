@@ -34,12 +34,14 @@ class RecordList(object):
         """
         condorId = rec.condorId
         if self.records.has_key(condorId):
-            list = self.records[condorId]
-            list.append(rec)
+            recordGroup = self.records[condorId]
+            recordGroup.append(rec)
         else:
-            list = []
-            list.append(rec)
-            self.records[condorId] = list
+            recordGroup = []
+            recordGroup.append(rec)
+            self.records[condorId] = recordGroup
+        # not equivalent
+        #self.records.get(rec.condorId, []).append(rec)
 
     def getRecords(self):
         """Accessor which returns all the record lists
@@ -53,7 +55,7 @@ class RecordList(object):
         for i in self.records:
             
            for rec in self.records[i]:
-                print i, rec.__class__.__name__, rec.timestamp
+                print i, rec
            print
         for i in self.records:
             print i 
@@ -67,5 +69,5 @@ class RecordList(object):
         for i in self.records:
             
            for rec in self.records[i]:
-                print i, rec.__class__.__name__, rec.timestamp
+                print i, rec
            print
