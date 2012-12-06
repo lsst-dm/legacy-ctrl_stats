@@ -70,12 +70,22 @@ class Record(object):
         val2 = values[tag2]
         return val1, val2
 
-    def extractUsrSysTimesOLD(self, line):
-        pat = r"Usr \d+ " + \
-                r"(?P<usr>\d+:\d+:\d+), "  + \
-                r"Sys \d+ " + \
-                r"(?P<sys>\d+:\d+:\d+) "
-        return self.extractPair(pat, line, "usr", "sys")
+    def extractUsageRequest(self, line):
+        input = line.strip()
+
+        usage = 0
+        request = 0
+
+        pat = r":\s+(?P<usage>\d+)\s+(?P<request>\d+)$"
+        values = re.search(pat,input)
+        if values is not None:
+            val1, val2 = self.extractPair(pat,input,"usage","request")
+            usage = int(val1)
+            request = int(val2)
+        else:
+            pat = r":\s+(?P<request>\d+)$"
+            request = int(self.extract(pat,input,"request"))
+        return usage, request
 
     def extractUsrSysTimes(self, line):
         pat = r"Usr \d+ " + \
