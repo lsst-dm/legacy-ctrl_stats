@@ -15,8 +15,9 @@ condor job id.  Note that the dag node can be submitted more than one time
 for a variety of reasons.  All of this information is captured in the
 database records.
 
+==============
 Usage
-=====
+==============
 The following commands are available:
 
 condorLogIngest.py - Takes a list of log files and ingests them into a
@@ -48,6 +49,33 @@ usage: condorLogInfo.py [-h] [-v] [-c CONDORIDS [CONDORIDS ...]] -f FILENAMES
 
 example:
 condorLogInfo.py -c 630.000.000 -f srp_2012_0925_160117/*nodes.log
+
+==============
+Notes extending lsst.ctrl.stats.records classes:
+==============
+
+These classes represent the information in Condor events (submitted, held,
+evicted, terminated, etc).   All of these classes subclass from Record.
+
+If new event types are added, they need to have the variables "eventClass"
+and "eventCode" defined, and they need to be added to the __init__.py file.
+This should allow the code to automatically register these classes so they'll
+be created as the classifier code encounters them.  Additional parsing code
+will likely need to be added for those classes.
+
+See the other records and __init__.py for additional information.
+
+==============
+DbRecord classes
+==============
+
+The DbRecord subclasses: SubmissionsRecord, UpdatesRecord, TotalsRecord are
+have member variables that are required to be matched to the columns in
+their SQL table counterparts.  When creating insertion strings for these 
+classes, the introspection code in DbRecord looks at member variables to
+create the correct insertion string.  This was done to make it easier to
+add new columns (or delete old ones) and still maintain the integrity of
+the insert string, and to print out record values for debuggging.
 
 -------------
 Further information can be found here:
