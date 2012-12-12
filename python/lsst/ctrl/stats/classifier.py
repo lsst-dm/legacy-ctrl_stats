@@ -88,11 +88,11 @@ class Classifier(object):
         entry.terminationReason = rec.reason
 
     def createResubmissionRecord(self, entry, rec):
-        rec = SubmissionsRecord()
-        rec.condorId = rec.condorId
-        rec.dagNode = entry.dagNode
-        rec.submitTime = rec.timestamp
-        return rec
+        newRec = SubmissionsRecord()
+        newRec.condorId = rec.condorId
+        newRec.dagNode = entry.dagNode
+        newRec.submitTime = rec.timestamp
+        return newRec
 
     def classify(self, records):
         """Classify a list of Condor event records into secondary 
@@ -155,14 +155,14 @@ class Classifier(object):
                 # something happened with the shadow daemon, and this
                 # job is going to be rescheduled.
                 entries.append(entry)
-                entry = self.createResubmissionRecord(self, entry, rec)
+                entry = self.createResubmissionRecord(entry, rec)
                 fExecuting = False
             elif rec.event == recordslib.socketReconnectFailure.eventCode:
                 self.recordTerminationInfo(entry, rec)
                 # lost communication with execution node
                 # this resubmits, so we create a new record
                 entries.append(entry)
-                entry = self.createResubmissionRecord(self, entry, rec)
+                entry = self.createResubmissionRecord(entry, rec)
                 fExecuting = False
         entries.append(entry)
         totalsRecord = self.tabulate(records, entries)
