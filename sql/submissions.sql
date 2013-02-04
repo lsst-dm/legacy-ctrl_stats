@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `submissions` (
   `condorId` varchar(24) default NULL,
   `dagNode` varchar(10) default NULL,
   `submitTime` datetime default NULL,
-  `executionHost` varchar(24) default NULL,
+  `executionHost` varchar(80) default NULL,
   `executionStartTime` datetime default NULL,
   `executionStopTime` datetime default NULL,
   `updateImageSize` int(11) default NULL,
