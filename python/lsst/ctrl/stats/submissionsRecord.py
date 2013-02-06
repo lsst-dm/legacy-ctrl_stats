@@ -48,6 +48,7 @@ class SubmissionsRecord(DbRecord):
             self.terminationTime = "0000-00-00 00:00:00"
             self.terminationCode = None
             self.terminationReason = None
+            self.slotName = None
         else:
             # this is used instead of copy to initialize values in
             # a superclass from values in object of this type
@@ -71,3 +72,4 @@ class SubmissionsRecord(DbRecord):
             self.terminationTime = rec.terminationTime
             self.terminationCode = rec.terminationCode
             self.terminationReason = rec.terminationReason
+            self.slotName = rec.slotName
