@@ -207,7 +207,9 @@ class Classifier(object):
             slotName = ent.slotName
         # the total number of unique slots used
         totalsEntry.slotsUsed = len(slotSet)
-        # last slot used is the successful one
+        # Last named slot used is the successful one
+        # (This isn't necessarily the last entry in "entries", i.e., it's
+        # not "entries[=1]"; it's the last time we saw a slot name).
         totalsEntry.slotName = slotName
         # the total number of unique hosts used, keeping in mind that one
         # host can have multiple slots
