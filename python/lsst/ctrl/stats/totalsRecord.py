@@ -41,3 +41,4 @@ class TotalsRecord(SubmissionsRecord):
         self.aborted = 0
         self.slotsUsed = 0
         self.hostsUsed = 0
+        self.slotName = None

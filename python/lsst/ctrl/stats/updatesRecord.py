@@ -34,3 +34,4 @@ class UpdatesRecord(DbRecord):
         self.imageSize = 0
         self.memoryUsageMb = 0
         self.residentSetSizeKb = 0
+        self.slotName = None

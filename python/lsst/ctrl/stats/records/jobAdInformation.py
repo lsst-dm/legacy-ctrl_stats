@@ -19,6 +19,8 @@
 # the GNU General Public License along with this program.  If not, 
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+import re
+
 from record import Record
 class JobAdInformation(Record):
     """
@@ -29,6 +31,21 @@ class JobAdInformation(Record):
     """
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
+
+
+        self.slotName = None
+        pat = r"MachineSlotName = \"(?P<slotname>\S+)\""
+        for line in lines:
+            if line.startswith("MachineSlotName"):
+                values = re.search(pat,line).groupdict()
+                self.slotName = values["slotname"]
+                if self.slotName == "$$(Name)":
+                    self.slotName = None
+                else:
+                    self.slotName = self.slotName.split("@")[0]
+                return
+                
+           
 
 eventClass = JobAdInformation
 eventCode = "028"

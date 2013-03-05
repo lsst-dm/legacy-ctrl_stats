@@ -40,6 +40,7 @@ class Classifier(object):
         updateEntry.imageSize = rec.imageSize
         updateEntry.memoryUsageMb = rec.memoryUsageMb
         updateEntry.residentSetSizeKb = rec.residentSetSizeKb
+        updateEntry.slotName = entry.slotName
         return updateEntry
 
     def recordTermination(self, entry, rec):
@@ -111,7 +112,9 @@ class Classifier(object):
         fEnded = False
         imageSize = 0
         for rec in records:
-            if rec.event == recordslib.submitted.eventCode:
+            if rec.event == recordslib.jobAdInformation.eventCode:
+                entry.slotName = rec.slotName
+            elif rec.event == recordslib.submitted.eventCode:
                 entry.condorId = rec.condorId
                 entry.dagNode = rec.dagNode
                 entry.submitTime = rec.timestamp
@@ -182,6 +185,7 @@ class Classifier(object):
         totalsEntry.submissions = len(entries)
 
         slotSet = set()
+        slotName = None
         for ent in entries:
             # global number of bytesSent for this record group
             totalsEntry.totalBytesSent += ent.bytesSent
@@ -200,8 +204,13 @@ class Classifier(object):
             # if execution occured, add it to the lists of unique hosts
             if ent.executionHost is not None:
                 slotSet.add(ent.executionHost)
+            slotName = ent.slotName
         # the total number of unique slots used
         totalsEntry.slotsUsed = len(slotSet)
+        # Last named slot used is the successful one
+        # (This isn't necessarily the last entry in "entries", i.e., it's
+        # not "entries[=1]"; it's the last time we saw a slot name).
+        totalsEntry.slotName = slotName
         # the total number of unique hosts used, keeping in mind that one
         # host can have multiple slots
         hostSet = set()
