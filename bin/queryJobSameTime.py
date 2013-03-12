@@ -82,10 +82,7 @@ def run():
 
     q1 = 'select dagNode, executionHost, unix_timestamp(executionStartTime), unix_timestamp(executionStopTime) from submissions order by executionStartTime'
     results = dbm.execCommandN(q1)
-    print len(results)
 
-    print results[0]
-    print "dagNode = "+results[0][0]
     #select count(distinct executionHost, slotName, executionStartTime, executionStopTime) from submissions where UNIX_TIMESTAMP(executionStartTime) >= UNIX_TIMESTAMP('2013-03-03 21:02:39') and UNIX_TIMESTAMP(executionStopTime) <= UNIX_TIMESTAMP('2013-03-03 21:10:41') order by executionStartTime
 
     entries = []
