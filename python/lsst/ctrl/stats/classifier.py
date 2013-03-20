@@ -142,9 +142,12 @@ class Classifier(object):
                 fEnded = True
                 self.recordTerminationInfo(entry, rec)
             elif rec.event == recordslib.evicted.eventCode:
-                # job was removed, either by condor or the user
-                fEnded = True
+                # job was removed, either by condor or the user,
+                # and this job will be rescheduled.
                 self.recordEviction(entry, rec)
+                entries.append(entry)
+                entry = self.createResubmissionRecord(entry, rec)
+                fExecuting = False
             elif rec.event == recordslib.aborted.eventCode:
                 # job was aborted
                 if not fEnded:
