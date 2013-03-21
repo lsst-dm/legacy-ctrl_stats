@@ -58,6 +58,7 @@ class Classifier(object):
         entry.terminationTime = rec.timestamp
         entry.terminationCode = rec.event
         entry.terminationReason = "Terminated normally"
+
     def recordEviction(self, entry, rec):
         """Record eviction  information
         """
@@ -72,6 +73,13 @@ class Classifier(object):
         entry.finalMemoryUsageMb = rec.memoryUsage
         entry.finalMemoryRequestMb = rec.memoryRequest
         entry.bytesSent = rec.runBytesSent 
+        entry.bytesReceived = rec.runBytesReceived
+
+    def recordShadowExceptionInfo(self, entry, rec):
+        """Record shadow exception record information
+        """
+        self.recordTerminationInfo(entry, rec)
+        entry.bytesSent = rec.runBytesSent
         entry.bytesReceived = rec.runBytesReceived
 
     def updateJobInformation(self, entry, rec):
@@ -157,7 +165,7 @@ class Classifier(object):
                     entry.terminationTime = rec.timestamp
                 fEnded = False
             elif rec.event == recordslib.shadowException.eventCode:
-                self.recordTerminationInfo(entry, rec)
+                self.recordShadowExceptionInfo(entry, rec)
                 # something happened with the shadow daemon, and this
                 # job is going to be rescheduled.
                 entries.append(entry)
