@@ -153,8 +153,7 @@ class Classifier(object):
                 # job was removed, either by condor or the user,
                 # and this job will be rescheduled.
                 self.recordEviction(entry, rec)
-                entries.append(entry)
-                entry = self.createResubmissionRecord(entry, rec)
+                entry = self.resubmit(entries, entry, rec)
                 fExecuting = False
             elif rec.event == recordslib.aborted.eventCode:
                 # job was aborted
@@ -165,22 +164,31 @@ class Classifier(object):
                     entry.terminationTime = rec.timestamp
                 fEnded = False
             elif rec.event == recordslib.shadowException.eventCode:
-                self.recordShadowExceptionInfo(entry, rec)
                 # something happened with the shadow daemon, and this
                 # job is going to be rescheduled.
-                entries.append(entry)
-                entry = self.createResubmissionRecord(entry, rec)
+                self.recordShadowExceptionInfo(entry, rec)
+                entry = self.resubmit(entries, entry, rec)
                 fExecuting = False
             elif rec.event == recordslib.socketReconnectFailure.eventCode:
-                self.recordTerminationInfo(entry, rec)
                 # lost communication with execution node
                 # this resubmits, so we create a new record
-                entries.append(entry)
-                entry = self.createResubmissionRecord(entry, rec)
+                self.recordTerminationInfo(entry, rec)
+                entry = self.resubmit(entries, entry, rec)
                 fExecuting = False
         entries.append(entry)
         totalsRecord = self.tabulate(records, entries)
         return entries, totalsRecord, updateEntries
+
+    def resubmit(self, entries, entry, rec):
+        """Store the current entry, and return a new resubmission record
+        @param entries: a list of summary "submissions" records for the database
+        @param entry: the current submission entry record
+        @param rec: the current record
+        @return: a new entry record
+        """
+        entries.append(entry)
+        newEntry = self.createResubmissionRecord(entry, rec)
+        return newEntry
 
     def tabulate(self, records, entries):
         """
