@@ -37,6 +37,8 @@ from lsst.ctrl.stats.data.submissionTimes import SubmissionTimes
 from lsst.ctrl.stats.data.submitsPerInterval import SubmitsPerInterval
 from lsst.ctrl.stats.data.coresPerSecond import CoresPerSecond
 from lsst.ctrl.stats.data.executionsPerSlot import ExecutionsPerSlot
+from lsst.ctrl.stats.data.firstExecutingWorker import FirstExecutingWorker
+from lsst.ctrl.stats.data.lastExecutingWorker import LastExecutingWorker
 
 def run():
     basename = os.path.basename(sys.argv[0])
@@ -111,28 +113,58 @@ def printSummary(dbm, entries):
         print
         # first worker
         firstWorker = entries.getDagNode('A1')
-        print "First worker submitted at %s" % dateTime(firstWorker.submitTime)
-        print "First worker started at %s" % dateTime(firstWorker.executionStartTime)
+        print "First worker %s submitted at %s" % (firstWorker.dagNode, dateTime(firstWorker.submitTime))
+        delay = firstWorker.submitTime-preJob.executionStopTime
+        print "Delay of end of preJob to submission of first worker: %s" % timeStamp(delay)
 
-        # last worker
+        # first executing worker is not necessarily the first 
+        # worker submitted, so look it up
+        worker = FirstExecutingWorker(dbm)
+        firstExecutingWorker = worker.calculate()
+
+        print "First executing worker %s started at %s" % (firstExecutingWorker.dagNode, dateTime(firstExecutingWorker.executionStartTime))
+        print "First executing worker %s stopped at %s" % (firstExecutingWorker.dagNode, dateTime(firstExecutingWorker.executionStopTime))
+        print "First executing worker %s run duration %s" % (firstExecutingWorker.dagNode, dateTime(firstExecutingWorker.executionStopTime-firstExecutingWorker.executionStartTime))
+        print
+
+        # last worker in the list
         lastWorker = entries.getLastWorker()
-        print "Last worker submitted at %s" % dateTime(lastWorker.submitTime)
-        print "Last worker started at %s" % dateTime(lastWorker.executionStartTime)
+        print "Last submitted worker %s submitted at %s" % (lastWorker.dagNode, dateTime(lastWorker.submitTime))
+        print "Last submitted worker %s started executing at %s" % (lastWorker.dagNode, dateTime(lastWorker.executionStartTime))
+        print "Last submitted worker %s stopped executing at %s" % (lastWorker.dagNode, dateTime(lastWorker.executionStopTime))
+        print "Last submitted worker %s run duration %s" % (lastWorker.dagNode, timeStamp(lastWorker.executionStopTime-lastWorker.executionStartTime))
+        print
+
+        # last executing worker is not necessarily the last worker that was
+        # submitted.  It's the last worker that was executing at the end of the
+        # run.
+        worker = LastExecutingWorker(dbm)
+        lastExecutingWorker = worker.calculate()
+        print "Last executing worker %s started at: %s " % (lastExecutingWorker.dagNode, dateTime(lastExecutingWorker.executionStartTime))
+        print "Last executing worker %s finished at: %s " % (lastExecutingWorker.dagNode, dateTime(lastExecutingWorker.executionStopTime))
+        print "Last executing worker %s run duration %s" % (lastExecutingWorker.dagNode, timeStamp(lastExecutingWorker.executionStopTime-lastExecutingWorker.executionStartTime))
 
         # workers overall
         submitDuration = lastWorker.submitTime-firstWorker.submitTime
         print "First worker submit until last worker submit: %s" % timeStamp(submitDuration)
 
-        workerRunTime = lastWorker.executionStartTime-firstWorker.executionStartTime
-        print "First worker started to last worker finished: %s" % timeStamp(workerRunTime)
+        workerRunTime = lastExecutingWorker.executionStopTime-firstExecutingWorker.executionStartTime
+        print "First executing worker started to last executing worker finished: %s" % timeStamp(workerRunTime)
+        delay = postJob.submitTime - lastExecutingWorker.executionStopTime
+        print "Delay of end of last executing worker %s to submission of postJob: %s" % (lastExecutingWorker.dagNode, timeStamp(delay))
         print
 
 
         # Time until maximum cores are used
         coresPerSecond = CoresPerSecond(dbm)
         values = coresPerSecond.calculate(entries)
-        maximumCores, timeFirstUsed = maximumCoresFirstUsed(values)
-        print "Maximum cores %s first used at %s" % (maximumCores, timeFirstUsed)
+        maximumCores, maxCoresFirstUsed = maximumCoresFirstUsed(values)
+        maxCoresLastUsed = maximumCoresLastUsed(values, maximumCores)
+
+        print "Maximum cores %s first used: %s" % (maximumCores, dateTime(maxCoresFirstUsed))
+        print "Maximum cores %s last used: %s" % (maximumCores, dateTime(maxCoresLastUsed))
+        print "Maximum cores last used until last worker finished: %s" % timeStamp(lastExecutingWorker.executionStopTime-maxCoresLastUsed)
+        print "First executing job to maximum cores used: %s" % timeStamp(maxCoresFirstUsed-firstExecutingWorker.executionStartTime)
 
         # Executions per Slot
         executionsPerSlot = ExecutionsPerSlot(dbm)
@@ -161,6 +193,17 @@ def maximumCoresFirstUsed(values):
             maximumCores = cores
             timeFirstUsed = timeValue
     return maximumCores, timeFirstUsed
+
+def maximumCoresLastUsed(values, maxCores):
+    timeLastUsed = None
+    for j in range(len(values)):
+        val = values[j]
+        timeValue = val[0]
+        cores = val[1]
+        if cores == maxCores:
+            timeLastUsed = timeValue
+    return timeLastUsed
+
        
 def writeValues(values):
     if values == None:
@@ -170,8 +213,9 @@ def writeValues(values):
         length = len(val)
         for i in range(length):
             if (i > 0):
-                sys.stdout.write(", ")
-            sys.stdout.write("%s" % val[i])
+                sys.stdout.write(", %s" % val[i])
+            elif i == 0:
+                sys.stdout.write("%s" % dateTime(val[0]))
         sys.stdout.write("\n")
     return
 

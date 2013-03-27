@@ -5,7 +5,7 @@ class CoresPerSecond:
         self.dbm = dbm
 
     def calculate(self, entries):
-        query = 'select UNIX_TIMESTAMP(MIN(executionStartTime)), UNIX_TIMESTAMP(MAX(executionStopTime)) from submissions where UNIX_TIMESTAMP(executionStartTime) > 0;'
+        query = "select UNIX_TIMESTAMP(MIN(executionStartTime)), UNIX_TIMESTAMP(MAX(executionStopTime)) from submissions where UNIX_TIMESTAMP(executionStartTime) > 0 order by executionStartTime;"
 
         results = self.dbm.execCommandN(query)
         startTime = results[0][0]
