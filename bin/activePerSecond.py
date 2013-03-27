@@ -41,8 +41,9 @@ class DbEntry:
     def __init__(self, dbList):
         self.dagNode = dbList[0]
         self.executionHost = dbList[1]
-        self.executionStartTime = dbList[2]
-        self.executionStopTime = dbList[3]
+        self.slotName = dbList[2]
+        self.executionStartTime = dbList[3]
+        self.executionStopTime = dbList[4]
 
 def run():
     basename = os.path.basename(sys.argv[0])
@@ -69,35 +70,34 @@ def run():
     # connect to the database
     dbm = DatabaseManager(host, port, user, password)
 
-    # get all hosts and slot names for those hosts.
-    # select distinct executionHost, slotName from submissions order by executionHost
-
-    # count them
-    # select count(distinct executionHost, slotName) as `total` from submissions order by executionHost
-
-    # all unique hosts and slots in a date range
-    #select distinct executionHost, slotName, executionStartTime, executionStopTime from submissions where UNIX_TIMESTAMP(executionStartTime) >= UNIX_TIMESTAMP('2013-03-03 21:02:39') and UNIX_TIMESTAMP(executionStopTime) <= UNIX_TIMESTAMP('2013-03-03 21:10:41') order by executionStartTime
 
     dbm.execCommand0('use '+database)
 
-    #q1 = 'select dagNode, executionHost, unix_timestamp(executionStartTime), unix_timestamp(executionStopTime) from submissions order by executionStartTime'
-    #results = dbm.execCommandN(q1)
 
-    q1 = 'select UNIX_TIMESTAMP(MIN(executionStartTime)), UNIX_TIMESTAMP(MAX(executionStopTime)) from submissions;'
+    q0 = 'select dagNode, executionHost, slotName, UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime) from submissions;'
+
+    results = dbm.execCommandN(q0)
+
+    entries = []
+    for res in results:
+        dbEnt = DbEntry(res)
+        entries.append(dbEnt)
+
+
+    q1 = 'select UNIX_TIMESTAMP(MIN(executionStartTime)), UNIX_TIMESTAMP(MAX(executionStopTime)) from submissions where UNIX_TIMESTAMP(executionStartTime) > 0;'
 
     results = dbm.execCommandN(q1)
     startTime = results[0][0]
     stopTime = results[0][1]
 
-    # TODO:  Fix this.  This is a very quick and dirty way to put this info
-    # together.  It'd be better to just grab all the data and have this program
-    # cycle through it.
-
-    for i in range(startTime, stopTime+1):
-        q2 = "select count(*) from submissions where "+str(i)+" between UNIX_TIMESTAMP(executionStartTime) and UNIX_TIMESTAMP(executionStopTime)"
-        c = dbm.execCommand1(q2)[0]
-        #print str(c)+" "+datetime.datetime.fromtimestamp(i).strftime('%Y-%m-%d %H:%M:%S')
-        print datetime.datetime.fromtimestamp(i).strftime('%H:%M:%S')+" "+str(c)
+    # cycle through the seconds, counting the number of cores being used
+    # during each second
+    for thisSecond in range(startTime, stopTime+1):
+       x = 0
+       for ent in entries:
+            if (thisSecond >= ent.executionStartTime) and (thisSecond <= ent.executionStopTime):
+                x = x + 1
+       print datetime.datetime.fromtimestamp(thisSecond).strftime('%H:%M:%S')+" "+str(x)
        
 
     # TODO:  Output Start time, End Time, Amount of time preJob takes,

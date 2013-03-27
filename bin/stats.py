@@ -32,15 +32,10 @@ from lsst.ctrl.stats.databaseManager import DatabaseManager
 from lsst.ctrl.stats.logIngestor import LogIngestor
 from lsst.daf.persistence import DbAuth
 from lsst.pex.policy import Policy
-
-class DbEntry:
-
-    def __init__(self, dbList):
-        self.dagNode = dbList[0]
-        self.executionHost = dbList[1]
-        self.slotName = dbList[2]
-        self.executionStartTime = dbList[3]
-        self.executionStopTime = dbList[4]
+from lsst.ctrl.stats.data.dbEntry import DbEntry
+from lsst.ctrl.stats.data.submissionTimes import SubmissionTimes
+from lsst.ctrl.stats.data.submitsPerInterval import SubmitsPerInterval
+from lsst.ctrl.stats.data.coresPerSecond import CoresPerSecond
 
 def run():
     basename = os.path.basename(sys.argv[0])
@@ -49,7 +44,9 @@ def run():
     parser.add_argument("-H", "--host", action="store", default=None, dest="host", help="mysql server host", type=str, required=True)
     parser.add_argument("-p", "--port", action="store", default=3306, dest="port", help="mysql server port", type=int)
     parser.add_argument("-d", "--database", action="store", default=None, dest="database", help="database name", type=str, required=True)
-    parser.add_argument("-S", "--submits-per-interval", action="store_true", default=None, dest="submits", help="submits per interval")
+    parser.add_argument("-I", "--submits-per-interval", action="store_true", default=None, dest="submits", help="number of submits to the condor queue per interval")
+    parser.add_argument("-C", "--cores-used-each-second", action="store_true", default=None, dest="cores", help="cores used each second")
+    parser.add_argument("-S", "--summary", action="store_true", default=None, dest="summary", help="summary of run")
     parser.add_argument("-v", "--verbose", action="store_true", dest="verbose", help="verbose")
 
     args = parser.parse_args()
@@ -71,8 +68,101 @@ def run():
 
     dbm.execCommand0('use '+database)
 
+    values = None
+    submitTimes = SubmissionTimes(dbm)
+    entries = submitTimes.getEntries()
     if args.submits == True:
-        submissionsPerInterval(dbm)
+        submitsPerInterval = SubmitsPerInterval(dbm)
+        values = submitsPerInterval.calculate()
+        writeValues(values)
+    elif args.cores == True:
+        coresPerSecond = CoresPerSecond(dbm)
+        values = coresPerSecond.calculate(entries)
+        writeValues(values)
+    elif args.summary == True:
+        printSummary(dbm, entries)
+
+def printSummary(dbm, entries):
+        print "summary"
+
+        # preJob
+        preJob = entries.getPreJob()
+        preJobSubmitTime = timeStamp(preJob.submitTime)
+        preJobStartTime = timeStamp(preJob.executionStartTime)
+        startTime = preJob.executionStartTime-preJob.submitTime
+        runTime = preJob.executionStopTime-preJob.executionStartTime
+
+        print "PreJob submitted %s" % (preJobSubmitTime)
+        print "PreJob started %s" % (preJobStartTime)
+        print "PreJob time to start %d second%s" % (startTime, 's' if startTime > 1 else '')
+        print "PreJob ran for %d second%s" % (runTime, 's' if runTime > 1 else '')
+        print
+        # postJob
+        postJob = entries.getPostJob()
+        postJobSubmitTime = timeStamp(postJob.submitTime)
+        postJobStartTime = timeStamp(postJob.executionStartTime)
+        runTime = postJob.executionStopTime-postJob.executionStartTime
+        print "PostJob submitted %s" % (postJobSubmitTime)
+        print "PostJob started %s" % (postJobStartTime)
+        startTime = postJob.executionStartTime-postJob.submitTime
+        print "PostJob time to start %d second%s" % (startTime, 's' if startTime > 1 else '')
+        print "PostJob ran for %d second%s" % (runTime, 's' if runTime > 1 else '')
+        print
+        # first worker
+        firstWorker = entries.getDagNode('A1')
+        print "First worker submitted at %s" % timeStamp(firstWorker.submitTime)
+        print "First worker started at %s" % timeStamp(firstWorker.executionStartTime)
+
+        # 
+        lastWorker = entries.getLastWorker()
+        print "Last worker submitted at %s" % timeStamp(lastWorker.submitTime)
+        print "Last worker started at %s" % timeStamp(lastWorker.executionStartTime)
+
+        submitDuration = lastWorker.submitTime-firstWorker.submitTime
+        print "First worker submit until last worker submit: %d second%s" % (submitDuration, 's' if submitDuration > 1 else '')
+
+
+        coresPerSecond = CoresPerSecond(dbm)
+        values = coresPerSecond.calculate(entries)
+        maximumCores, timeFirstUsed = maximumCoresFirstUsed(values)
+        print "Maximum cores %s first used at %s" % (maximumCores, timeFirstUsed)
+
+
+        workerRunTime = lastWorker.executionStartTime-firstWorker.executionStartTime
+        print "first worker started to last worker finished: %d second%s" % (workerRunTime, 's' if workerRunTime > 1 else '')
+        print "first worker started to last worker finished: %s" % inMinutes(workerRunTime)
+
+
+def timeStamp(val):
+    return datetime.datetime.fromtimestamp(val).strftime('%Y-%m-%d %H:%M:%S')
+
+def inMinutes(val):
+    return datetime.datetime.fromtimestamp(val).strftime('%H:%M:%S')
+
+def maximumCoresFirstUsed(values):
+    maximumCores = -1
+    timeFirstUsed = None
+    for j in range(len(values)):
+        val = values[j]
+        timeValue = val[0]
+        cores = val[1]
+        if cores > maximumCores:
+            maximumCores = cores
+            timeFirstUsed = timeValue
+    return maximumCores, timeFirstUsed
+       
+def writeValues(values):
+    if values == None:
+        return
+    for j in range(len(values)):
+        val = values[j]
+        length = len(val)
+        for i in range(length):
+            if (i > 0):
+                sys.stdout.write(", ")
+            sys.stdout.write("%s" % val[i])
+        sys.stdout.write("\n")
+    return
 
 
 
@@ -80,17 +170,6 @@ def run():
     # first full usage of all cores, drain time from full usage to end,
     # time of last job started to end.
         
-
-def submissionsPerInterval(dbm):
-    q0 = 'select submitTime, count(*) as count from submissions group by submitTime;'
-
-    results = dbm.execCommandN(q0)
-
-    for res in results:
-        submitTime = res[0]
-        count = res[1]
-        print "%s, %s" % (submitTime, count)
-    
 
 if __name__ == "__main__":
     run()

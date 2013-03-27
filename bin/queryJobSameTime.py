@@ -69,21 +69,10 @@ def run():
     # connect to the database
     dbm = DatabaseManager(host, port, user, password)
 
-    # get all hosts and slot names for those hosts.
-    # select distinct executionHost, slotName from submissions order by executionHost
-
-    # count them
-    # select count(distinct executionHost, slotName) as `total` from submissions order by executionHost
-
-    # all unique hosts and slots in a date range
-    #select distinct executionHost, slotName, executionStartTime, executionStopTime from submissions where UNIX_TIMESTAMP(executionStartTime) >= UNIX_TIMESTAMP('2013-03-03 21:02:39') and UNIX_TIMESTAMP(executionStopTime) <= UNIX_TIMESTAMP('2013-03-03 21:10:41') order by executionStartTime
-
     dbm.execCommand0('use '+database)
 
     q1 = 'select dagNode, executionHost, unix_timestamp(executionStartTime), unix_timestamp(executionStopTime) from submissions order by executionStartTime'
     results = dbm.execCommandN(q1)
-
-    #select count(distinct executionHost, slotName, executionStartTime, executionStopTime) from submissions where UNIX_TIMESTAMP(executionStartTime) >= UNIX_TIMESTAMP('2013-03-03 21:02:39') and UNIX_TIMESTAMP(executionStopTime) <= UNIX_TIMESTAMP('2013-03-03 21:10:41') order by executionStartTime
 
     entries = []
     for ent in results:
