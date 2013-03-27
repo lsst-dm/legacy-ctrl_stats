@@ -1,0 +1,25 @@
+class DbEntries:
+
+    def __init__(self, entries):
+        self.entries = entries
+
+    def getEntry(self, x):
+        return self.entries[x]
+
+    def getDagNode(self, dagNode):
+        for ent in self.entries:
+            if ent.dagNode == dagNode:
+                return ent
+        return None
+    
+    def getPreJob(self):
+        return self.getDagNode('A')
+    
+    def getPostJob(self):
+        return self.getDagNode('B')
+
+    def getLength(self):
+        return len(self.entries)
+
+    def getLastWorker(self):
+        return self.entries[-2]
