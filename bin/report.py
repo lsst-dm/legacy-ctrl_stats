@@ -36,6 +36,7 @@ from lsst.ctrl.stats.data.dbEntry import DbEntry
 from lsst.ctrl.stats.data.submissionTimes import SubmissionTimes
 from lsst.ctrl.stats.data.submitsPerInterval import SubmitsPerInterval
 from lsst.ctrl.stats.data.coresPerSecond import CoresPerSecond
+from lsst.ctrl.stats.data.executionsPerSlot import ExecutionsPerSlot
 
 def run():
     basename = os.path.basename(sys.argv[0])
@@ -87,57 +88,67 @@ def printSummary(dbm, entries):
 
         # preJob
         preJob = entries.getPreJob()
-        preJobSubmitTime = timeStamp(preJob.submitTime)
-        preJobStartTime = timeStamp(preJob.executionStartTime)
+        preJobSubmitTime = dateTime(preJob.submitTime)
+        preJobStartTime = dateTime(preJob.executionStartTime)
         startTime = preJob.executionStartTime-preJob.submitTime
         runTime = preJob.executionStopTime-preJob.executionStartTime
 
         print "PreJob submitted %s" % (preJobSubmitTime)
         print "PreJob started %s" % (preJobStartTime)
-        print "PreJob time to start %d second%s" % (startTime, 's' if startTime > 1 else '')
-        print "PreJob ran for %d second%s" % (runTime, 's' if runTime > 1 else '')
+        print "PreJob time to start: %s" % timeStamp(startTime)
+        print "PreJob run duration: %s" % timeStamp(runTime)
         print
         # postJob
         postJob = entries.getPostJob()
-        postJobSubmitTime = timeStamp(postJob.submitTime)
-        postJobStartTime = timeStamp(postJob.executionStartTime)
+        postJobSubmitTime = dateTime(postJob.submitTime)
+        postJobStartTime = dateTime(postJob.executionStartTime)
         runTime = postJob.executionStopTime-postJob.executionStartTime
         print "PostJob submitted %s" % (postJobSubmitTime)
         print "PostJob started %s" % (postJobStartTime)
         startTime = postJob.executionStartTime-postJob.submitTime
-        print "PostJob time to start %d second%s" % (startTime, 's' if startTime > 1 else '')
-        print "PostJob ran for %d second%s" % (runTime, 's' if runTime > 1 else '')
+        print "PostJob time to start: %s" % timeStamp(startTime)
+        print "PostJob run duration: %s" % timeStamp(runTime)
         print
         # first worker
         firstWorker = entries.getDagNode('A1')
-        print "First worker submitted at %s" % timeStamp(firstWorker.submitTime)
-        print "First worker started at %s" % timeStamp(firstWorker.executionStartTime)
+        print "First worker submitted at %s" % dateTime(firstWorker.submitTime)
+        print "First worker started at %s" % dateTime(firstWorker.executionStartTime)
 
-        # 
+        # last worker
         lastWorker = entries.getLastWorker()
-        print "Last worker submitted at %s" % timeStamp(lastWorker.submitTime)
-        print "Last worker started at %s" % timeStamp(lastWorker.executionStartTime)
+        print "Last worker submitted at %s" % dateTime(lastWorker.submitTime)
+        print "Last worker started at %s" % dateTime(lastWorker.executionStartTime)
 
+        # workers overall
         submitDuration = lastWorker.submitTime-firstWorker.submitTime
-        print "First worker submit until last worker submit: %d second%s" % (submitDuration, 's' if submitDuration > 1 else '')
+        print "First worker submit until last worker submit: %s" % timeStamp(submitDuration)
+
+        workerRunTime = lastWorker.executionStartTime-firstWorker.executionStartTime
+        print "First worker started to last worker finished: %s" % timeStamp(workerRunTime)
+        print
 
 
+        # Time until maximum cores are used
         coresPerSecond = CoresPerSecond(dbm)
         values = coresPerSecond.calculate(entries)
         maximumCores, timeFirstUsed = maximumCoresFirstUsed(values)
         print "Maximum cores %s first used at %s" % (maximumCores, timeFirstUsed)
 
+        # Executions per Slot
+        executionsPerSlot = ExecutionsPerSlot(dbm)
+        avg = executionsPerSlot.average()
+        min = executionsPerSlot.min()
+        max = executionsPerSlot.max()
+        print "Average number of executions per slot: %d" % avg
+        print "Minimum number of executions per slot: %d" % min
+        print "Maximum number of executions per slot: %d" % max
 
-        workerRunTime = lastWorker.executionStartTime-firstWorker.executionStartTime
-        print "first worker started to last worker finished: %d second%s" % (workerRunTime, 's' if workerRunTime > 1 else '')
-        print "first worker started to last worker finished: %s" % inMinutes(workerRunTime)
 
-
-def timeStamp(val):
+def dateTime(val):
     return datetime.datetime.fromtimestamp(val).strftime('%Y-%m-%d %H:%M:%S')
 
-def inMinutes(val):
-    return datetime.datetime.fromtimestamp(val).strftime('%H:%M:%S')
+def timeStamp(val):
+    return str(datetime.timedelta(seconds=val))
 
 def maximumCoresFirstUsed(values):
     maximumCores = -1
