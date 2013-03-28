@@ -7,3 +7,4 @@ class DbEntry:
         self.submitTime = dbList[3]
         self.executionStartTime = dbList[4]
         self.executionStopTime = dbList[5]
+        self.terminationTime = dbList[6]
