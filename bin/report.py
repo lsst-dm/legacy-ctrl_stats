@@ -193,7 +193,8 @@ def printSummary(dbm, entries):
         print
 
         newJobStart = NewJobStart(dbm)
-        totals = newJobStart.consolidate()
+        totals = newJobStart.calculate()
+        #totals = newJobStart.consolidate()
 
         
         print "Time from the end of one worker until the next worker starts."
