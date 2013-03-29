@@ -21,5 +21,8 @@ class DbEntries:
     def getLength(self):
         return len(self.entries)
 
+    def getFirstWorker(self):
+        return self.getDagNode('A1')
+
     def getLastWorker(self):
         return self.entries[-2]

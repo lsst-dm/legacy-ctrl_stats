@@ -1,3 +1,4 @@
+import sys
 import collections
 from collections import defaultdict
 
@@ -15,7 +16,7 @@ class NewJobStart:
     def __init__(self, dbm):
         self.dbm = dbm
 
-        query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(terminationTime) from submissions where dagNode != 'A' and dagNode !='B' order by executionHost, slotName, executionStartTime;"
+        query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(terminationTime) from submissions where executionStartTime != '0000-00-00 00:00:00' and dagNode != 'A' and dagNode !='B' order by executionHost, slotName, executionStartTime;"
 
         results = self.dbm.execCommandN(query)
         self.entries = []
@@ -37,6 +38,10 @@ class NewJobStart:
             length = len(timeList)
             for i in range(length-1):
                 timeToNext = timeList[i+1][0] - timeList[i][1]
+                if timeToNext < 0:
+                    print "ERROR!"
+                    print timeList
+                    sys.exit(100)
                 if timeToNext not in totals:
                     totals[timeToNext] = 1
                 else:

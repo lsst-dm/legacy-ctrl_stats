@@ -35,6 +35,7 @@ from lsst.pex.policy import Policy
 from lsst.ctrl.stats.data.workerTotal import WorkerTotal
 from lsst.ctrl.stats.data.dbEntry import DbEntry
 from lsst.ctrl.stats.data.submissionTimes import SubmissionTimes
+from lsst.ctrl.stats.data.initialSubmissionTimes import InitialSubmissionTimes
 from lsst.ctrl.stats.data.successTimes import SuccessTimes
 from lsst.ctrl.stats.data.submitsPerInterval import SubmitsPerInterval
 from lsst.ctrl.stats.data.coresPerSecond import CoresPerSecond
@@ -113,11 +114,29 @@ def printSummary(dbm, entries):
         print "PostJob time to start: %s" % timeStamp(startTime)
         print "PostJob run duration: %s" % timeStamp(runTime)
         print
+
+        initialSubmits = InitialSubmissionTimes(dbm)
+        initialEntries = initialSubmits.getEntries()
+        initialFirstWorker = initialEntries.getFirstWorker()
+        initialLastWorker = initialEntries.getLastWorker()
+        submissionDuration = initialLastWorker.submitTime-initialLastWorker.submitTime
+
+        count = initialEntries.getLength()-2 # don't count preJob and postJob
+        submissionDuration = initialLastWorker.submitTime-initialFirstWorker.submitTime
+        print "Total worker submits: %d" % count
+        print "Mean initial worker submissions per second: %d" % (count/float(submissionDuration))
+        print
+
         # first worker
-        firstWorker = entries.getDagNode('A1')
-        print "First worker %s submitted at %s" % (firstWorker.dagNode, dateTime(firstWorker.submitTime))
+        firstWorker = initialFirstWorker
         delay = firstWorker.submitTime-preJob.executionStopTime
         print "Delay of end of preJob to submission of first worker: %s" % timeStamp(delay)
+        print "Initial first worker %s submitted at %s" % (firstWorker.dagNode, dateTime(firstWorker.submitTime))
+        print "Initial submission of workers - last worker submitted at %s" % dateTime(initialLastWorker.submitTime)
+        print "Initial first worker to initial last worker submitted: %s" % timeStamp(submissionDuration)
+
+
+            
 
         # first executing worker is not necessarily the first 
         # worker submitted, so look it up
@@ -128,6 +147,7 @@ def printSummary(dbm, entries):
         print "First executing worker %s stopped at %s" % (firstExecutingWorker.dagNode, dateTime(firstExecutingWorker.executionStopTime))
         print "First executing worker %s run duration %s" % (firstExecutingWorker.dagNode, timeStamp(firstExecutingWorker.executionStopTime-firstExecutingWorker.executionStartTime))
         print
+
 
         # last worker in the list
         lastWorker = entries.getLastWorker()
@@ -160,7 +180,7 @@ def printSummary(dbm, entries):
         min, max, avg = jobRunTimes(entries)
         print "Minimum submitted worker run time: %s" % timeStamp(min)
         print "Maximum submitted worker run time: %s" % timeStamp(max)
-        print "Average submitted worker run time: %s" % timeStamp(avg)
+        print "Mean submitted worker run time: %s" % timeStamp(avg)
 
         successTimes = SuccessTimes(dbm)
         successEntries = successTimes.getEntries()
@@ -168,7 +188,7 @@ def printSummary(dbm, entries):
         min, max, avg = jobRunTimes(successEntries)
         print "Minimum successful worker run time: %s" % timeStamp(min)
         print "Maximum successful worker run time: %s" % timeStamp(max)
-        print "Average successful worker run time: %s" % timeStamp(avg)
+        print "Mean successful worker run time: %s" % timeStamp(avg)
 
 
         # Time until maximum cores are used
@@ -180,6 +200,7 @@ def printSummary(dbm, entries):
         print "Maximum cores %s first used: %s" % (maximumCores, dateTime(maxCoresFirstUsed))
         print "Maximum cores %s last used: %s" % (maximumCores, dateTime(maxCoresLastUsed))
         print "Maximum cores last used until last worker finished: %s" % timeStamp(lastExecutingWorker.executionStopTime-maxCoresLastUsed)
+        print "First worker submit to maximum cores used: %s" % timeStamp(maxCoresFirstUsed-firstWorker.submitTime)
         print "First executing worker to maximum cores used: %s" % timeStamp(maxCoresFirstUsed-firstExecutingWorker.executionStartTime)
 
         # Executions per Slot
@@ -187,9 +208,9 @@ def printSummary(dbm, entries):
         avg = executionsPerSlot.average()
         min = executionsPerSlot.min()
         max = executionsPerSlot.max()
-        print "Average number of executions per slot: %d" % avg
-        print "Minimum number of executions per slot: %d" % min
-        print "Maximum number of executions per slot: %d" % max
+        print "Minimum executions per slot: %d" % min
+        print "Maximum executions per slot: %d" % max
+        print "Mean executions per slot: %d" % avg
         print
 
         newJobStart = NewJobStart(dbm)
@@ -198,8 +219,13 @@ def printSummary(dbm, entries):
 
         
         print "Time from the end of one worker until the next worker starts."
+        totalStarts = 0
+        totalMinutes = 0
         for key,value in totals.iteritems():
             print "%d second%s until next worker started: %d worker%s total" % (key, 's' if key > 1 else '', value, 's' if value > 1 else '')
+            totalStarts = totalStarts + value
+            totalMinutes = totalMinutes + key*value
+        print "Mean time to next worker start: %.2f seconds" % (totalMinutes/float(totalStarts))
 
         print
 

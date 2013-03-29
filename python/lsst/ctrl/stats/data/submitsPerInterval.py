@@ -4,9 +4,9 @@ class SubmitsPerInterval:
         self.dbm = dbm
 
     def calculate(self):
-        query = 'select submitTime, count(*) as count from submissions group by submitTime;'
+        query = "select submitTime, count(*) as count from submissions where dagNode !='A' and dagNode != 'B' group by submitTime;"
     
-        results = dbm.execCommandN(query)
+        results = self.dbm.execCommandN(query)
     
         values = []
         for res in results:

@@ -4,7 +4,7 @@ from lsst.ctrl.stats.data.dbEntries import DbEntries
 class SubmissionTimes:
 
     def __init__(self, dbm):
-        query = 'select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), UNIX_TIMESTAMP(terminationTime) from submissions;'
+        query = 'select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), UNIX_TIMESTAMP(terminationTime) from submissions order by submitTime;'
     
         results = dbm.execCommandN(query)
     
