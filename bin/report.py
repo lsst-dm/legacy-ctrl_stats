@@ -192,10 +192,10 @@ def printSummary(dbm, entries):
 
 
         # Time until maximum cores are used
-        coresPerSecond = CoresPerSecond(dbm)
-        values = coresPerSecond.calculate(entries)
-        maximumCores, maxCoresFirstUsed = maximumCoresFirstUsed(values)
-        maxCoresLastUsed = maximumCoresLastUsed(values, maximumCores)
+        coresPerSecond = CoresPerSecond(dbm, entries)
+        maximumCores = coresPerSecond.getMaximumCores()
+        maxCoresFirstUsed = coresPerSecond.maximumCoresFirstUsed()
+        maxCoresLastUsed = coresPerSecond.maximumCoresLastUsed()
 
         print "Maximum cores %s first used: %s" % (maximumCores, dateTime(maxCoresFirstUsed))
         print "Maximum cores %s last used: %s" % (maximumCores, dateTime(maxCoresLastUsed))
@@ -244,28 +244,6 @@ def dateTime(val):
 
 def timeStamp(val):
     return str(datetime.timedelta(seconds=val))
-
-def maximumCoresFirstUsed(values):
-    maximumCores = -1
-    timeFirstUsed = None
-    for j in range(len(values)):
-        val = values[j]
-        timeValue = val[0]
-        cores = val[1]
-        if cores > maximumCores:
-            maximumCores = cores
-            timeFirstUsed = timeValue
-    return maximumCores, timeFirstUsed
-
-def maximumCoresLastUsed(values, maxCores):
-    timeLastUsed = None
-    for j in range(len(values)):
-        val = values[j]
-        timeValue = val[0]
-        cores = val[1]
-        if cores == maxCores:
-            timeLastUsed = timeValue
-    return timeLastUsed
 
 def jobRunTimes(ents):
     workers = 0
