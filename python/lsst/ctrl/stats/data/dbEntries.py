@@ -14,6 +14,10 @@ class DbEntries:
     
     def getPreJob(self):
         return self.getDagNode('A')
+
+    def getPreJobExecutionStopTime(self):
+        ent = self.getDagNode('A')
+        return ent.executionStopTime
     
     def getPostJob(self):
         return self.getDagNode('B')
@@ -26,3 +30,7 @@ class DbEntries:
 
     def getLastWorker(self):
         return self.entries[-2]
+
+    def getPostJobSubmitTime(self):
+        ent = self.getPostJob()
+        return ent.submitTime

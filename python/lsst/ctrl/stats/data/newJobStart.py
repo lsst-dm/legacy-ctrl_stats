@@ -1,3 +1,4 @@
+import datetime
 import sys
 import collections
 from collections import defaultdict
@@ -37,6 +38,8 @@ class NewJobStart:
             timeList = d[item]
             length = len(timeList)
             for i in range(length-1):
+                #if i == 0:
+                #    print datetime.datetime.fromtimestamp(timeList[0][0]).strftime('%Y-%m-%d %H:%M:%S')
                 timeToNext = timeList[i+1][0] - timeList[i][1]
                 if timeToNext < 0:
                     print "ERROR!"
@@ -47,8 +50,6 @@ class NewJobStart:
                 else:
                     totals[timeToNext] = totals[timeToNext] + 1
         od = collections.OrderedDict(sorted(totals.items()))
-        return od
-                
         return od
             
 

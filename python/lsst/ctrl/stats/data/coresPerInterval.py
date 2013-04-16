@@ -1,7 +1,7 @@
 import datetime
-class CoresPerSecond:
+class CoresPerInterval:
 
-    def __init__(self, dbm, entries):
+    def __init__(self, dbm, entries, interval):
         self.dbm = dbm
 
         query = "select UNIX_TIMESTAMP(MIN(executionStartTime)), UNIX_TIMESTAMP(MAX(executionStopTime)) from submissions where UNIX_TIMESTAMP(executionStartTime) > 0 and dagNode != 'A' and dagNode != 'B' order by executionStartTime;"
@@ -13,19 +13,38 @@ class CoresPerSecond:
         self.values = []
         # cycle through the seconds, counting the number of cores being used
         # during each second
-        for thisSecond in range(startTime, stopTime+1):
+        last = startTime
+        if (startTime+interval > stopTime):
+            next = stopTime
+        else:
+            next = startTime+interval
+        stepInterval = 0
+        while True:
             x = 0
             length = entries.getLength()
+            intervalRangeSet = set(range(last,next+1))
+            #print stepInterval, last, next
             for i in range(length):
                 ent = entries.getEntry(i)
                 if ent.dagNode == 'A':
                     continue
                 if ent.dagNode == 'B':
                     continue
-                if (thisSecond >= ent.executionStartTime) and (thisSecond <= ent.executionStopTime):
+                entryRangeSet = set(range(ent.executionStartTime, ent.executionStopTime+1))
+                if (len(intervalRangeSet&entryRangeSet) > 0):
                     x = x + 1
             
-            self.values.append([thisSecond,x])
+            self.values.append([last,x])
+            stepInterval = stepInterval+1
+
+            if (next >= stopTime):
+                return
+            last = next
+            if (next+interval > stopTime):
+                next = stopTime
+            else:
+                next = next+interval
+            
 
         # count the number of cores used at maximum
         # also calculate the first time that many cores were used
@@ -46,9 +65,6 @@ class CoresPerSecond:
             # last time all the cores were used
             if cores == self.maximumCores:
                 self.timeLastUsed = timeValue
-
-    def getValues(self):
-        return self.values
     
     def getMaximumCores(self):
         return self.maximumCores
@@ -58,3 +74,6 @@ class CoresPerSecond:
 
     def maximumCoresLastUsed(self):
         return self.timeLastUsed
+
+    def getValues(self):
+        return self.values
