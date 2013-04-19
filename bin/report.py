@@ -84,8 +84,8 @@ def run():
     submitTimes = SubmissionTimes(dbm)
     entries = submitTimes.getEntries()
     if args.submits == True:
-        submitsPerInterval = SubmitsPerInterval(dbm)
-        values = submitsPerInterval.calculate()
+        submitsPerInterval = SubmitsPerInterval(dbm, 5)
+        values = submitsPerInterval.getValues()
         writeDateValues(values)
     elif args.cores == True:
         coresPerSecond = CoresPerSecond(dbm, entries)
