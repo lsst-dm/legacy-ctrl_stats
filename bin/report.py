@@ -89,7 +89,6 @@ def run():
         writeDateValues(values)
     elif args.cores == True:
         coresPerSecond = CoresPerSecond(dbm, entries)
-        # TODO: fix this
         values = coresPerSecond.getValues()
         writeDateValues(values)
     elif args.interval > -1:
@@ -270,6 +269,7 @@ def jobRunTimes(ents):
     length = ents.getLength()
     for i in range(length):
         ent = ents.getEntry(i)
+        # ignore preJob, postJob, and jobs that don't start
         if ent.dagNode == 'A':
             continue
         if ent.dagNode == 'B':
@@ -320,13 +320,5 @@ def writeDateValues(values):
         sys.stdout.write("\n")
     return
 
-
-
-    # TODO:  Output Start time, End Time, Amount of time preJob takes,
-    # first full usage of all cores, drain time from full usage to end,
-    # time of last job started to end.
-        
-
 if __name__ == "__main__":
     run()
-
