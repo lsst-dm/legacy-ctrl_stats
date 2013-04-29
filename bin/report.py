@@ -99,26 +99,6 @@ def run():
     elif args.summary == True:
         printSummary(dbm, entries)
 
-def printCoreRampUpRampDownSummary(dbm, entries, initialSubmits, executingWorkers):
-    # Time until maximum cores are used
-    coresPerSecond = CoresPerSecond(dbm, entries)
-    maximumCores = coresPerSecond.getMaximumCores()
-    maxCoresFirstUsed = coresPerSecond.maximumCoresFirstUsed()
-    maxCoresLastUsed = coresPerSecond.maximumCoresLastUsed()
-
-    initialEntries = initialSubmits.getEntries()
-    initialFirstWorker = initialEntries.getFirstWorker()
-
-    firstExecutingWorker = executingWorkers.getFirstExecutingWorker()
-    lastExecutingWorker = executingWorkers.getLastExecutingWorker()
-
-    print "Maximum cores %s first used: %s" % (maximumCores, dateTime(maxCoresFirstUsed))
-    print "Maximum cores %s last used: %s" % (maximumCores, dateTime(maxCoresLastUsed))
-    print "Maximum cores last used until last worker finished: %s" % timeStamp(lastExecutingWorker.executionStopTime-maxCoresLastUsed)
-    print "First worker submit to maximum cores used: %s" % timeStamp(maxCoresFirstUsed-initialFirstWorker.submitTime)
-    print "First executing worker to maximum cores used: %s" % timeStamp(maxCoresFirstUsed-firstExecutingWorker.executionStartTime)
-    print
-
 def printCoreUtilizationSummary(dbm, initialSubmits):
     cu = CoreUtilization(dbm)
     cores = cu.coresUtilized()
@@ -238,7 +218,6 @@ def printSummary(dbm, entries):
     print "Maximum successful worker run time: %s" % timeStamp(max)
     print "Mean successful worker run time: %s" % timeStamp(avg)
 
-    #printCoreRampUpRampDownSummary(dbm, entries, initialSubmits, executingWorkers)
     printCoreUtilizationSummary(dbm, initialSubmits)
 
     # Executions per Slot
