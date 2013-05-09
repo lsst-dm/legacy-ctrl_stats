@@ -1,5 +1,6 @@
 import datetime
-class CoresPerSecond:
+from lsst.ctrl.stats.data.coresPer import CoresPer
+class CoresPerSecond(CoresPer):
 
     def __init__(self, dbm, entries):
         self.dbm = dbm
@@ -27,34 +28,4 @@ class CoresPerSecond:
             
             self.values.append([thisSecond,x])
 
-        # count the number of cores used at maximum
-        # also calculate the first time that many cores were used
-        # and the last time that many cores were used.
-        self.maximumCores = -1
-        self.timeFirstUsed = None
-        self.timeLastUsed = None
-        for j in range(len(self.values)):
-            val = self.values[j]
-            timeValue = val[0]
-            cores = val[1]
-            # this counts the times the maximum cores
-            # were first used
-            if cores > self.maximumCores:
-                self.maximumCores = cores
-                self.timeFirstUsed = timeValue
-            # this extra conditional also tallies the
-            # last time all the cores were used
-            if cores == self.maximumCores:
-                self.timeLastUsed = timeValue
-
-    def getValues(self):
-        return self.values
-    
-    def getMaximumCores(self):
-        return self.maximumCores
-
-    def maximumCoresFirstUsed(self):
-        return self.timeFirstUsed
-
-    def maximumCoresLastUsed(self):
-        return self.timeLastUsed
+        self.maximumCores, self.timeFirstUsed, self.timeLastUsed = calculateMax()

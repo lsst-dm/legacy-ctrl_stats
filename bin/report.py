@@ -84,7 +84,7 @@ def run():
     submitTimes = SubmissionTimes(dbm)
     entries = submitTimes.getEntries()
     if args.submits == True:
-        submitsPerInterval = SubmitsPerInterval(dbm, 5)
+        submitsPerInterval = SubmitsPerInterval(dbm, 1)
         values = submitsPerInterval.getValues()
         writeDateValues(values)
     elif args.cores == True:
