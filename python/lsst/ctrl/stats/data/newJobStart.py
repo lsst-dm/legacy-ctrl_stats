@@ -58,18 +58,24 @@ class NewJobStart:
         for item in d:
             timeList = d[item]
             length = len(timeList)
-            for i in range(length-1):
-                #if i == 0:
-                #    print datetime.datetime.fromtimestamp(timeList[0][0]).strftime('%Y-%m-%d %H:%M:%S')
-                timeToNext = timeList[i+1][0] - timeList[i][1]
-                if timeToNext < 0:
-                    print "ERROR!"
-                    print timeList
-                    sys.exit(100)
-                if timeToNext not in totals:
-                    totals[timeToNext] = 1
+            if length == 1:
+                if -1 not in totals:
+                    totals[-1] = 1
                 else:
-                    totals[timeToNext] = totals[timeToNext] + 1
+                    totals[-1] = totals[-1] + 1
+            else:
+                for i in range(length-1):
+                    #if i == 0:
+                    #    print datetime.datetime.fromtimestamp(timeList[0][0]).strftime('%Y-%m-%d %H:%M:%S')
+                    timeToNext = timeList[i+1][0] - timeList[i][1]
+                    if timeToNext < 0:
+                        print "ERROR!"
+                        print timeList
+                        sys.exit(100)
+                    if timeToNext not in totals:
+                        totals[timeToNext] = 1
+                    else:
+                        totals[timeToNext] = totals[timeToNext] + 1
         od = collections.OrderedDict(sorted(totals.items()))
         return od
             
