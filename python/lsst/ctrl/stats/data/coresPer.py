@@ -20,6 +20,9 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 import datetime
+#
+# CoresPer - Base class to use by the CoresPer* classes
+#
 class CoresPer:
 
     def calculateMax(self):

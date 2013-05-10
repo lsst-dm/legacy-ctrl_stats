@@ -20,11 +20,14 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 import sys
+#
+# represents the number of times a worker is executing in a particular slot
+#
 class ExecutionsPerSlot:
 
     def __init__(self, dbm):
         self.dbm = dbm
-        query = "select concat(executionHost, '/', slotName) as slot, count(*) as timesUsed from submissions group by executionHost, slotName;"
+        query = "select concat(executionHost, '/', slotName) as slot, count(*) as timesUsed from submissions where dagNode != 'A' and dagNode != 'B' group by executionHost, slotName;"
 
         self.results = self.dbm.execCommandN(query)
 

@@ -21,6 +21,9 @@
 #
 from lsst.ctrl.stats.data.dbEntry import DbEntry
 
+#
+# represents executing workers
+#
 class ExecutingWorkers:
 
     def __init__(self, dbm):
@@ -51,5 +54,3 @@ class ExecutingWorkers:
         dbEntry = DbEntry(results[0])
 
         return dbEntry
-
-        

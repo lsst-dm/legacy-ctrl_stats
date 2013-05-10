@@ -23,12 +23,18 @@ import sys
 import collections
 from collections import defaultdict
 
+#
+# class to hold information about the host, slot and the time it started
+#
 class DbCoreInfo:
     def __init__(self, info):
         self.executionHost = info[0]
         self.slotName = info[1]
         self.executionStartTime = info[2]
 
+#
+# get a listing of all the times at with a core is used.
+#
 class CoreUtilization:
 
     def __init__(self, dbm):

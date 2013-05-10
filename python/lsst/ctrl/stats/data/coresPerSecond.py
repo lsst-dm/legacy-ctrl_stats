@@ -21,6 +21,10 @@
 #
 import datetime
 from lsst.ctrl.stats.data.coresPer import CoresPer
+#
+# calculate the number of cores that are being used each second of the
+# execution time span
+#
 class CoresPerSecond(CoresPer):
 
     def __init__(self, dbm, entries):

@@ -41,8 +41,6 @@ from lsst.ctrl.stats.data.submitsPerInterval import SubmitsPerInterval
 from lsst.ctrl.stats.data.coresPerSecond import CoresPerSecond
 from lsst.ctrl.stats.data.coresPerInterval import CoresPerInterval
 from lsst.ctrl.stats.data.executionsPerSlot import ExecutionsPerSlot
-from lsst.ctrl.stats.data.firstExecutingWorker import FirstExecutingWorker
-from lsst.ctrl.stats.data.lastExecutingWorker import LastExecutingWorker
 from lsst.ctrl.stats.data.newJobStart import NewJobStart
 from lsst.ctrl.stats.data.terminationStatus import TerminationStatus
 from lsst.ctrl.stats.data.executingWorkers import ExecutingWorkers
@@ -187,8 +185,7 @@ def printSummary(dbm, entries):
     # last executing worker is not necessarily the last worker that was
     # submitted.  It's the last worker that was executing at the end of the
     # run.
-    worker = LastExecutingWorker(dbm)
-    lastExecutingWorker = worker.calculate()
+    lastExecutingWorker = executingWorkers.getLastExecutingWorker()
     print "Last executing worker %s started at: %s " % (lastExecutingWorker.dagNode, dateTime(lastExecutingWorker.executionStartTime))
     print "Last executing worker %s finished at: %s " % (lastExecutingWorker.dagNode, dateTime(lastExecutingWorker.executionStopTime))
     print "Last executing worker %s run duration %s" % (lastExecutingWorker.dagNode, timeStamp(lastExecutingWorker.executionStopTime-lastExecutingWorker.executionStartTime))

@@ -19,6 +19,10 @@
 # the GNU General Public License along with this program.  If not, 
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+
+#
+# a representation of the of the database entries for a given run
+#
 class DbEntries:
 
     def __init__(self, entries):

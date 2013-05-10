@@ -21,6 +21,9 @@
 #
 import datetime
 from lsst.ctrl.stats.data.coresPer import CoresPer
+#
+# count the number of cores that are active during a specific interval
+#
 class CoresPerInterval(CoresPer):
 
     def __init__(self, dbm, entries, interval):
