@@ -96,12 +96,11 @@ def run():
     elif args.summary == True:
         printSummary(dbm, entries)
 
-def printCoreUtilizationSummary(dbm, initialSubmits):
+def printCoreUtilizationSummary(dbm, entries):
     cu = CoreUtilization(dbm)
     cores = cu.coresUtilized()
 
-    initialEntries = initialSubmits.getEntries()
-    initialFirstWorker = initialEntries.getFirstWorker()
+    initialFirstWorker = entries.getFirstWorker()
 
     print "Maximum number of cores used: %d" % cores
     print "Time until %d cores are used at least once: %s" % (cores, timeStamp(cu.getLastTime() - cu.getFirstTime()))
@@ -143,13 +142,11 @@ def printSummary(dbm, entries):
 
     printPostJobSummary(dbm, entries)
 
-    initialSubmits = InitialSubmissionTimes(dbm)
-    initialEntries = initialSubmits.getEntries()
-    initialFirstWorker = initialEntries.getFirstWorker()
-    initialLastWorker = initialEntries.getLastWorker()
+    initialFirstWorker = entries.getFirstWorker()
+    initialLastWorker = entries.getLastWorker()
     submissionDuration = initialLastWorker.submitTime-initialLastWorker.submitTime
 
-    count = initialEntries.getLength()-2 # don't count preJob and postJob
+    count = entries.getLength()-2 # don't count preJob and postJob
     submissionDuration = initialLastWorker.submitTime-initialFirstWorker.submitTime
     print "Total worker submits: %d" % count
     print "Mean initial worker submissions per second: %d" % (count/float(submissionDuration))
@@ -214,7 +211,7 @@ def printSummary(dbm, entries):
     print "Maximum successful worker run time: %s" % timeStamp(max)
     print "Mean successful worker run time: %s" % timeStamp(avg)
 
-    printCoreUtilizationSummary(dbm, initialSubmits)
+    printCoreUtilizationSummary(dbm, entries)
 
     # Executions per Slot
     executionsPerSlot = ExecutionsPerSlot(dbm)
@@ -228,7 +225,6 @@ def printSummary(dbm, entries):
 
     newJobStart = NewJobStart(dbm)
     totals = newJobStart.calculate()
-    #totals = newJobStart.consolidate()
 
     
     print "Time from the end of one worker until the next worker starts"
