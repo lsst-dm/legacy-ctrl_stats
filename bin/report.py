@@ -35,7 +35,6 @@ from lsst.pex.policy import Policy
 from lsst.ctrl.stats.data.workerTotal import WorkerTotal
 from lsst.ctrl.stats.data.dbEntry import DbEntry
 from lsst.ctrl.stats.data.submissionTimes import SubmissionTimes
-from lsst.ctrl.stats.data.initialSubmissionTimes import InitialSubmissionTimes
 from lsst.ctrl.stats.data.successTimes import SuccessTimes
 from lsst.ctrl.stats.data.submitsPerInterval import SubmitsPerInterval
 from lsst.ctrl.stats.data.coresPerSecond import CoresPerSecond
