@@ -25,7 +25,9 @@ from lsst.ctrl.stats.data.dbEntries import DbEntries
 class SubmissionTimes:
 
     def __init__(self, dbm):
-        query = 'select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), UNIX_TIMESTAMP(terminationTime) from submissions order by submitTime, dagNode;'
+        # this query sorts by submission time, and dagNode.  The dagNode
+        # needs to be sorted this way because otherwise it comes out A1, A10, A11, A12, A2, A3, A4, instead of A1, A2, A3, A4, etc.
+        query = 'select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), UNIX_TIMESTAMP(terminationTime) from submissions order by submitTime, cast(mid(dagNode,2,length(dagNode)-1) as unsigned);'
     
         results = dbm.execCommandN(query)
     

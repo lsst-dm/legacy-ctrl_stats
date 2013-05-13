@@ -33,6 +33,10 @@ class DbStartInfo:
         self.terminationTime = info[4]
         self.timeToNext = -1
 
+#
+# represents which each job was started
+#
+
 class NewJobStart:
 
     def __init__(self, dbm):

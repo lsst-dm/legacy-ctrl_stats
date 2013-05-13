@@ -22,6 +22,9 @@
 from lsst.ctrl.stats.data.dbEntry import DbEntry
 from lsst.ctrl.stats.data.dbEntries import DbEntries
 
+#
+# represents the initial times each worker was submitted
+#
 class InitialSubmissionTimes:
 
     def __init__(self, dbm):
