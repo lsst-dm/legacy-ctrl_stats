@@ -164,27 +164,36 @@ def printSummary(dbm, entries):
     # worker submitted, so look it up
     firstExecutingWorker = executingWorkers.getFirstExecutingWorker()
 
-    print "First executing worker %s started at %s" % (firstExecutingWorker.dagNode, dateTime(firstExecutingWorker.executionStartTime))
-    print "First executing worker %s stopped at %s" % (firstExecutingWorker.dagNode, dateTime(firstExecutingWorker.executionStopTime))
-    print "First executing worker %s run duration %s" % (firstExecutingWorker.dagNode, timeStamp(firstExecutingWorker.executionStopTime-firstExecutingWorker.executionStartTime))
+    dagNode = firstExecutingWorker.dagNode
+    startTime = firstExecutingWorker.executionStartTime
+    stopTime = firstExecutingWorker.executionStopTime
+    print "First executing worker %s started at %s" % (dagNode, dateTime(startTime))
+    print "First executing worker %s stopped at %s" % (dagNode, dateTime(stopTime))
+    print "First executing worker %s run duration %s" % (dagNode, timeStamp(stopTime-startTime))
     print
 
 
     # last worker in the list
     lastWorker = entries.getLastWorker()
-    print "Last submitted worker %s submitted at %s" % (lastWorker.dagNode, dateTime(lastWorker.submitTime))
-    print "Last submitted worker %s started executing at %s" % (lastWorker.dagNode, dateTime(lastWorker.executionStartTime))
-    print "Last submitted worker %s stopped executing at %s" % (lastWorker.dagNode, dateTime(lastWorker.executionStopTime))
-    print "Last submitted worker %s run duration %s" % (lastWorker.dagNode, timeStamp(lastWorker.executionStopTime-lastWorker.executionStartTime))
+    dagNode = lastWorker.dagNode
+    startTime = lastWorker.executionStartTime
+    stopTime = lastWorker.executionStopTime
+    print "Last submitted worker %s submitted at %s" % (dagNode, dateTime(lastWorker.submitTime))
+    print "Last submitted worker %s started executing at %s" % (dagNode, dateTime(startTime))
+    print "Last submitted worker %s stopped executing at %s" % (dagNode, dateTime(stopTime))
+    print "Last submitted worker %s run duration %s" % (dagNode, timeStamp(stopTime-startTime))
     print
 
     # last executing worker is not necessarily the last worker that was
     # submitted.  It's the last worker that was executing at the end of the
     # run.
     lastExecutingWorker = executingWorkers.getLastExecutingWorker()
-    print "Last executing worker %s started at: %s " % (lastExecutingWorker.dagNode, dateTime(lastExecutingWorker.executionStartTime))
-    print "Last executing worker %s finished at: %s " % (lastExecutingWorker.dagNode, dateTime(lastExecutingWorker.executionStopTime))
-    print "Last executing worker %s run duration %s" % (lastExecutingWorker.dagNode, timeStamp(lastExecutingWorker.executionStopTime-lastExecutingWorker.executionStartTime))
+    dagNode = lastExecutingWorker.dagNode
+    startTime = lastExecutingWorker.executionStartTime
+    stopTime = lastExecutingWorker.executionStopTime
+    print "Last executing worker %s started at: %s " % (dagNode, dateTime(startTime))
+    print "Last executing worker %s finished at: %s " % (dagNode, dateTime(stopTime))
+    print "Last executing worker %s run duration %s" % (dagNode, timeStamp(stopTime-startTime))
 
     # workers overall
     submitDuration = lastWorker.submitTime-initialFirstWorker.submitTime

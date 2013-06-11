@@ -74,6 +74,11 @@ class NewJobStart:
                     timeToNext = timeList[i+1][0] - timeList[i][1]
                     if timeToNext < 0:
                         print "ERROR!"
+                        print "length = ",length
+                        print "i = ",i
+                        print "timeList[i+1][0] = ", timeList[i+1][0]
+                        print "timeList[i][1] = ", timeList[i][1]
+                        print "timeToNext = ",timeToNext
                         print timeList
                         sys.exit(100)
                     if timeToNext not in totals:
