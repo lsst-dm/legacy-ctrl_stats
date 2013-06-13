@@ -23,7 +23,7 @@
 
 # examples:
 #
-# stats.py -H lsst10 -p 3306 -d testing --submits-per-interval
+# report.py -H lsst10 -p 3306 -d testing -S
 
 import os, sys
 import datetime
@@ -77,6 +77,7 @@ def run():
 
     dbm.execCommand0('use '+database)
 
+    # command line arguments
     values = None
     submitTimes = SubmissionTimes(dbm)
     entries = submitTimes.getEntries()
@@ -235,6 +236,7 @@ def printSummary(dbm, entries):
     totals = newJobStart.calculate()
 
     
+    # execution switch over
     print "Time from the end of one worker until the next worker starts"
     totalStarts = 0
     totalMinutes = 0
@@ -252,6 +254,7 @@ def printSummary(dbm, entries):
 
     print
 
+    # totals
     submittedWorkers = WorkerTotal(dbm)
     print "Total submitted workers: %d" % submittedWorkers.getTotal("submissions")
     successfulWorkers = WorkerTotal(dbm)
@@ -262,9 +265,11 @@ def printSummary(dbm, entries):
     for t in totals:
         print "%s: %s" % (t[0],t[1])
         
+# return a formatted date string
 def dateTime(val):
     return datetime.datetime.fromtimestamp(val).strftime('%Y-%m-%d %H:%M:%S')
 
+# return the number of seconds
 def timeStamp(val):
     return str(datetime.timedelta(seconds=val))
 
