@@ -50,6 +50,16 @@ usage: condorLogInfo.py [-h] [-v] [-c CONDORIDS [CONDORIDS ...]] -f FILENAMES
 example:
 condorLogInfo.py -c 630.000.000 -f srp_2012_0925_160117/*nodes.log
 
+----
+report.py - a statistics reporting utility.  Use to print out information
+about what happened during a run.  Takes as an argument previously ingested
+run information (via one of the ingest utilities above) in a named database.
+
+usage: report.py -H HOST [-p PORT] -d database_name [-S|I|C|N]
+
+example:
+report.py -H kaboom.ncsa.illinois.edu -p 3303 -d srp_2013_0601_140432 -S
+
 ==============
 Notes extending lsst.ctrl.stats.records classes:
 ==============

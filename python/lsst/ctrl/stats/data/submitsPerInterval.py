@@ -50,7 +50,5 @@ class SubmitsPerInterval:
         self.values.append([last,submits])
         
 
-        # TODO: handle last elements case
-
     def getValues(self):
         return self.values

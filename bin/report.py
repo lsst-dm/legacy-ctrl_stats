@@ -304,20 +304,6 @@ def jobRunTimes(ents):
     return minRunTime, maxRunTime, avg
 
 
-def writeValues(values):
-    if values == None:
-        return
-    for j in range(len(values)):
-        val = values[j]
-        length = len(val)
-        for i in range(length):
-            if (i > 0):
-                sys.stdout.write(", %s" % val[i])
-            elif i == 0:
-                sys.stdout.write("%s" % val[0])
-        sys.stdout.write("\n")
-    return
-       
 def writeDateValues(values):
     if values == None:
         return
