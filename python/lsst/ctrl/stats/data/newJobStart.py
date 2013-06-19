@@ -42,7 +42,7 @@ class NewJobStart:
     def __init__(self, dbm):
         self.dbm = dbm
 
-        query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(terminationTime) from submissions where executionStartTime != '0000-00-00 00:00:00' and dagNode != 'A' and dagNode !='B' order by executionHost, slotName, executionStartTime;"
+        query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(terminationTime) from submissions where executionStartTime != '0000-00-00 00:00:00' and dagNode != 'A' and dagNode !='B' and slotName !='' order by executionHost, slotName, executionStartTime;"
 
         results = self.dbm.execCommandN(query)
         self.entries = []

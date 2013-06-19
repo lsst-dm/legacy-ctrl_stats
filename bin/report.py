@@ -247,22 +247,28 @@ def printSummary(dbm, entries):
 
     
     # execution switch over
-    print "Time from the end of one worker until the next worker starts"
-    totalStarts = 0
-    totalMinutes = 0
-    for key,value in totals.iteritems():
-        if key == -1:
-            print "Single worker started: %d worker%s total" % (value, 's' if value > 1 else '')
-        else:
-            print "%d second%s until next worker started: %d worker%s total" % (key, 's' if key > 1 else '', value, 's' if value > 1 else '')
-            totalMinutes = totalMinutes + key*value
-            totalStarts = totalStarts + value
-    if totalStarts == 0:
-        print "No workers scheduled for more than one slot"
+    if len(list(totals)) == 0:
+        print "Could not calculate execution times between workers because"
+        print "no valid entries were found.  Check to see if workers were"
+        print "executed, and/or if valid slot names were set."
+        print
     else:
-        print "Mean time to next worker start: %.2f seconds" % (totalMinutes/float(totalStarts))
+        print "Time from the end of one worker until the next worker starts"
+        totalStarts = 0
+        totalMinutes = 0
+        for key,value in totals.iteritems():
+            if key == -1:
+                print "Single worker started: %d worker%s total" % (value, 's' if value > 1 else '')
+            else:
+                print "%d second%s until next worker started: %d worker%s total" % (key, 's' if key > 1 else '', value, 's' if value > 1 else '')
+                totalMinutes = totalMinutes + key*value
+                totalStarts = totalStarts + value
+        if totalStarts == 0:
+            print "No workers scheduled for more than one slot"
+        else:
+            print "Mean time to next worker start: %.2f seconds" % (totalMinutes/float(totalStarts))
 
-    print
+        print
 
     # totals
     submittedWorkers = WorkerTotal(dbm)
