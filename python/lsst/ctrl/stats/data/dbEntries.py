@@ -58,4 +58,6 @@ class DbEntries:
 
     def getPostJobSubmitTime(self):
         ent = self.getPostJob()
+        if ent == None:
+            return None
         return ent.submitTime

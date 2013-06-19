@@ -125,6 +125,10 @@ def printPreJobSummary(dbm, entries):
 def printPostJobSummary(dbm, entries):
     # postJob
     postJob = entries.getPostJob()
+    if postJob == None:
+        print "PostJob not executed"
+        print
+        return
     postJobSubmitTime = dateTime(postJob.submitTime)
     postJobStartTime = dateTime(postJob.executionStartTime)
     runTime = postJob.executionStopTime-postJob.executionStartTime
@@ -202,8 +206,14 @@ def printSummary(dbm, entries):
 
     workerRunTime = lastExecutingWorker.executionStopTime-firstExecutingWorker.executionStartTime
     print "First executing worker started to last executing worker finished: %s" % (timeStamp(workerRunTime))
-    delay = entries.getPostJobSubmitTime() - lastExecutingWorker.executionStopTime
-    print "Delay of end of last executing worker %s to submission of postJob: %s" % (lastExecutingWorker.dagNode, timeStamp(delay))
+    postTime =  entries.getPostJobSubmitTime()
+    if postTime is None:
+        print
+        print "Could not calculate delay of end of last executing worker"
+        print "to submission of postJob, because postJob did not execute."
+    else:
+        delay = postTime - lastExecutingWorker.executionStopTime
+        print "Delay of end of last executing worker %s to submission of postJob: %s" % (lastExecutingWorker.dagNode, timeStamp(delay))
     print
 
     # run times
