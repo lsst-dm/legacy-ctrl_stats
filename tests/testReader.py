@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # 
 # LSST Data Management System
-# Copyright 2008-2012 LSST Corporation.
+# Copyright 2008-2013 LSST Corporation.
 # 
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
@@ -23,6 +23,7 @@
 import os
 import unittest
 import lsst.ctrl.stats.records as recordslib
+from datetime import date
 from lsst.ctrl.stats.reader import Reader
 
 class test1(unittest.TestCase):
@@ -30,6 +31,10 @@ class test1(unittest.TestCase):
         filename = os.path.join("tests","testfiles","reader_test.log")
         reader = Reader(filename)
         self.records = reader.getRecords()
+        # Condor doesn't emit the the current year in records.  The classifier
+        # code assumes it's the current year, and prepends that, so we have
+        # to assume that here as well when testing for the date.
+        self.year = str(date.today().year)
 
     def test1(self):
         # check to see we have the number of records we expect
@@ -60,7 +65,7 @@ class test1(unittest.TestCase):
         self.assertEqual(rec.imageSize, 272192)
         self.assertEqual(rec.memoryUsageMb, 40)
         self.assertEqual(rec.residentSetSizeKb, 40640)
-        self.assertEqual(rec.timestamp, "2012-10-17 20:00:07")
+        self.assertEqual(rec.timestamp, self.year+"-10-17 20:00:07")
 
     def test5(self):
         # check validity of second Updated record
@@ -83,7 +88,7 @@ class test1(unittest.TestCase):
         self.assertEqual(rec.sysRunRemoteUsage, 1)
         self.assertEqual(rec.sysTotalLocalUsage, 0)
         self.assertEqual(rec.sysTotalRemoteUsage, 1)
-        self.assertEqual(rec.timestamp, "2012-10-17 20:00:14")
+        self.assertEqual(rec.timestamp, self.year+"-10-17 20:00:14")
         self.assertEqual(rec.totalBytesReceived, 1449)
         self.assertEqual(rec.totalBytesSent, 25594)
         self.assertEqual(rec.userRunLocalUsage, 0)
