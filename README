@@ -87,6 +87,16 @@ create the correct insertion string.  This was done to make it easier to
 add new columns (or delete old ones) and still maintain the integrity of
 the insert string, and to print out record values for debuggging.
 
+==============
+data directory classes
+==============
+The classes in the python/lsst/ctrl/stats/data directory are used by the
+bin/report.py tool tool to output statistics about previously ingested HTCondor
+runs.  Various queries take place in each of these classes.  The results of
+the queries are then saved and manipulated to output statistical 
+information about a particular run.
+
+
 -------------
 Further information can be found here:
 
