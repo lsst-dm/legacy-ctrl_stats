@@ -20,6 +20,10 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 import datetime
+
+#
+# representation of how how many submissions happen per interval, in seconds
+#
 class SubmitsPerInterval:
 
     def __init__(self, dbm, interval):

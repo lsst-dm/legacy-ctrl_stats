@@ -50,6 +50,8 @@ class NewJobStart:
             startInfo = DbStartInfo(res)
             self.entries.append(startInfo)
 
+    # calculate the length of time from when a worker stopped in a slot until
+    # the next worker started
     def calculate(self):
         mylist = []
         for ent in self.entries:

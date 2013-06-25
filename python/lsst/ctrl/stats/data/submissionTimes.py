@@ -22,6 +22,9 @@
 from lsst.ctrl.stats.data.dbEntry import DbEntry
 from lsst.ctrl.stats.data.dbEntries import DbEntries
 
+#
+# representation of the submission times of each of the dagNodes
+#
 class SubmissionTimes:
 
     def __init__(self, dbm):

@@ -51,10 +51,6 @@ class CoresPerInterval(CoresPer):
 
             for i in range(length):
                 ent = entries.getEntry(i)
-                if ent.dagNode == 'A':
-                    continue
-                if ent.dagNode == 'B':
-                    continue
                 entryRangeSet = set(range(ent.executionStartTime, ent.executionStopTime+1))
                 if (len(intervalRangeSet&entryRangeSet) > 0):
                     x = x + 1
@@ -62,10 +58,10 @@ class CoresPerInterval(CoresPer):
             self.values.append([last,x])
             stepInterval = stepInterval+1
 
-            if (next >= stopTime):
+            if next >= stopTime:
                 return
             last = next
-            if (next+interval > stopTime):
+            if (next+interval) > stopTime:
                 next = stopTime
             else:
                 next = next+interval

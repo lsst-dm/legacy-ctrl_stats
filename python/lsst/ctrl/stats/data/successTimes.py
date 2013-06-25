@@ -22,6 +22,9 @@
 from lsst.ctrl.stats.data.dbEntry import DbEntry
 from lsst.ctrl.stats.data.dbEntries import DbEntries
 
+#
+# number of successful dagNode completions.
+#
 class SuccessTimes:
 
     def __init__(self, dbm):

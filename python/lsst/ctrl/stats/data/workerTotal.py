@@ -22,6 +22,9 @@
 from lsst.ctrl.stats.data.dbEntry import DbEntry
 from lsst.ctrl.stats.data.dbEntries import DbEntries
 
+#
+# count the total number of workers. does not include the preJob or postJob 
+#
 class WorkerTotal:
 
     def __init__(self, dbm):

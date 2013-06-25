@@ -44,10 +44,6 @@ class CoresPerSecond(CoresPer):
             length = entries.getLength()
             for i in range(length):
                 ent = entries.getEntry(i)
-                if ent.dagNode == 'A':
-                    continue
-                if ent.dagNode == 'B':
-                    continue
                 if (thisSecond >= ent.executionStartTime) and (thisSecond <= ent.executionStopTime):
                     x = x + 1
             

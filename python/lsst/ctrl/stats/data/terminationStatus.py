@@ -22,6 +22,7 @@
 from lsst.ctrl.stats.data.dbEntry import DbEntry
 from lsst.ctrl.stats.data.dbEntries import DbEntries
 
+# representation of how all jobs ended, based on termination codes
 class TerminationStatus:
 
     def __init__(self, dbm):
