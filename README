@@ -96,6 +96,13 @@ runs.  Various queries take place in each of these classes.  The results of
 the queries are then saved and manipulated to output statistical 
 information about a particular run.
 
+==============
+report utility
+==============
+
+$ report.py -H fester.ncsa.uiuc.edu -p 32861 -d database_name -S
+
+prints a summary of the information from the run contained in database_name
 
 -------------
 Further information can be found here:
