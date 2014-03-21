@@ -26,9 +26,11 @@ import datetime
 class CoresPer:
 
     def calculateMax(self):
-        # count the number of cores used at maximum
-        # also calculate the first time that many cores were used
-        # and the last time that many cores were used.
+        """
+        count the number of cores used at maximum
+        also calculate the first time that many cores were used
+        and the last time that many cores were used.
+        """
         maximumCores = -1
         timeFirstUsed = None
         timeLastUsed = None

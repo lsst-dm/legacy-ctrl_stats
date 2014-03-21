@@ -21,10 +21,10 @@
 #
 import datetime
 
-#
-# representation of how how many submissions happen per interval, in seconds
-#
 class SubmitsPerInterval:
+    """
+    Representation of how how many submissions happen per interval, in seconds
+    """
 
     def __init__(self, dbm, interval):
         self.dbm = dbm

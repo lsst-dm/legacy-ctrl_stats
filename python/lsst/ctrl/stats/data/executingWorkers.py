@@ -21,10 +21,10 @@
 #
 from lsst.ctrl.stats.data.dbEntry import DbEntry
 
-#
-# represents executing workers
-#
 class ExecutingWorkers:
+    """
+    # represents executing workers
+    """
 
     def __init__(self, dbm):
         self.dbm = dbm

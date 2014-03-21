@@ -33,11 +33,11 @@ class DbStartInfo:
         self.terminationTime = info[4]
         self.timeToNext = -1
 
-#
-# represents which each job was started
-#
-
 class NewJobStart:
+    """
+    represents when each job was started
+    """
+
 
     def __init__(self, dbm):
         self.dbm = dbm
@@ -50,9 +50,11 @@ class NewJobStart:
             startInfo = DbStartInfo(res)
             self.entries.append(startInfo)
 
-    # calculate the length of time from when a worker stopped in a slot until
-    # the next worker started
     def calculate(self):
+        """
+        calculate the length of time from when a worker stopped in a slot
+        until the next worker started
+        """
         mylist = []
         for ent in self.entries:
             mylist.append((ent.executionHost+"/"+ent.slotName,[ent.executionStartTime,ent.terminationTime]))
@@ -92,6 +94,9 @@ class NewJobStart:
             
 
     def consolidate(self):
+        """
+        Consolidate the information and sort the information.
+        """
         totals = {}
         for ent in self.entries:
             if ent.secondsTilNext is None:
@@ -102,4 +107,3 @@ class NewJobStart:
                 totals[ent.secondsTilNext] = totals[ent.secondsTilNext] + 1
         od = collections.OrderedDict(sorted(totals.items()))
         return od
-                

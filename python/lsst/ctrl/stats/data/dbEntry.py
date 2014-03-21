@@ -20,10 +20,10 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
-#
-# a representation of a single database query
-#
 class DbEntry:
+    """
+    A representation of a single database query
+    """
 
     def __init__(self, dbList):
         self.dagNode = dbList[0]

@@ -19,11 +19,13 @@
 # the GNU General Public License along with this program.  If not, 
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+
 import sys
-#
-# represents the number of times a worker is executing in a particular slot
-#
+
 class ExecutionsPerSlot:
+    """
+    Represents the number of times a worker is executing in a particular slot
+    """
 
     def __init__(self, dbm):
         self.dbm = dbm

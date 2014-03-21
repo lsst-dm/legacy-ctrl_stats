@@ -90,12 +90,5 @@ class Reader(object):
         else:
             return None
     
-        #if eventNumber in CondorEvents.events:
-        #    recType = CondorEvents.events[eventNumber]
-        #    rec = recType(year, lines)
-        #    return rec
-        #else:
-        #    return None
-
 if __name__ == "__main__":
     records = Reader(sys.argv[1])

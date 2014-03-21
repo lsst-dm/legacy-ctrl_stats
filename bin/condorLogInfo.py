@@ -33,6 +33,7 @@ import sys
 from lsst.ctrl.stats.reader import Reader
 
 def printRecords(records, job, verbose):
+    """ print records for a particular job, optionally in verbose mode"""
     for rec in records[job]:
             name = rec.__class__.__name__
             if verbose:

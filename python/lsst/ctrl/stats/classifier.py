@@ -30,7 +30,10 @@ class Classifier(object):
     groups of summary records
     """
     def createUpdatesRecord(self, entry, rec):
-        """Create a new UpdatesRecord and fill that in
+        """Create a new UpdatesRecord and fill it in
+        @param entry: an entry to update
+        @param rec: a record containing new information
+        @return: the new updated entry
         """
         updateEntry = UpdatesRecord()
         updateEntry.condorId = entry.condorId
@@ -45,6 +48,8 @@ class Classifier(object):
 
     def recordTermination(self, entry, rec):
         """Record fields after we've received a termination record
+        @param entry: an entry to fill in
+        @param rec: a record containing information
         """
         entry.executionStopTime = rec.timestamp
         entry.userRunRemoteUsage = rec.userRunRemoteUsage
@@ -61,11 +66,10 @@ class Classifier(object):
 
     def recordEviction(self, entry, rec):
         """Record eviction  information
+        @param entry: an entry to fill in
+        @param rec: a record containing information
         """
         self.recordTerminationInfo(entry, rec)
-        #entry.terminationTime = rec.timestamp
-        #entry.terminationCode = rec.event
-        #entry.terminationReason = rec.reason
         entry.userRunRemoteUsage = rec.userRunRemoteUsage
         entry.sysRunRemoteUsage = rec.sysRunRemoteUsage
         entry.finalDiskUsageKb = rec.diskUsage
@@ -77,6 +81,8 @@ class Classifier(object):
 
     def recordShadowExceptionInfo(self, entry, rec):
         """Record shadow exception record information
+        @param entry: an entry to fill in
+        @param rec: a record containing information
         """
         self.recordTerminationInfo(entry, rec)
         entry.bytesSent = rec.runBytesSent
@@ -84,6 +90,8 @@ class Classifier(object):
 
     def updateJobInformation(self, entry, rec):
         """Update entry with record's information
+        @param entry: an entry to fill in
+        @param rec: a record containing information
         """
         entry.updateImageSize = rec.imageSize
         entry.updateMemoryUsageMb = rec.memoryUsageMb
@@ -91,12 +99,19 @@ class Classifier(object):
 
     def recordTerminationInfo(self, entry, rec):
         """Record termination information
+        @param entry: an entry to fill in
+        @param rec: a record containing information
         """
         entry.terminationCode = rec.event
         entry.terminationTime = rec.timestamp
         entry.terminationReason = rec.reason
 
     def createResubmissionRecord(self, entry, rec):
+        """Create a new record containing termination information
+        @param entry: an entry to fill in
+        @param rec: a record containing information
+        @return a new SubmissionsRecord
+        """
         newRec = SubmissionsRecord()
         newRec.condorId = rec.condorId
         newRec.dagNode = entry.dagNode
@@ -108,7 +123,7 @@ class Classifier(object):
         database records, recording statistics about data in the list.
         @param records: list containing Condor event records
         @return: list of submissions, a totalsRecord and a list of updates
-        return entries, totalsRecord, updateEntries
+        @return entries, totalsRecord, updateEntries
         """
 
         entries = []
@@ -192,6 +207,7 @@ class Classifier(object):
 
     def tabulate(self, records, entries):
         """
+        Tabulate all the information in records and entires into one record
         @param records: a list of Condor Event Records
         @param entries: a list of summary "submissions" records for the database
         @return: a record intended for the "totals" table in the database

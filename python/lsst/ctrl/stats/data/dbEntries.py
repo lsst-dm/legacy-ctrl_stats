@@ -20,10 +20,10 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
-#
-# a representation of the of the database entries for a given run
-#
 class DbEntries:
+    """
+    A representation of the database entries for a given run
+    """
 
     def __init__(self, entries):
         self.entries = entries

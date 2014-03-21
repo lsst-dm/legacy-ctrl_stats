@@ -23,6 +23,9 @@ import re
 import sys
 
 class Record(object):
+    """
+    Representation of a HTCondor record
+    """
     def __init__(self, year, lines):
         self.lines = list(lines)
 
