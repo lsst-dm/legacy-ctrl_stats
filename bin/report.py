@@ -49,7 +49,7 @@ def run():
     basename = os.path.basename(sys.argv[0])
 
     parser = argparse.ArgumentParser(prog=basename, 
-                description='''a statistics reporting utility.  Use to print 
+                description='''A statistics reporting utility.  Use to print 
                             out information about what happened during a run.
                             Takes as an argument previously ingested run 
                             information one of the ingest utilities  in 

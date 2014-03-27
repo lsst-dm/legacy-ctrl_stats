@@ -38,7 +38,12 @@ from lsst.pex.policy import Policy
 def run():
     basename = os.path.basename(sys.argv[0])
 
-    parser = argparse.ArgumentParser(prog=basename)
+    parser = argparse.ArgumentParser(prog=basename,
+                description='''Takes a list of log files and ingests them into a
+database''',
+                epilog='''example:
+condorLogIngest.py -H lsst10 -d testing -f worker.log'''
+)
     parser.add_argument("-H", "--host", action="store", default=None, dest="host", help="mysql server host", type=str, required=True)
     parser.add_argument("-p", "--port", action="store", default=3306, dest="port", help="mysql server port", type=int)
     parser.add_argument("-d", "--database", action="store", default=None, dest="database", help="database name", type=str, required=True)
