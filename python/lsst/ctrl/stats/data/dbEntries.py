@@ -30,6 +30,7 @@ class DbEntries:
         Constructor
         @param entries representation of all database entries for a run
         """
+        ## objects representing database records
         self.entries = entries
 
     def getEntry(self, x):

@@ -26,10 +26,20 @@ class DbEntry:
     """
 
     def __init__(self, dbList):
+        """
+        Constructor
+        """
+        ## the DAG node name
         self.dagNode = dbList[0]
+        ## the host where the job resided
         self.executionHost = dbList[1]
+        ## the name of the slot
         self.slotName = dbList[2]
+        ## the time the job was submitted to HTCondor
         self.submitTime = dbList[3]
+        ## the time the job started execution
         self.executionStartTime = dbList[4]
+        ## the time the job ended execution
         self.executionStopTime = dbList[5]
+        ## the time the job was terminated
         self.terminationTime = dbList[6]

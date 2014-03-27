@@ -23,22 +23,37 @@ from lsst.ctrl.stats.data.dbEntry import DbEntry
 
 class ExecutingWorkers:
     """
-    # represents executing workers
+    Represents executing workers
     """
 
     def __init__(self, dbm):
+        """
+        Constructor
+        """
+        ## the database to query
         self.dbm = dbm
+        ## the first job that executed
         self.firstExecutingWorker = self.getFirst()
+        ## the last job that executed
         self.lastExecutingWorker = self.getLast()
 
 
     def getFirstExecutingWorker(self):
+        """
+        @return the first worker that executed
+        """
         return self.firstExecutingWorker
 
     def getLastExecutingWorker(self):
+        """
+        @return the last worker that executed
+        """
         return self.lastExecutingWorker
 
     def getFirst(self):
+        """
+        @return the first job that executed
+        """
         query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), UNIX_TIMESTAMP(terminationTime)  from submissions where dagNode != 'A' and executionStartTime !='0000-00-00 00:00:00' order by executionStartTime limit 1;"
 
         results = self.dbm.execCommandN(query)
@@ -48,6 +63,9 @@ class ExecutingWorkers:
 
 
     def getLast(self):
+        """
+        @return the last job that executed
+        """
         query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), UNIX_TIMESTAMP(terminationTime) from submissions where dagNode != 'B' and executionStartTime !='0000-00-00 00:00:00' order by executionStopTime DESC limit 1;"
 
         results = self.dbm.execCommandN(query)

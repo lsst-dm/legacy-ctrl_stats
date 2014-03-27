@@ -28,6 +28,9 @@ class DbCoreInfo:
     Class to hold information about the host, slot and the time it started
     """
     def __init__(self, info):
+        """
+        Constructor
+        """
         ## the host on which the job was executing
         self.executionHost = info[0]
         ## the name of the HTCondor slot
@@ -45,11 +48,13 @@ class CoreUtilization:
         Constructor
         @parameter dbm The database object to query.
         """
+        ## the database object to query
         self.dbm = dbm
 
         query = "select executionHost, slotName, min(UNIX_TIMESTAMP(executionStartTime)) from submissions where dagNode !='A' and dagNode != 'B'  group by executionHost, slotName order by min(UNIX_TIMESTAMP(executionStartTime))"
 
         results = self.dbm.execCommandN(query)
+        ## the list of all database records returned
         self.entries = []
         for res in results:
             coreInfo = DbCoreInfo(res)

@@ -75,6 +75,9 @@ class CoresPerInterval(CoresPer):
                 next = next+interval
             
         maximumCores, timeFirstUsed, timeLastUsed = calculateMax()
+        ## the maximum number of cores use
         self.maximumCores = maximumCores
+        ## the first time at which a core was used for this job
         self.timeFirstUsed = timeFirstUsed
+        ## the last time at which a core was used for this job
         self.timeLastUsed = timeLastUsed

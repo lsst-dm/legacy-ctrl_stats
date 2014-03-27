@@ -34,6 +34,7 @@ class CoresPerSecond(CoresPer):
         @param the database object to query
         @param the entries to compare
         """
+        ## the database object to query
         self.dbm = dbm
 
         query = "select UNIX_TIMESTAMP(MIN(executionStartTime)), UNIX_TIMESTAMP(MAX(executionStopTime)) from submissions where UNIX_TIMESTAMP(executionStartTime) > 0 and dagNode != 'A' and dagNode != 'B' order by executionStartTime;"
@@ -42,6 +43,7 @@ class CoresPerSecond(CoresPer):
         startTime = results[0][0]
         stopTime = results[0][1]
 
+        ## the intervals between entries
         self.values = []
         # cycle through the seconds, counting the number of cores being used
         # during each second
@@ -55,4 +57,10 @@ class CoresPerSecond(CoresPer):
             
             self.values.append([thisSecond,x])
 
-        self.maximumCores, self.timeFirstUsed, self.timeLastUsed = calculateMax()
+        maximumCores, timeFirstUsed, timeLastUsed = calculateMax()
+        ## the maximum number of cores use
+        self.maximumCores = maximumCores
+        ## the first time at which a core was used for this job
+        self.timeFirstUsed = timeFirstUsed
+        ## the last time at which a core was used for this job
+        self.timeLastUsed = timeLastUsed
