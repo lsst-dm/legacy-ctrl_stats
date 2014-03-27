@@ -48,7 +48,14 @@ from lsst.ctrl.stats.data.coreUtilization import CoreUtilization
 def run():
     basename = os.path.basename(sys.argv[0])
 
-    parser = argparse.ArgumentParser(prog=basename)
+    parser = argparse.ArgumentParser(prog=basename, 
+                description='''a statistics reporting utility.  Use to print 
+                            out information about what happened during a run.
+                            Takes as an argument previously ingested run 
+                            information one of the ingest utilities  in 
+                            a named database.''',
+                epilog='''example:
+report.py -H kaboom.ncsa.illinois.edu -p 3303 -d srp_2013_0601_140432 -S''')
     parser.add_argument("-H", "--host", action="store", default=None, dest="host", help="mysql server host", type=str, required=True)
     parser.add_argument("-p", "--port", action="store", default=3306, dest="port", help="mysql server port", type=int)
     parser.add_argument("-d", "--database", action="store", default=None, dest="database", help="database name", type=str, required=True)
