@@ -25,6 +25,9 @@ import collections
 from collections import defaultdict
 
 class DbStartInfo:
+    """
+    Starting record
+    """
     def __init__(self, info):
         self.dagNode = info[0]
         self.executionHost = info[1]

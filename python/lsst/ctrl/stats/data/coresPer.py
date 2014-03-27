@@ -20,10 +20,15 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 import datetime
-#
-# CoresPer - Base class to use by the CoresPer* classes
-#
 class CoresPer:
+    """
+    Base class to use by the CoresPer* classes
+    """
+
+    def __init__(self):
+        self.maximumCores = -1
+        self.timeFirstUsed = None
+        self.timeLastUsed = None
 
     def calculateMax(self):
         """
@@ -31,33 +36,43 @@ class CoresPer:
         also calculate the first time that many cores were used
         and the last time that many cores were used.
         """
-        maximumCores = -1
-        timeFirstUsed = None
-        timeLastUsed = None
+        self.maximumCores = -1
+        self.timeFirstUsed = None
+        self.timeLastUsed = None
         for j in range(len(self.values)):
             val = self.values[j]
             timeValue = val[0]
             cores = val[1]
             # this counts the times the maximum cores
             # were first used
-            if cores > maximumCores:
-                maximumCores = cores
-                timeFirstUsed = timeValue
+            if cores > self.maximumCores:
+                self.maximumCores = cores
+                self.timeFirstUsed = timeValue
             # this extra conditional also tallies the
             # last time all the cores were used
-            if cores == maximumCores:
-                timeLastUsed = timeValue
-        return maximumCores, timeFirstUsed, timeLastUsed
+            if cores == self.maximumCores:
+                self.timeLastUsed = timeValue
+        return self.maximumCores, self.timeFirstUsed, self.timeLastUsed
     
     def getValues(self):
+        """
+        returns generic values for the subclass
+        """
         return self.values
-
     def getMaximumCores(self):
+        """
+        returns maximum number of cores utilitized
+        """
         return self.maximumCores
 
     def maximumCoresFirstUsed(self):
+        """
+        returns the time the maximum number of cores were being utilitized
+        """
         return self.timeFirstUsed
 
     def maximumCoresLastUsed(self):
+        """
+        returns the last time the maximum number of cores were being utilitized
+        """
         return self.timeLastUsed
-

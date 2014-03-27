@@ -27,6 +27,13 @@ class CoresPerInterval(CoresPer):
     """
 
     def __init__(self, dbm, entries, interval):
+        """
+        query the database for the number of cores active during an interval
+        @param dbm the database object to query
+        @param entries the set of entries to compare
+        @param interval the time interval
+        """
+        ## the database object to query
         self.dbm = dbm
 
         query = "select UNIX_TIMESTAMP(MIN(executionStartTime)), UNIX_TIMESTAMP(MAX(executionStopTime)) from submissions where UNIX_TIMESTAMP(executionStartTime) > 0 and dagNode != 'A' and dagNode != 'B' order by executionStartTime;"
@@ -35,6 +42,7 @@ class CoresPerInterval(CoresPer):
         startTime = results[0][0]
         stopTime = results[0][1]
 
+        ## computed values
         self.values = []
         # cycle through the seconds, counting the number of cores being used
         # during each second
@@ -66,4 +74,7 @@ class CoresPerInterval(CoresPer):
             else:
                 next = next+interval
             
-        self.maximumCores, self.timeFirstUsed, self.timeLastUsed = calculateMax()
+        maximumCores, timeFirstUsed, timeLastUsed = calculateMax()
+        self.maximumCores = maximumCores
+        self.timeFirstUsed = timeFirstUsed
+        self.timeLastUsed = timeLastUsed

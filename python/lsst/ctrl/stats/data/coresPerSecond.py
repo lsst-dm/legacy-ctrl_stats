@@ -29,6 +29,11 @@ class CoresPerSecond(CoresPer):
     """
 
     def __init__(self, dbm, entries):
+        """
+        Constructor
+        @param the database object to query
+        @param the entries to compare
+        """
         self.dbm = dbm
 
         query = "select UNIX_TIMESTAMP(MIN(executionStartTime)), UNIX_TIMESTAMP(MAX(executionStopTime)) from submissions where UNIX_TIMESTAMP(executionStartTime) > 0 and dagNode != 'A' and dagNode != 'B' order by executionStartTime;"

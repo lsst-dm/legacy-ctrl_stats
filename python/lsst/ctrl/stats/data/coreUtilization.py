@@ -25,19 +25,26 @@ from collections import defaultdict
 
 class DbCoreInfo:
     """
-    class to hold information about the host, slot and the time it started
+    Class to hold information about the host, slot and the time it started
     """
     def __init__(self, info):
+        ## the host on which the job was executing
         self.executionHost = info[0]
+        ## the name of the HTCondor slot
         self.slotName = info[1]
+        ## start of execution
         self.executionStartTime = info[2]
 
 class CoreUtilization:
     """
-    get a listing of all the times at with a core is used.
+    Get a listing of all the times at with a core is used.
     """
 
     def __init__(self, dbm):
+        """
+        Constructor
+        @parameter dbm The database object to query.
+        """
         self.dbm = dbm
 
         query = "select executionHost, slotName, min(UNIX_TIMESTAMP(executionStartTime)) from submissions where dagNode !='A' and dagNode != 'B'  group by executionHost, slotName order by min(UNIX_TIMESTAMP(executionStartTime))"
@@ -49,10 +56,19 @@ class CoreUtilization:
             self.entries.append(coreInfo)
 
     def getFirstTime(self):
+        """
+        retrieve the first execution start time
+        """
         return self.entries[0].executionStartTime
                 
     def getLastTime(self):
+        """
+        retrieve the last execution start time
+        """
         return self.entries[-1].executionStartTime
 
     def coresUtilized(self):
+        """
+        the maximum of cores that were utilitized 
+        """
         return len(self.entries)
