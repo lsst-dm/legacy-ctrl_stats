@@ -26,8 +26,11 @@ class CoresPer:
     """
 
     def __init__(self):
+        ## the maximum number of cores
         self.maximumCores = -1
+        ## the time the core was first used
         self.timeFirstUsed = None
+        ## the time the core was last used
         self.timeLastUsed = None
 
     def calculateMax(self):
