@@ -24,16 +24,24 @@ import sys
 
 class ExecutionsPerSlot:
     """
-    Represents the number of times a worker is executing in a particular slot
+    Represents the number of times workers have run in HTCondor slots
     """
 
     def __init__(self, dbm):
+        """
+        Constructor
+        """
+        ## database object used for queries
         self.dbm = dbm
         query = "select concat(executionHost, '/', slotName) as slot, count(*) as timesUsed from submissions where dagNode != 'A' and dagNode != 'B' group by executionHost, slotName;"
 
+        ## results from the database query
         self.results = self.dbm.execCommandN(query)
 
     def average(self):
+        """
+        calculate the average executions that occurred overall
+        """
         avg = 0
         for res in self.results:
             avg = avg + res[1]
@@ -41,6 +49,9 @@ class ExecutionsPerSlot:
             
 
     def min(self):
+        """
+        calculate the least number of times slots has been utilitized
+        """
         m = sys.maxint
         for res in self.results:
             if m > res[1]:
@@ -48,6 +59,9 @@ class ExecutionsPerSlot:
         return m
 
     def max(self):
+        """
+        calculate the most number of times slots has been utilitized
+        """
         m = -sys.maxint -1
         for res in self.results:
             if res[1] > m:

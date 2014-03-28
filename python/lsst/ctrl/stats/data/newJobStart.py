@@ -29,11 +29,20 @@ class DbStartInfo:
     Starting record
     """
     def __init__(self, info):
+        """
+        Constructor
+        """
+        ## name of DAG node
         self.dagNode = info[0]
+        ## host job executed on
         self.executionHost = info[1]
+        ## name of slot which ran this job
         self.slotName = info[2]
+        ## time of start of execution
         self.executionStartTime = info[3]
+        ## time of termination of execution
         self.terminationTime = info[4]
+        ## time the next execution started in this slot
         self.timeToNext = -1
 
 class NewJobStart:
@@ -43,11 +52,16 @@ class NewJobStart:
 
 
     def __init__(self, dbm):
+        """
+        Constructor
+        """
+        ## database object to use in queries
         self.dbm = dbm
 
         query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(terminationTime) from submissions where executionStartTime != '0000-00-00 00:00:00' and dagNode != 'A' and dagNode !='B' and slotName !='' order by executionHost, slotName, executionStartTime;"
 
         results = self.dbm.execCommandN(query)
+        ## list of DBStartInfo record representing the results of the new job start query
         self.entries = []
         for res in results:
             startInfo = DbStartInfo(res)

@@ -38,7 +38,9 @@ class DatabaseManager(MySQLBase):
         @param password: the users's password
         """
         MySQLBase.__init__(self, dbHostName, portNumber)
+        ## user
         self.user = user
+        ## password
         self.password = password
 
         self.connect(user,password)

@@ -28,9 +28,17 @@ class WorkerTotal:
     """
 
     def __init__(self, dbm):
+        """
+        Constructor
+        """
+        ## database object to use in query
         self.dbm = dbm;
 
     def getTotal(self, tableName):
+        """
+        return the total number of workers, not including prejob and postjob
+        @return total number of workers
+        """
         query = "select  count(dagNode) from %s where dagNode != 'A' and dagNode != 'B'" % tableName
     
         results = self.dbm.execCommand1(query)

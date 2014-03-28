@@ -28,9 +28,17 @@ class TerminationStatus:
     """
 
     def __init__(self, dbm):
-        self.dbm = dbm;
+        """
+        Constructor
+        """
+        ## database object used to query
+        self.dbm = dbm
 
     def getTotals(self):
+        """
+        Return the number of times job termination events occurred.
+        @return list containing event type, number of occurrences pairs
+        """
         query = "select eventCodes.EventName, (select count(*) from submissions where submissions.terminationCode = eventCodes.eventCode and submissions.dagNode != 'A' and submissions.dagNode != 'B') as appears from eventCodes"
     
         results = self.dbm.execCommandN(query)

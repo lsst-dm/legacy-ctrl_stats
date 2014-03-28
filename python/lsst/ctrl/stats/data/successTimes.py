@@ -28,6 +28,10 @@ class SuccessTimes:
     """
 
     def __init__(self, dbm):
+        """
+        Constructor
+        @param dbm database object to use to query
+        """
         query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), UNIX_TIMESTAMP(terminationTime) from submissions where terminationCode='005';"
     
         results = dbm.execCommandN(query)
@@ -37,8 +41,12 @@ class SuccessTimes:
             dbEnt = DbEntry(res)
             ents.append(dbEnt)
 
+        ## DBEntries representing records of successful completions
         self.entries = DbEntries(ents)
     
 
     def getEntries(self):
+        """
+        @return DBEntries representing records of successful completions
+        """
         return self.entries

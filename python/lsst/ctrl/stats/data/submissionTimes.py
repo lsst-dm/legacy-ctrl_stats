@@ -41,8 +41,12 @@ class SubmissionTimes:
             dbEnt = DbEntry(res)
             ents.append(dbEnt)
 
+        ## DBEntries object with submission times of dagNodes
         self.entries = DbEntries(ents)
     
 
     def getEntries(self):
+        """
+        @return DBEntries object with submission times of dagNodes
+        """
         return self.entries

@@ -27,6 +27,12 @@ class SubmitsPerInterval:
     """
 
     def __init__(self, dbm, interval):
+        """
+        Constructor
+        @param dbm  database object used to query
+        @param interval length of interval we're interested in, in seconds
+        """
+        ## database object used to query
         self.dbm = dbm
 
         query = "select UNIX_TIMESTAMP(submitTime), count(*) as count from submissions where dagNode !='A' and dagNode != 'B' group by submitTime;"
@@ -35,6 +41,7 @@ class SubmitsPerInterval:
         startTime = results[0][0]
         count = results[0][1]
 
+        ## submit pairs for a given interval
         self.values = []
         # cycle through the seconds, counting the number of cores being used
         # during each interval
@@ -55,4 +62,7 @@ class SubmitsPerInterval:
         
 
     def getValues(self):
+        """
+        @return list of submit pairs for a given interval
+        """
         return self.values
