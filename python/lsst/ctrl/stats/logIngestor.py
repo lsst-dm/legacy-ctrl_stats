@@ -37,6 +37,7 @@ class LogIngestor(object):
         @param dbm: a database manager object
         @param database: the database name to write to
         """
+        ## database object to use for queries
         self.dbm = dbm
 
         submissionsTableName = "submissions"
@@ -62,8 +63,11 @@ class LogIngestor(object):
         filePath = os.path.join(pkg,"sql","updates.sql")
         dbm.loadSql(filePath, database)
 
+        ## full name of the submissions table
         self.submissionsTable = database+"."+submissionsTableName
+        ## full name of the updates table
         self.updatesTable = database+"."+updatesTableName
+        ## full name of the totals table
         self.totalsTable = database+"."+totalsTableName
 
     def ingest(self, filename):

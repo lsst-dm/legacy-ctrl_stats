@@ -26,6 +26,11 @@ class GridResourceDown(Record):
     The grid resource that a job is to run on is unavailable.
     """
     def __init__(self, year, lines):
+        """
+        Constructor
+        @param year - the year to tag the job with
+        @param lines - the strings making up this record
+        """
         Record.__init__(self, year, lines)
 
 eventClass = GridResourceDown

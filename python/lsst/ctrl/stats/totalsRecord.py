@@ -27,18 +27,35 @@ class TotalsRecord(SubmissionsRecord):
     here must match those of the SQL columns.
     """
     def __init__(self, rec):
+        """
+        Constructor
+        """
         SubmissionsRecord.__init__(self, rec)
+        ## this first time this job was submitted
         self.firstSubmitTime = "0000-00-00 00:00:00"
+        ## number of bytes sent
         self.totalBytesSent = 0
+        ## number of bytes received
         self.totalBytesReceived = 0
+        ## number of times this job was submitted
         self.submissions = 0
+        ## number of times this job was executed
         self.executions = 0
+        ## number of shadow exceptions that occurred
         self.shadowException = 0
+        ## number of times a socket lost occurred
         self.socketLost = 0
+        ## number of times a socket reconnection failure  occurred
         self.socketReconnectFailure = 0
+        ## number of times a socket reestablished communication
         self.socketReestablished = 0
+        ## job was evicted
         self.evicted = 0
+        ## job was aborted
         self.aborted = 0
+        ## number of slots this job used (probably because of it being rescheduled)
         self.slotsUsed = 0
+        ## number of hosts this job used (probably because of it being rescheduled)
         self.hostsUsed = 0
+        ## the name of the slot that was last used
         self.slotName = None

@@ -27,11 +27,22 @@ class UpdatesRecord(DbRecord):
     here must match those of the SQL columns.
     """
     def __init__(self):
+        """
+        Constructor
+        """
+        ## condor id
         self.condorId = None
+        ## dag node
         self.dagNode = None
+        ## host where this job was executing
         self.executionHost = None
+        ## time stamp of update
         self.timestamp = "0000-00-00 00:00:00"
+        ## image size of job
         self.imageSize = 0
+        ## memory usage of job in MB
         self.memoryUsageMb = 0
+        ## resident memory size in KB
         self.residentSetSizeKb = 0
+        ## name of the HTCondor slot this job ran in
         self.slotName = None

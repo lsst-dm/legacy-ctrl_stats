@@ -28,31 +28,59 @@ class Evicted(Record):
     """
     # event number: 004
     def __init__(self, year, lines):
+        """
+        Constructor
+        @param year - the year to tag the job with
+        @param lines - the strings making up this record
+        """
         Record.__init__(self, year, lines)
 
+        ## reason for eviction
         self.reason = lines[1].strip()
 
 
 
         pat = r"\((?P<term>\d+)\) Job was not checkpointed."
 
+        ## termination code
         self.term = self.extract(pat, lines[1], "term")
 
-        self.userRunRemoteUsage, self.sysRunRemoteUsage = self.extractUsrSysTimes(lines[2])
+        userRunRemoteUsage, sysRunRemoteUsage = self.extractUsrSysTimes(lines[2])
+        ## remote user run usage time
+        self.userRunRemoteUsage = userRunRemoteUsage
+        ## remote sys run usage time
+        self.sysRunRemoteUsage = sysRunRemoteUsage
 
-        self.userRunLocalUsage,  self.sysRunLocalUsage  = self.extractUsrSysTimes(lines[3])
+        userRunLocalUsage, sysRunLocalUsage  = self.extractUsrSysTimes(lines[3])
 
+        ## local user run usage time
+        self.userRunLocalUsage = userRunLocalUsage
+        ## local sys run usage time
+        self.sysRunLocalUsage  = sysRunLocalUsage
 
         pat = r"(?P<bytes>\d+) "
+        ## bytes sent during the run
         self.runBytesSent = int(self.extract(pat,lines[4], "bytes"))
+        ## bytes received during the run
         self.runBytesReceived = int(self.extract(pat,lines[5], "bytes"))
 
 
-        self.diskUsage, self.diskRequest = self.extractUsageRequest(lines[8])
+        diskUsage, diskRequest = self.extractUsageRequest(lines[8])
+        ## disk used
+        self.diskUsage = diskUsage
+        ## disk requested
+        self.diskRequest = diskRequest
 
-        self.memoryUsage, self.memoryRequest = self.extractUsageRequest(lines[9])
+        memoryUsage, memoryRequest = self.extractUsageRequest(lines[9])
+        ## memory used
+        self.memoryUsage = memoryUsage
+        ## memory requested
+        self.memoryRequest = memoryRequest
 
     def describe(self):
+        """
+        @return a string describing the contents of this object
+        """
         s = "%s reason=%s" % (self.timestamp, self.reason)
         return s
 

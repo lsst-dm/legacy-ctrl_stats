@@ -30,13 +30,22 @@ class ShadowException(Record):
     the queue.
     """
     def __init__(self, year, lines):
+        """
+        Constructor
+        @param year - the year to tag the job with
+        @param lines - the strings making up this record
+        """
         Record.__init__(self, year, lines)
 
         
         pat = r"Error from (?P<slot>[\w]+@[\d]+@[\w\-.]+): (?P<reason>.+?)($)"
+        ## the slot the job was in at the time of this exception
         self.slot = None
+        ## the reason for the exception
         self.reason = None
+        ## the number of bytes sent
         self.runBytesSent = None
+        ## the number of bytes received
         self.runBytesReceived = None
         if re.search(pat,lines[1]) is not None:
             values = self.extractValues(pat,lines[1])

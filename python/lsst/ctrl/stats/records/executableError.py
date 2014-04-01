@@ -26,6 +26,11 @@ class ExecutableError(Record):
     The job could not be run because the executable was bad.
     """
     def __init__(self, year, lines):
+        """
+        Constructor
+        @param year - the year to tag the job with
+        @param lines - the strings making up this record
+        """
         Record.__init__(self, year, lines)
 
 eventClass = ExecutableError

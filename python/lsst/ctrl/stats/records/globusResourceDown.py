@@ -27,6 +27,11 @@ class GlobusResourceDown(Record):
     This event is no longer used, but is here for completeness.
     """
     def __init__(self, year, lines):
+        """
+        Constructor
+        @param year - the year to tag the job with
+        @param lines - the strings making up this record
+        """
         Record.__init__(self, year, lines)
 
 eventClass = GlobusResourceDown

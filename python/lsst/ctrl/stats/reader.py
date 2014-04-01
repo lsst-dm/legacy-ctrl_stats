@@ -33,6 +33,7 @@ class Reader(object):
         """Read a Condor log file, classifying all the records into Record
         objects.
         """
+        ## RecordList containing all records from the log file
         self.recordList = RecordList()
         recordLines = []
 

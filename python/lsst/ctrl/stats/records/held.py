@@ -29,17 +29,32 @@ class Held(Record):
     This might happen if the user applies the "condor_hold" command to the job.
     """
     def __init__(self, year, lines):
+        """
+        Constructor
+        @param year - the year to tag the job with
+        @param lines - the strings making up this record
+        """
         Record.__init__(self, year, lines)
 
         
         pat = r"Error from (?P<slot>[\w@\d\-.]+): (?P<reason>.+?)($)"
-        self.slot, self.reason = self.extractPair(pat,lines[1], "slot", "reason")
-        self.reason = self.reason.strip()
+        slot, reason = self.extractPair(pat,lines[1], "slot", "reason")
+        ## slot name
+        self.slot = slot
+        ## reason job was held
+        self.reason = reason.strip()
 
         pat = r"Code (?P<code>[\d]+) Subcode (?P<subcode>[\d]+)"
-        self.code, self.subcode = self.extractPair(pat,lines[2],"code","subcode")
+        code, subcode = self.extractPair(pat,lines[2],"code","subcode")
+        ## error code
+        self.code = code
+        ## error subcode
+        self.subcode = subcode
 
     def describe(self):
+        """
+        @return a string describing the contents of this object
+        """
         desc = super(Held, self).describe()
         s = "%s reason=%s" % (self.timestamp, self.reason)
         return s

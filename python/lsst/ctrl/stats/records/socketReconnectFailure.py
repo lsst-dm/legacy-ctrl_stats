@@ -27,7 +27,13 @@ class SocketReconnectFailure(Record):
     job runs) were unable to resume contact before the job lease expired.
     """
     def __init__(self, year, lines):
+        """
+        Constructor
+        @param year - the year to tag the job with
+        @param lines - the strings making up this record
+        """
         Record.__init__(self, year, lines)
+        ## the reason for the failure
         self.reason = lines[1].strip()+";"+lines[2].strip()
 
 eventClass = SocketReconnectFailure

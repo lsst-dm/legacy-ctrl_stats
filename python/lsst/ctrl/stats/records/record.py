@@ -27,6 +27,12 @@ class Record(object):
     Representation of a HTCondor record
     """
     def __init__(self, year, lines):
+        """
+        Constructor
+        @param year - the year to tag the job with
+        @param lines - the strings making up this record
+        """
+        ## strings making up this record
         self.lines = list(lines)
 
         pat = r"(?P<event>\d+) " + \
@@ -38,8 +44,11 @@ class Record(object):
         values = {}
         if info is not None:
             values = info.groupdict()
+            ## the event type
             self.event = values["event"]
+            ## the condor id
             self.condorId = values["condorId"]
+            ## the timestamp
             self.timestamp = str(year)+"-"+values["month"]+"-"+values["day"]+" "+values["timestamp"]
         else:
             print "error parsing record:"
@@ -47,6 +56,9 @@ class Record(object):
             sys.exit(10)
 
     def printAll(self):
+        """
+        print a description of this record to the console
+        """
         print "class name = %s " % self.__class__.__name__
         members = [attr for attr in dir(self) if not callable(getattr(self,attr)) and not attr.startswith("__")]
         for mem in members:
@@ -55,6 +67,12 @@ class Record(object):
 
 
     def extractValues(self,pat,line):
+        """
+        Extract all values given a pattern and line
+        @param pat pattern to match
+        @param line to extract values from
+        @return a dictionary of extracted values
+        """
         try:
             values = re.search(pat,line).groupdict()
             return values
@@ -63,17 +81,36 @@ class Record(object):
             sys.exit(100)
 
     def extract(self,pat,line,tag):
+        """
+        Extract a single value from a line
+        @param pat pattern to match
+        @param line to extract values from
+        @param tag the specific tag to extract
+        @return the extracted tag value
+        """
         values = re.search(pat,line).groupdict()
         val = values[tag]
         return val
 
     def extractPair(self, pat, line, tag1, tag2):
+        """
+        Extract two values from a line
+        @param pat pattern to match
+        @param line to extract values from
+        @param tag1 a tag to extract
+        @param tag2 a tag to extract
+        @return the extracted tag values
+        """
         values = self.extractValues(pat, line)
         val1 = values[tag1]
         val2 = values[tag2]
         return val1, val2
 
     def extractUsageRequest(self, line):
+        """
+        extract usage request information from a line
+        @return usage and request fields
+        """
         input = line.strip()
 
         usage = 0
@@ -91,6 +128,10 @@ class Record(object):
         return usage, request
 
     def extractUsrSysTimes(self, line):
+        """
+        extract time from a line
+        @return usr and sys fields, computed in seconds
+        """
         pat = r"Usr \d+ " + \
                 r"(?P<usrHours>\d+):(?P<usrMinutes>\d+):(?P<usrSeconds>\d+), "  + \
                 r"Sys \d+ " + \
@@ -107,8 +148,16 @@ class Record(object):
         return usr, sys
 
     def describe(self):
+        """
+        Describe this record
+        @return a string describing the event, condor id and time stamp
+        """
         s = "%s %s %s" % (self.event, self.condorId, self.timestamp)
         return s
 
     def str(self):
+        """
+        Describe this record
+        @return a string describing this object type and time stamp
+        """
         return "%s, %s" % (self.__class__.__name__,rec.timestamp)

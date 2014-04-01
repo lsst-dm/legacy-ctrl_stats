@@ -26,6 +26,11 @@ class SubmittedToGrid(Record):
     A job has been submitted, and is under the auspices of the grid resource.
     """
     def __init__(self, year, lines):
+        """
+        Constructor
+        @param year - the year to tag the job with
+        @param lines - the strings making up this record
+        """
         Record.__init__(self, year, lines)
 
 eventClass = SubmittedToGrid

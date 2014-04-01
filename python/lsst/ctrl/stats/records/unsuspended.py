@@ -26,6 +26,9 @@ class Unsuspended(Record):
     The job has resumed execution, after being suspended earlier.
     """
     def __init__(self, year, lines):
+        """
+        Constructor
+        """
         Record.__init__(self, year, lines)
 
 
