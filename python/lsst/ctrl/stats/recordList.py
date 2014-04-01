@@ -25,6 +25,10 @@ class RecordList(object):
     """An ordered list of Record objects
     """
     def __init__(self):
+        """
+        Constructor
+        """
+        ## ordered dictionary of records
         self.records = OrderedDict()
 
     def append(self, rec):

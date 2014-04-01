@@ -28,14 +28,23 @@ class Executing(Record):
     A job is running.  It might occur more than once.
     """
     def __init__(self, year, lines):
+        """
+        Constructor
+        @param year - the year to tag the job with
+        @param lines - the strings making up this record
+        """
         Record.__init__(self, year, lines)
 
         pat = r"\<(?P<hostAddr>\S+)\>"
 
         values = re.search(pat,lines[0]).groupdict()
+        ## internet address of the host
         self.executingHostAddr = values["hostAddr"]
 
     def describe(self):
+        """
+        @return a string describing the contents of this object
+        """
         s = "%s host=%s" % (self.timestamp, self.executingHostAddr)
         return s
 

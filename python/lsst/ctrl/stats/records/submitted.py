@@ -29,18 +29,28 @@ class Submitted(Record):
     will see for a job, and it should only occur once.
     """
     def __init__(self, year, lines):
+        """
+        Constructor
+        @param year - the year to tag the job with
+        @param lines - the strings making up this record
+        """
         Record.__init__(self, year, lines)
         
-        pat = r"\<(?P<hostAddr>\d+.\d+.\d+.\d+:\d+)\>"
+        pat = r"\<(?P<hostAddr>\d+.\d+.\d+.\d+:\d+.+)\>"
 
         values = re.search(pat,lines[0]).groupdict()
+        ## the submitted host's network address
         self.submitHostAddr = values["hostAddr"]
 
         pat = "DAG Node: (?P<dagNode>\w+)"
         values = re.search(pat,lines[1]).groupdict()
+        ## the DAG node that's being worked on
         self.dagNode = values["dagNode"]
 
     def describe(self):
+        """
+        @return a string describing the contents of this object
+        """
         desc = super(Submitted, self).describe()
         s = "%s condorId=%s dagNode=%s" % (self.timestamp, self.condorId, self.dagNode)
         return s

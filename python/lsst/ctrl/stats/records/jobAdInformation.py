@@ -30,9 +30,15 @@ class JobAdInformation(Record):
     EVENT_LOG_JOB_AD_INFORMATION_ATTRS is set.
     """
     def __init__(self, year, lines):
+        """
+        Constructor
+        @param year - the year to tag the job with
+        @param lines - the strings making up this record
+        """
         Record.__init__(self, year, lines)
 
 
+        ## slot name in which this job is running
         self.slotName = None
         pat = r"MachineSlotName = \"(?P<slotname>\S+)\""
         for line in lines:

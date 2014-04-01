@@ -26,6 +26,11 @@ class Released(Record):
     The job was in the hold state and is to be re-run.
     """
     def __init__(self, year, lines):
+        """
+        Constructor
+        @param year - the year to tag the job with
+        @param lines - the strings making up this record
+        """
         Record.__init__(self, year, lines)
 
 eventClass = Released

@@ -27,13 +27,21 @@ class Updated(Record):
     using while running.  It does not reflect the state of the job.
     """
     def __init__(self, year, lines):
+        """
+        Constructor
+        @param year - the year to tag the job with
+        @param lines - the strings making up this record
+        """
         Record.__init__(self, year, lines)
 
         pat = "Image size of job updated: (?P<imageSize>[\d]+)"
         
+        ## size of the image for this job
         self.imageSize = int(self.extract(pat,lines[0], "imageSize"))
         
+        ## memory used by this job in MB
         self.memoryUsageMb = 0
+        ## resident size of this job in KB
         self.residentSetSizeKb = 0
         if len(lines) == 3:
             pat = "(?P<memoryUsage>[\d]+)"
@@ -46,6 +54,9 @@ class Updated(Record):
 
 
     def describe(self):
+        """
+        @return a string describing the contents of this object
+        """
         s = "%s imageSize=%s" % (self.timestamp, self.imageSize)
         return s
 

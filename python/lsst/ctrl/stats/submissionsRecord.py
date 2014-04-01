@@ -27,27 +27,71 @@ class SubmissionsRecord(DbRecord):
     here must match those of the SQL columns.
     """ 
     def __init__(self, rec=None):
+        """
+        Constructor
+        """
         if rec == None:
+            ## condor id
             self.condorId = None
+
+            ## dag node
             self.dagNode = None
+
+            ## time this job was submitted
             self.submitTime = None
+
+            ## host this job ran on
             self.executionHost = None
+
+            ## time the job started to execute
             self.executionStartTime = "0000-00-00 00:00:00"
+
+            ## time the job stopped executing
             self.executionStopTime = "0000-00-00 00:00:00"
+
+            ## image size
             self.updateImageSize = 0
+
+            ## memory usage in MB
             self.updateMemoryUsageMb = 0
+
+            ## resident memory usages in KB
             self.updateResidentSetSizeKb = 0
+
+            ## user runtime on remote resource
             self.userRunRemoteUsage = 0
+
+            ## sys runtime on remote resource
             self.sysRunRemoteUsage = 0
+
+            ## final total of disk usage in KB
             self.finalDiskUsageKb = 0
+
+            ## final total of disk requested in KB
             self.finalDiskRequestKb = 0
+
+            ## final total of memory usage in MB
             self.finalMemoryUsageMb = 0
+
+            ## final total of memory requested in MB
             self.finalMemoryRequestMb = 0
+
+            ## bytes sent by job
             self.bytesSent = 0
+
+            ## bytes received by job
             self.bytesReceived = 0
+
+            ## time the job terminated
             self.terminationTime = "0000-00-00 00:00:00"
+
+            ## job termination code
             self.terminationCode = None
+
+            ## job termination reason
             self.terminationReason = None
+
+            ## slot name for this job
             self.slotName = None
         else:
             # this is used instead of copy to initialize values in

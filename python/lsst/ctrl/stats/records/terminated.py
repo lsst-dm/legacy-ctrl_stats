@@ -27,33 +27,73 @@ class Terminated(Record):
     The job has completed.
     """
     def __init__(self, year, lines):
+        """
+        Constructor
+        """
         Record.__init__(self, year, lines)
 
         pat = r"\((?P<term>\d+)\) Normal termination \(return value (?P<returnValue>\d+)\)"
 
-        self.term, self.returnValue = self.extractPair(pat, lines[1], "term", "returnValue")
+        # the pairs below are split this way because of doxygen complaints
+        term, returnValue = self.extractPair(pat, lines[1], "term", "returnValue")
+        ## termination reason
+        self.term = term 
+        ## return value of terminated process
+        self.returnValue = returnValue
 
-        self.userRunRemoteUsage, self.sysRunRemoteUsage = self.extractUsrSysTimes(lines[2])
+        userRunRemoteUsage, sysRunRemoteUsage = self.extractUsrSysTimes(lines[2])
+        ## remote user usage time
+        self.userRunRemoteUsage = userRunRemoteUsage
+        ## remote system usage time
+        self.sysRunRemoteUsage = sysRunRemoteUsage
 
-        self.userRunLocalUsage,  self.sysRunLocalUsage  = self.extractUsrSysTimes(lines[3])
+        userRunLocalUsage,  sysRunLocalUsage  = self.extractUsrSysTimes(lines[3])
+        ## local user usage time
+        self.userRunLocalUsage = userRunLocalUsage
+        ## local system usage time
+        self.sysRunLocalUsage = sysRunLocalUsage
 
-        self.userTotalRemoteUsage, self.sysTotalRemoteUsage = self.extractUsrSysTimes(lines[4])
+        userTotalRemoteUsage, sysTotalRemoteUsage = self.extractUsrSysTimes(lines[4])
+        ## total user remote usage time
+        self.userTotalRemoteUsage = userTotalRemoteusage
+        ## total system remote usage time
+        self.sysTotalRemoteUsage = sysTotalRemoteusage
 
-        self.userTotalLocalUsage,  self.sysTotalLocalUsage  = self.extractUsrSysTimes(lines[5])
+        userTotalLocalUsage,  sysTotalLocalUsage  = self.extractUsrSysTimes(lines[5])
+        ## total user local usage time
+        self.userTotalLocalUsage = userTotalLocalUsage
+        ## total system local usage time
+        self.sysTotalLocalUsage  = sysTotalLocalUsage
 
         pat = r"(?P<bytes>\d+) "
+        ## run bytes sent by job
         self.runBytesSent = int(self.extract(pat,lines[6], "bytes"))
+        ## run bytes received by job
         self.runBytesReceived = int(self.extract(pat,lines[7], "bytes"))
+        ## total bytes sent by job
         self.totalBytesSent = int(self.extract(pat,lines[8], "bytes"))
+        ## total bytes received by job
         self.totalBytesReceived = int(self.extract(pat,lines[9], "bytes"))
 
         
-        self.diskUsage, self.diskRequest = self.extractUsageRequest(lines[12])
+        diskUsage, diskRequest = self.extractUsageRequest(lines[12])
+        ## disk space used
+        self.diskUsage = diskUsage
+        ## disk space requested
+        self.diskRequest = diskRequest
 
-        self.memoryUsage, self.memoryRequest = self.extractUsageRequest(lines[13])
+
+        memoryUsage, memoryRequest = self.extractUsageRequest(lines[13])
+        ## the amount of memory used
+        self.memoryUsage = memoryUsage
+        ## the amount of memory requested
+        self.memoryRequest = memoryRequest
 
 
     def describe(self):
+        """
+        @return a string describing the contents of this object
+        """
         desc = super(Terminated, self).describe()
         s = "%s runUser=%s totalUser=%s" % (self.timestamp, self.userRunRemoteUsage, self.userTotalRemoteUsage)
         return s

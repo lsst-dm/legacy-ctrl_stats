@@ -27,12 +27,21 @@ class Aborted(Record):
     The user canceled the job.
     """
     def __init__(self, year, lines):
+        """
+        Constructor
+        @param year - the year to tag the job with
+        @param lines - the strings making up this record
+        """
         Record.__init__(self, year, lines)
 
+        ## reason for abort
         self.reason = lines[1].strip()
 
 
     def describe(self):
+        """
+        @return a string describing the contents of this object
+        """
         s = "%s %s" % (self.timestamp, self.reason)
         return s
 
