@@ -55,9 +55,9 @@ class Terminated(Record):
 
         userTotalRemoteUsage, sysTotalRemoteUsage = self.extractUsrSysTimes(lines[4])
         ## total user remote usage time
-        self.userTotalRemoteUsage = userTotalRemoteusage
+        self.userTotalRemoteUsage = userTotalRemoteUsage
         ## total system remote usage time
-        self.sysTotalRemoteUsage = sysTotalRemoteusage
+        self.sysTotalRemoteUsage = sysTotalRemoteUsage
 
         userTotalLocalUsage,  sysTotalLocalUsage  = self.extractUsrSysTimes(lines[5])
         ## total user local usage time
@@ -75,19 +75,23 @@ class Terminated(Record):
         ## total bytes received by job
         self.totalBytesReceived = int(self.extract(pat,lines[9], "bytes"))
 
-        
-        diskUsage, diskRequest = self.extractUsageRequest(lines[12])
-        ## disk space used
-        self.diskUsage = diskUsage
-        ## disk space requested
-        self.diskRequest = diskRequest
+        pat = r"Partitionable Resources :\s+Usage\s+\Request\s+Allocated$"
+        ret = re.search(pat, lines[10])
+        if ret is None:
+            diskUsage, diskRequest = self.extractUsageRequest(lines[12])
+            ## disk space used
+            self.diskUsage = diskUsage
+            ## disk space requested
+            self.diskRequest = diskRequest
 
-
-        memoryUsage, memoryRequest = self.extractUsageRequest(lines[13])
-        ## the amount of memory used
-        self.memoryUsage = memoryUsage
-        ## the amount of memory requested
-        self.memoryRequest = memoryRequest
+            memoryUsage, memoryRequest = self.extractUsageRequest(lines[13])
+            ## the amount of memory used
+            self.memoryUsage = memoryUsage
+            ## the amount of memory requested
+            self.memoryRequest = memoryRequest
+        else:
+            diskUsage, diskRequest, allocated = self.extractUsageRequestAllocated(lines[12])
+            diskUsage, diskRequest, allocated = self.extractUsageRequestAllocated(lines[13])
 
 
     def describe(self):
