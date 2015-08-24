@@ -127,20 +127,6 @@ class Record(object):
             request = int(self.extract(pat,input,"request"))
         return usage, request
 
-    def extractUsageRequestAllocated(self, line):
-        input = line.strip()
-        usage = 0
-        request = 0
-        allocated = 0
-        pat = r":\s+(?P<usage>\d+)\s+(?P<request>\d+)\s+(?P<allocated>\d+)$"
-        values = re.search(pat, input)
-        if values is not None:
-            d = values.groupdict()
-            usage = d["usage"]
-            request = d["request"]
-            allocated = d["allocated"]
-        return usage, request, allocated
-
     def extractUsrSysTimes(self, line):
         """
         extract time from a line
