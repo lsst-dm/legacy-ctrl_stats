@@ -65,17 +65,15 @@ class Evicted(Record):
         self.runBytesReceived = int(self.extract(pat,lines[5], "bytes"))
 
 
-        diskUsage, diskRequest = self.extractUsageRequest(lines[8])
-        ## disk used
-        self.diskUsage = diskUsage
-        ## disk requested
-        self.diskRequest = diskRequest
-
-        memoryUsage, memoryRequest = self.extractUsageRequest(lines[9])
-        ## memory used
-        self.memoryUsage = memoryUsage
-        ## memory requested
-        self.memoryRequest = memoryRequest
+        pat = r"Partitionable Resources :\s+Usage\s+\Request\s+Allocated$"
+        ret = re.search(pat, lines[6])
+        if ret is None:
+            self.diskUsage, self.diskRequest = self.extractUsageRequest(lines[8])
+            self.memoryUsage, self.memoryRequest = self.extractUsageRequest(lines[9])
+        else:
+            self.diskUsage, self.diskRequest, allocated = self.extractUsageRequestAllocated(lines[8])
+            self.memoryUsage, self.memoryRequest, allocated = self.extractUsageRequestAllocated(lines[9])
+    
 
     def describe(self):
         """

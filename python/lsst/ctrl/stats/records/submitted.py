@@ -42,17 +42,23 @@ class Submitted(Record):
         ## the submitted host's network address
         self.submitHostAddr = values["hostAddr"]
 
-        pat = "DAG Node: (?P<dagNode>\w+)"
-        values = re.search(pat,lines[1]).groupdict()
-        ## the DAG node that's being worked on
-        self.dagNode = values["dagNode"]
+        if len(lines) > 1:
+            pat = "DAG Node: (?P<dagNode>\w+)"
+            values = re.search(pat,lines[1]).groupdict()
+            ## the DAG node that's being worked on
+            self.dagNode = values["dagNode"]
+        else:
+            self.dagNode = None
 
     def describe(self):
         """
         @return a string describing the contents of this object
         """
         desc = super(Submitted, self).describe()
-        s = "%s condorId=%s dagNode=%s" % (self.timestamp, self.condorId, self.dagNode)
+        if self.dagNode is None:
+            s = "%s condorId=%s" % (self.timestamp, self.condorId)
+        else:
+            s = "%s condorId=%s dagNode=%s" % (self.timestamp, self.condorId, self.dagNode)
         return s
 
 eventClass = Submitted
