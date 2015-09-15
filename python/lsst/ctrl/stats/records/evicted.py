@@ -21,6 +21,21 @@
 #
 import re
 from record import Record
+
+# Parses Evicted records of the form:
+#
+# 004 (244585.000.000) 08/20 13:12:55 Job was evicted.
+#     (0) Job was not checkpointed.
+#         Usr 0 00:00:00, Sys 0 00:00:00  -  Run Remote Usage
+#         Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+#     0  -  Run Bytes Sent By Job
+#     0  -  Run Bytes Received By Job
+#     Partitionable Resources :    Usage  Request Allocated
+#        Cpus                 :                 1         1
+#        Disk (KB)            :        1        1   1347851
+#        Memory (MB)          :       41        1       275
+# ...
+#
 class Evicted(Record):
     """
     Job evicted from machine
@@ -66,6 +81,19 @@ class Evicted(Record):
 
 
         pat = r"Partitionable Resources :\s+Usage\s+\Request\s+Allocated$"
+
+        ## disk usage
+        self.diskUsage = None
+
+        ## disk requested
+        self.diskRequest = None
+
+        ## memory usage
+        self.memoryUsage = None
+
+        ## memory requested
+        self.memoryRequest = None
+
         ret = re.search(pat, lines[6])
         if ret is None:
             self.diskUsage, self.diskRequest = self.extractUsageRequest(lines[8])

@@ -127,7 +127,12 @@ class Record(object):
             request = int(self.extract(pat,input,"request"))
         return usage, request
 
+
     def extractUsageRequestAllocated(self, line):
+        """
+        extract usage request information from a line
+        @return usage request and allocated fields
+        """
         input = line.strip()
         usage = 0
         request = 0

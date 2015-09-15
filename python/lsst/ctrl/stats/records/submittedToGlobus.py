@@ -20,6 +20,14 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 from record import Record
+
+#
+#
+# 017 (001.000.000) 03/24 19:13:30 Job submitted to Globus
+#     RM-Contact: test.ncsa.illinois.edu/jobmanager-fork
+#     JM-Contact: https://test.ncsa.illinois.edu:34127/28997/1174763610/
+#     Can-Restart-JM: 1
+# ...
 class SubmittedToGlobus(Record):
     """
     Job submitted to Globus

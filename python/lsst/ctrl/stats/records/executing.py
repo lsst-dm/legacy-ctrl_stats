@@ -22,6 +22,11 @@
 import re
 from record import Record
 
+# Parses Executing records of the form:
+#
+# 001 (244585.000.000) 08/20 13:09:36 Job executing on host: <192.168.1.121:47727>
+# ...
+#
 class Executing(Record):
     """
     Job executing

@@ -22,6 +22,11 @@
 import re
 from record import Record
 
+# Parses Submitted records of the form:
+#
+# 000 (244585.000.000) 08/20 13:09:28 Job submitted from host: <192.168.1.142:40885>
+# ...
+#
 class Submitted(Record):
     """
     Job submitted

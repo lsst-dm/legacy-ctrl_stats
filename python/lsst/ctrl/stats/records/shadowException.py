@@ -21,6 +21,14 @@
 #
 import re
 from record import Record
+
+#
+# 007 (010.000.000) 10/22 13:54:20 Shadow exception!
+#     Error from slot3@lsst15.ncsa.illinois.edu: Failed to execute '/tmp/srp/big.sh' with arguments 20 21 22: (errno=8: 'Exec format error')
+#     0  -  Run Bytes Sent By Job
+#     0  -  Run Bytes Received By Job
+# ...
+
 class ShadowException(Record):
     """
     Shadow exception

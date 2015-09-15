@@ -21,6 +21,13 @@
 #
 import re
 from record import Record
+
+# Parses Aborted records of the form:
+#
+# 009 (244585.000.000) 08/20 13:12:55 Job was aborted by the user.
+#     via condor_rm (by user srp)
+# ...
+#
 class Aborted(Record):
     """
     Job aborted
