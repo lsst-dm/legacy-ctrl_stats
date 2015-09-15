@@ -20,6 +20,14 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 from record import Record
+
+# Parses Updated records of the form:
+#
+# 006 (244585.000.000) 08/20 13:12:55 Image size of job updated: 983888
+#     41  -  MemoryUsage of job (MB)
+#     41032  -  ResidentSetSize of job (KB)
+# ...
+#
 class Updated(Record):
     """
     Image size of job updated

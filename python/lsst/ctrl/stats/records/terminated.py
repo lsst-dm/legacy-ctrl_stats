@@ -21,6 +21,25 @@
 #
 import re
 from record import Record
+
+# Parses Terminated records of the form:
+#
+# 005 (254504.000.000) 08/21 10:29:43 Job terminated.
+#     (1) Normal termination (return value 0)
+#         Usr 0 00:00:00, Sys 0 00:00:00  -  Run Remote Usage
+#         Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+#         Usr 0 00:00:00, Sys 0 00:00:00  -  Total Remote Usage
+#         Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+#     0  -  Run Bytes Sent By Job
+#     0  -  Run Bytes Received By Job
+#     0  -  Total Bytes Sent By Job
+#     0  -  Total Bytes Received By Job
+#     Partitionable Resources :    Usage  Request Allocated
+#        Cpus                 :                 1         1
+#        Disk (KB)            :        1        1   2148167
+#        Memory (MB)          :       10        1       294
+# ...
+#
 class Terminated(Record):
     """
     Job terminated
@@ -55,9 +74,9 @@ class Terminated(Record):
 
         userTotalRemoteUsage, sysTotalRemoteUsage = self.extractUsrSysTimes(lines[4])
         ## total user remote usage time
-        self.userTotalRemoteUsage = userTotalRemoteusage
+        self.userTotalRemoteUsage = userTotalRemoteUsage
         ## total system remote usage time
-        self.sysTotalRemoteUsage = sysTotalRemoteusage
+        self.sysTotalRemoteUsage = sysTotalRemoteUsage
 
         userTotalLocalUsage,  sysTotalLocalUsage  = self.extractUsrSysTimes(lines[5])
         ## total user local usage time
@@ -75,19 +94,27 @@ class Terminated(Record):
         ## total bytes received by job
         self.totalBytesReceived = int(self.extract(pat,lines[9], "bytes"))
 
-        
-        diskUsage, diskRequest = self.extractUsageRequest(lines[12])
-        ## disk space used
-        self.diskUsage = diskUsage
-        ## disk space requested
-        self.diskRequest = diskRequest
+        pat = r"Partitionable Resources :\s+Usage\s+\Request\s+Allocated$"
 
+        ## disk usage
+        self.diskUsage = None
 
-        memoryUsage, memoryRequest = self.extractUsageRequest(lines[13])
-        ## the amount of memory used
-        self.memoryUsage = memoryUsage
-        ## the amount of memory requested
-        self.memoryRequest = memoryRequest
+        ## disk requested
+        self.diskRequest = None
+
+        ## memory usage
+        self.memoryUsage = None
+
+        ## memory requested
+        self.memoryRequest = None
+
+        ret = re.search(pat, lines[10])
+        if ret is None:
+            self.diskUsage, self.diskRequest = self.extractUsageRequest(lines[12])
+            self.memoryUsage, self.memoryRequest = self.extractUsageRequest(lines[13])
+        else:
+            self.diskUsage, self.diskRequest, allocated = self.extractUsageRequestAllocated(lines[12])
+            self.memoryUsage, self.memoryRequest, allocated = self.extractUsageRequestAllocated(lines[13])
 
 
     def describe(self):

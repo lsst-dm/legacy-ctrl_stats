@@ -22,6 +22,11 @@
 import re
 from record import Record
 
+# 012 (003.000.000) 07/12 22:36:52 Job was held.
+#        Error from slot2@big15.ncsa.illnois.edu: the job manager could not stage out a file
+#        Code 2 Subcode 155
+# ...
+
 class Held(Record):
     """
     Job was held

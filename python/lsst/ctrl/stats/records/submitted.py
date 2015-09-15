@@ -22,6 +22,11 @@
 import re
 from record import Record
 
+# Parses Submitted records of the form:
+#
+# 000 (244585.000.000) 08/20 13:09:28 Job submitted from host: <192.168.1.142:40885>
+# ...
+#
 class Submitted(Record):
     """
     Job submitted
@@ -42,17 +47,23 @@ class Submitted(Record):
         ## the submitted host's network address
         self.submitHostAddr = values["hostAddr"]
 
-        pat = "DAG Node: (?P<dagNode>\w+)"
-        values = re.search(pat,lines[1]).groupdict()
-        ## the DAG node that's being worked on
-        self.dagNode = values["dagNode"]
+        if len(lines) > 1:
+            pat = "DAG Node: (?P<dagNode>\w+)"
+            values = re.search(pat,lines[1]).groupdict()
+            ## the DAG node that's being worked on
+            self.dagNode = values["dagNode"]
+        else:
+            self.dagNode = None
 
     def describe(self):
         """
         @return a string describing the contents of this object
         """
         desc = super(Submitted, self).describe()
-        s = "%s condorId=%s dagNode=%s" % (self.timestamp, self.condorId, self.dagNode)
+        if self.dagNode is None:
+            s = "%s condorId=%s" % (self.timestamp, self.condorId)
+        else:
+            s = "%s condorId=%s dagNode=%s" % (self.timestamp, self.condorId, self.dagNode)
         return s
 
 eventClass = Submitted

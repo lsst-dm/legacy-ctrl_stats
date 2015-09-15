@@ -1,0 +1,7 @@
+The objects in this directory represent records in which are parsed from
+HTCondor and DAGMAN logs.   The format of the records that each of these
+emit is very regular, and the parsing code for these objects is HIGHLY 
+dependent on this.  See individual objects for additional information about
+what each object expects.  The header for all records is parsed.  Some records
+contain additional information we're interested in, and those records are
+parsed in more detail.
