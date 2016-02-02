@@ -1,6 +1,6 @@
 setupRequired(base)
 setupRequired(cat)
-setupRequired(mysqlclient)
+setupRequired(mariadbclient)
 setupRequired(mysqlpython)
 
 envAppend(PYTHONPATH, ${PRODUCT_DIR}/python)
