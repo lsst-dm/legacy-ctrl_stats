@@ -1,7 +1,8 @@
-# 
+from __future__ import absolute_import
+#
 # LSST Data Management System
 # Copyright 2008-2012 LSST Corporation.
-# 
+#
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
 #
@@ -9,19 +10,21 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
-# You should have received a copy of the LSST License Statement and 
-# the GNU General Public License along with this program.  If not, 
+#
+# You should have received a copy of the LSST License Statement and
+# the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 import re
 
-from record import Record
+from .record import Record
+
+
 class JobAdInformation(Record):
     """
     Job ad information event triggered
@@ -29,6 +32,7 @@ class JobAdInformation(Record):
     as a supplement to other events when the configuration paramter
     EVENT_LOG_JOB_AD_INFORMATION_ATTRS is set.
     """
+
     def __init__(self, year, lines):
         """
         Constructor
@@ -37,21 +41,19 @@ class JobAdInformation(Record):
         """
         Record.__init__(self, year, lines)
 
-
         ## slot name in which this job is running
         self.slotName = None
         pat = r"MachineSlotName = \"(?P<slotname>\S+)\""
         for line in lines:
             if line.startswith("MachineSlotName"):
-                values = re.search(pat,line).groupdict()
+                values = re.search(pat, line).groupdict()
                 self.slotName = values["slotname"]
                 if self.slotName == "$$(Name)":
                     self.slotName = None
                 else:
                     self.slotName = self.slotName.split("@")[0]
                 return
-                
-           
+
 
 eventClass = JobAdInformation
 eventCode = "028"

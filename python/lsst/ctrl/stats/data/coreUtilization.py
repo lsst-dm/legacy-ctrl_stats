@@ -1,7 +1,7 @@
-# 
+#
 # LSST Data Management System
 # Copyright 2008-2013 LSST Corporation.
-# 
+#
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
 #
@@ -9,24 +9,26 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
-# You should have received a copy of the LSST License Statement and 
-# the GNU General Public License along with this program.  If not, 
+#
+# You should have received a copy of the LSST License Statement and
+# the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 import sys
 import collections
 from collections import defaultdict
 
+
 class DbCoreInfo:
     """
     Class to hold information about the host, slot and the time it started
     """
+
     def __init__(self, info):
         """
         Constructor
@@ -37,6 +39,7 @@ class DbCoreInfo:
         self.slotName = info[1]
         ## start of execution
         self.executionStartTime = info[2]
+
 
 class CoreUtilization:
     """
@@ -65,7 +68,7 @@ class CoreUtilization:
         retrieve the first execution start time
         """
         return self.entries[0].executionStartTime
-                
+
     def getLastTime(self):
         """
         retrieve the last execution start time

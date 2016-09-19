@@ -1,7 +1,8 @@
-# 
+from __future__ import absolute_import
+#
 # LSST Data Management System
 # Copyright 2008-2012 LSST Corporation.
-# 
+#
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
 #
@@ -9,26 +10,28 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
-# You should have received a copy of the LSST License Statement and 
-# the GNU General Public License along with this program.  If not, 
+#
+# You should have received a copy of the LSST License Statement and
+# the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 import sys
-from submissionsRecord import SubmissionsRecord
-from totalsRecord import TotalsRecord
-from updatesRecord import UpdatesRecord
+from .submissionsRecord import SubmissionsRecord
+from .totalsRecord import TotalsRecord
+from .updatesRecord import UpdatesRecord
 import lsst.ctrl.stats.records as recordslib
+
 
 class Classifier(object):
     """Takes a group of Condor event records and classifies them into 
     groups of summary records
     """
+
     def createUpdatesRecord(self, entry, rec):
         """Create a new UpdatesRecord and fill it in
         @param entry: an entry to update
@@ -76,7 +79,7 @@ class Classifier(object):
         entry.finalDiskRequestKb = rec.diskRequest
         entry.finalMemoryUsageMb = rec.memoryUsage
         entry.finalMemoryRequestMb = rec.memoryRequest
-        entry.bytesSent = rec.runBytesSent 
+        entry.bytesSent = rec.runBytesSent
         entry.bytesReceived = rec.runBytesReceived
 
     def recordShadowExceptionInfo(self, entry, rec):
@@ -153,7 +156,7 @@ class Classifier(object):
             elif rec.event == recordslib.updated.eventCode:
                 updateEntry = self.createUpdatesRecord(entry, rec)
                 updateEntries.append(updateEntry)
-    
+
                 self.updateJobInformation(entry, rec)
             elif rec.event == recordslib.terminated.eventCode:
                 # termination occurred without some kind of Condor

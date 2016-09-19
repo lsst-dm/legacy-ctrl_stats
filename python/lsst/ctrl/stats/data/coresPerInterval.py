@@ -1,7 +1,7 @@
-# 
+#
 # LSST Data Management System
 # Copyright 2008-2013 LSST Corporation.
-# 
+#
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
 #
@@ -9,18 +9,20 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
-# You should have received a copy of the LSST License Statement and 
-# the GNU General Public License along with this program.  If not, 
+#
+# You should have received a copy of the LSST License Statement and
+# the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 import datetime
 from lsst.ctrl.stats.data.coresPer import CoresPer
+
+
 class CoresPerInterval(CoresPer):
     """
     Count the number of cores that are active during a specific interval
@@ -55,15 +57,15 @@ class CoresPerInterval(CoresPer):
         while True:
             x = 0
             length = entries.getLength()
-            intervalRangeSet = set(range(last,next+1))
+            intervalRangeSet = set(range(last, next+1))
 
             for i in range(length):
                 ent = entries.getEntry(i)
                 entryRangeSet = set(range(ent.executionStartTime, ent.executionStopTime+1))
-                if (len(intervalRangeSet&entryRangeSet) > 0):
+                if (len(intervalRangeSet & entryRangeSet) > 0):
                     x = x + 1
-            
-            self.values.append([last,x])
+
+            self.values.append([last, x])
             stepInterval = stepInterval+1
 
             if next >= stopTime:
@@ -73,7 +75,7 @@ class CoresPerInterval(CoresPer):
                 next = stopTime
             else:
                 next = next+interval
-            
+
         maximumCores, timeFirstUsed, timeLastUsed = calculateMax()
         ## the maximum number of cores use
         self.maximumCores = maximumCores

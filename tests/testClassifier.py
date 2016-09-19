@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-# 
+#
 # LSST Data Management System
 # Copyright 2008-2013 LSST Corporation.
-# 
+#
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
 #
@@ -10,27 +10,31 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
-# You should have received a copy of the LSST License Statement and 
-# the GNU General Public License along with this program.  If not, 
+#
+# You should have received a copy of the LSST License Statement and
+# the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 import os
 import unittest
+import lsst.utils.tests
 from datetime import date
 import lsst.ctrl.stats.records as recordslib
 from lsst.ctrl.stats.reader import Reader
 from lsst.ctrl.stats.classifier import Classifier
 
-class test1(unittest.TestCase):
+def setup_module(module):
+    lsst.utils.tests.init()
+
+class TestClassifier(lsst.utils.tests.TestCase):
 
     def setUp(self):
-        filename = os.path.join("tests","testfiles","reader_test.log")
+        filename = os.path.join("tests", "testfiles", "reader_test.log")
         reader = Reader(filename)
         self.records = reader.getRecords()
 
@@ -64,7 +68,6 @@ class test1(unittest.TestCase):
         self.assertEqual(rec.bytesReceived, 1449)
         self.assertEqual(rec.terminationTime, year+"-10-17 20:00:14")
         self.assertEqual(rec.terminationCode, recordslib.terminated.eventCode)
-
 
     def test2(self):
         # see note about "year", above
@@ -104,5 +107,9 @@ class test1(unittest.TestCase):
         self.assertEqual(rec1.memoryUsageMb, 40)
         self.assertEqual(rec1.residentSetSizeKb, 40640)
 
+class ClassifierMemoryTestCase(lsst.utils.tests.MemoryTestCase):
+    pass
+
 if __name__ == "__main__":
+    lsst.utils.tests.init()
     unittest.main()
