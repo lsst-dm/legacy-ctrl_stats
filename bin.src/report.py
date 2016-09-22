@@ -33,6 +33,8 @@ import os
 import sys
 import datetime
 import argparse
+import lsst.log as log
+import lsst.utils
 from lsst.ctrl.stats.databaseManager import DatabaseManager
 from lsst.daf.persistence import DbAuth
 from lsst.ctrl.stats.data.workerTotal import WorkerTotal
@@ -78,6 +80,11 @@ report.py -H kaboom.ncsa.illinois.edu -p 3303 -d srp_2013_0601_140432 -S''')
     parser.add_argument("-v", "--verbose", action="store_true", dest="verbose", help="verbose")
 
     args = parser.parse_args()
+
+
+    package = lsst.utils.getPackageDir("ctrl_stats")
+    configPath = os.path.join(package, "etc", "log4j.properties")
+    log.configure(configPath)
 
     host = args.host
     port = args.port
@@ -171,22 +178,32 @@ def printSummary(dbm, entries):
 
     initialFirstWorker = entries.getFirstWorker()
     initialLastWorker = entries.getLastWorker()
-    submissionDuration = initialLastWorker.submitTime-initialLastWorker.submitTime
+    submissionDuration = float(initialLastWorker.submitTime-initialLastWorker.submitTime)
 
     # don't count preJob and postJob, so subtract 2
     count = entries.getLength()-2
-    submissionDuration = initialLastWorker.submitTime-initialFirstWorker.submitTime
+    
     print("Total worker submits: %d" % count)
-    print("Mean initial worker submissions per second: %d" % (count/float(submissionDuration)))
+    if submissionDuration > 0:
+        print("Mean initial worker submissions per second: %d" % (count/submissionDuration))
+    else:
+        print("Initial workers all submitted at the same time")
     print()
 
     # first worker
     delay = initialFirstWorker.submitTime-entries.getPreJobExecutionStopTime()
     print("Delay of end of preJob to submission of first worker: %s" % timeStamp(delay))
-    print("Initial submission - first worker %s " % initialFirstWorker.dagNode, end="")
-    print("submitted at %s" % dateTime(initialFirstWorker.submitTime), end="", flush=True)
-    print("Initial submission - last worker %s " % initialLastWorker.dagNode, end="")
-    print("submitted at %s" % dateTime(initialLastWorker.submitTime), end="", flush=True)
+
+    ## initial submission here means all the workers that got submitted so that all nodes were occupied
+
+    node = initialFirstWorker.dagNode
+    submitTime = dateTime(initialFirstWorker.submitTime)
+    print("Initial submission - first worker %s submitted at %s" % (node, submitTime))
+
+    node = initialLastWorker.dagNode
+    submitTime = dateTime(initialLastWorker.submitTime)
+    print("Initial submission - last worker %s submitted at %s" % (node, submitTime))
+
     print("Initial submission - first worker to last worker submitted: %s" % timeStamp(submissionDuration))
 
     # first executing worker is not necessarily the first
@@ -235,9 +252,9 @@ def printSummary(dbm, entries):
         print("Could not calculate delay of end of last executing worker")
         print("to submission of postJob, because postJob did not execute.")
     else:
-        delay = postTime - lastExecutingWorker.executionStopTime
-        print("Delay of end of last executing worker %s " % lastExecutingWorker.dagNode, end="")
-        print("to submission of postJob: %s" % timeStamp(delay), end="", flush=True)
+        node = lastExecutingWorker.dagNode
+        delay = timeStamp(postTime - lastExecutingWorker.executionStopTime)
+        print("Delay of end of last executing worker %s to submission of postJob: %s" % (node, delay))
     print()
 
     # run times
@@ -283,8 +300,9 @@ def printSummary(dbm, entries):
             if key == -1:
                 print("Single worker started: %d worker%s total" % (value, 's' if value > 1 else ''))
             else:
-                print("%d second%s until next worker " % (key, 's' if key > 1 else ''), end="")
-                print("started: %d worker%s total" % (value, 's' if value > 1 else ''), end="", flush=True)
+                pS = 's' if key > 1 else ''
+                pW = 's' if value > 1 else ''
+                print("%d second%s until next worker started: %d worker%s total" % (key, pS, value, pW))
                 totalMinutes = totalMinutes + key*value
                 totalStarts = totalStarts + value
         if totalStarts == 0:
