@@ -49,11 +49,12 @@ def run():
 
     basename = os.path.basename(sys.argv[0])
 
+    msg = '''example: condorLogInfo.py -c 630.000.000 -f srp_2012_0925_160117/*nodes.log'''
     parser = argparse.ArgumentParser(prog=basename,
                                      description='''A debugging utility to view record groups.  This
-                        is useful in viewing records without having to do a 
+                        is useful in viewing records without having to do a
                         complete database ingest.''',
-                                     epilog='''example: condorLogInfo.py -c 630.000.000 -f srp_2012_0925_160117/*nodes.log''')
+                                     epilog=msg)
     parser.add_argument("-v", "--verbose", action="store_true", dest="verbose", help="verbose")
     parser.add_argument("-c", "--condorid", action="store", default=None, dest="condorIds",
                         help="print only condorId(s)", nargs="+", type=str, required=False)

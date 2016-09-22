@@ -29,13 +29,16 @@
 # condorLogIngest.py -H lsst10 -p 3306 -d testing2 -f worker-pre.log worker.log
 
 from __future__ import print_function
+from future import standard_library
+from builtins import str
 import os
 import sys
 import argparse
 from lsst.ctrl.stats.databaseManager import DatabaseManager
 from lsst.ctrl.stats.logIngestor import LogIngestor
 from lsst.daf.persistence import DbAuth
-from lsst.pex.policy import Policy
+
+standard_library.install_aliases()
 
 
 def run():

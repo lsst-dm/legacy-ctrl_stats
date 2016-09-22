@@ -26,16 +26,16 @@
 # report.py -H lsst10 -p 3306 -d testing -S
 
 from __future__ import print_function
+from future import standard_library
+from builtins import str
+from builtins import range
 import os
 import sys
 import datetime
 import argparse
 from lsst.ctrl.stats.databaseManager import DatabaseManager
-from lsst.ctrl.stats.logIngestor import LogIngestor
 from lsst.daf.persistence import DbAuth
-from lsst.pex.policy import Policy
 from lsst.ctrl.stats.data.workerTotal import WorkerTotal
-from lsst.ctrl.stats.data.dbEntry import DbEntry
 from lsst.ctrl.stats.data.submissionTimes import SubmissionTimes
 from lsst.ctrl.stats.data.successTimes import SuccessTimes
 from lsst.ctrl.stats.data.submitsPerInterval import SubmitsPerInterval
@@ -47,15 +47,17 @@ from lsst.ctrl.stats.data.terminationStatus import TerminationStatus
 from lsst.ctrl.stats.data.executingWorkers import ExecutingWorkers
 from lsst.ctrl.stats.data.coreUtilization import CoreUtilization
 
+standard_library.install_aliases()
+
 
 def run():
     basename = os.path.basename(sys.argv[0])
 
     parser = argparse.ArgumentParser(prog=basename,
-                                     description='''A statistics reporting utility.  Use to print 
+                                     description='''A statistics reporting utility.  Use to print
                             out information about what happened during a run.
-                            Takes as an argument previously ingested run 
-                            information one of the ingest utilities  in 
+                            Takes as an argument previously ingested run
+                            information one of the ingest utilities  in
                             a named database.''',
                                      epilog='''example:
 report.py -H kaboom.ncsa.illinois.edu -p 3303 -d srp_2013_0601_140432 -S''')
@@ -97,11 +99,11 @@ report.py -H kaboom.ncsa.illinois.edu -p 3303 -d srp_2013_0601_140432 -S''')
     values = None
     submitTimes = SubmissionTimes(dbm)
     entries = submitTimes.getEntries()
-    if args.submits == True:
+    if args.submits:
         submitsPerInterval = SubmitsPerInterval(dbm, 1)
         values = submitsPerInterval.getValues()
         writeDateValues(values)
-    elif args.cores == True:
+    elif args.cores:
         coresPerSecond = CoresPerSecond(dbm, entries)
         values = coresPerSecond.getValues()
         writeDateValues(values)
@@ -109,7 +111,7 @@ report.py -H kaboom.ncsa.illinois.edu -p 3303 -d srp_2013_0601_140432 -S''')
         coresPerInterval = CoresPerInterval(dbm, entries, args.interval)
         values = coresPerInterval.getValues()
         writeDateValues(values)
-    elif args.summary == True:
+    elif args.summary:
         printSummary(dbm, entries)
 
 
@@ -120,8 +122,10 @@ def printCoreUtilizationSummary(dbm, entries):
     initialFirstWorker = entries.getFirstWorker()
 
     print("Maximum number of cores used: %d" % cores)
-    print("Time until %d cores are used at least once: %s" % (cores, timeStamp(cu.getLastTime() - cu.getFirstTime())))
-    print("First worker submit to %d cores used at least once: %s" % (cores, timeStamp(cu.getLastTime()-initialFirstWorker.submitTime)))
+    stamp = timeStamp(cu.getLastTime() - cu.getFirstTime())
+    print("Time until %d cores are used at least once: %s" % (cores, stamp))
+    stamp = timeStamp(cu.getLastTime()-initialFirstWorker.submitTime)
+    print("First worker submit to %d cores used at least once: %s" % (cores, stamp))
     print()
 
 
@@ -143,7 +147,7 @@ def printPreJobSummary(dbm, entries):
 def printPostJobSummary(dbm, entries):
     # postJob
     postJob = entries.getPostJob()
-    if postJob == None:
+    if postJob is None:
         print("PostJob not executed")
         print()
         return
@@ -169,7 +173,8 @@ def printSummary(dbm, entries):
     initialLastWorker = entries.getLastWorker()
     submissionDuration = initialLastWorker.submitTime-initialLastWorker.submitTime
 
-    count = entries.getLength()-2 # don't count preJob and postJob
+    # don't count preJob and postJob, so subtract 2
+    count = entries.getLength()-2
     submissionDuration = initialLastWorker.submitTime-initialFirstWorker.submitTime
     print("Total worker submits: %d" % count)
     print("Mean initial worker submissions per second: %d" % (count/float(submissionDuration)))
@@ -178,8 +183,10 @@ def printSummary(dbm, entries):
     # first worker
     delay = initialFirstWorker.submitTime-entries.getPreJobExecutionStopTime()
     print("Delay of end of preJob to submission of first worker: %s" % timeStamp(delay))
-    print("Initial submission - first worker %s submitted at %s" % (initialFirstWorker.dagNode, dateTime(initialFirstWorker.submitTime)))
-    print("Initial submission - last worker %s submitted at %s" % (initialLastWorker.dagNode, dateTime(initialLastWorker.submitTime)))
+    print("Initial submission - first worker %s " % initialFirstWorker.dagNode, end="")
+    print("submitted at %s" % dateTime(initialFirstWorker.submitTime), end="", flush=True)
+    print("Initial submission - last worker %s " % initialLastWorker.dagNode, end="")
+    print("submitted at %s" % dateTime(initialLastWorker.submitTime), end="", flush=True)
     print("Initial submission - first worker to last worker submitted: %s" % timeStamp(submissionDuration))
 
     # first executing worker is not necessarily the first
@@ -229,7 +236,8 @@ def printSummary(dbm, entries):
         print("to submission of postJob, because postJob did not execute.")
     else:
         delay = postTime - lastExecutingWorker.executionStopTime
-        print("Delay of end of last executing worker %s to submission of postJob: %s" % (lastExecutingWorker.dagNode, timeStamp(delay)))
+        print("Delay of end of last executing worker %s " % lastExecutingWorker.dagNode, end="")
+        print("to submission of postJob: %s" % timeStamp(delay), end="", flush=True)
     print()
 
     # run times
@@ -271,11 +279,12 @@ def printSummary(dbm, entries):
         print("Time from the end of one worker until the next worker starts")
         totalStarts = 0
         totalMinutes = 0
-        for key, value in totals.iteritems():
+        for key, value in totals.items():
             if key == -1:
                 print("Single worker started: %d worker%s total" % (value, 's' if value > 1 else ''))
             else:
-                print("%d second%s until next worker started: %d worker%s total" % (key, 's' if key > 1 else '', value, 's' if value > 1 else ''))
+                print("%d second%s until next worker " % (key, 's' if key > 1 else ''), end="")
+                print("started: %d worker%s total" % (value, 's' if value > 1 else ''), end="", flush=True)
                 totalMinutes = totalMinutes + key*value
                 totalStarts = totalStarts + value
         if totalStarts == 0:
@@ -289,7 +298,7 @@ def printSummary(dbm, entries):
     submittedWorkers = WorkerTotal(dbm)
     print("Total submitted workers: %d" % submittedWorkers.getTotal("submissions"))
     successfulWorkers = WorkerTotal(dbm)
-    print("Total successful workers: %d" % submittedWorkers.getTotal("totals"))
+    print("Total successful workers: %d" % successfulWorkers.getTotal("totals"))
     print()
     termStatus = TerminationStatus(dbm)
     totals = termStatus.getTotals()
@@ -341,7 +350,7 @@ def jobRunTimes(ents):
 
 
 def writeDateValues(values):
-    if values == None:
+    if values is None:
         return
     for j in range(len(values)):
         val = values[j]
