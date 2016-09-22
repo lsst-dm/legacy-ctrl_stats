@@ -1,6 +1,3 @@
-from __future__ import print_function
-from builtins import str
-from builtins import object
 #
 # LSST Data Management System
 # Copyright 2008-2012 LSST Corporation.
@@ -22,6 +19,10 @@ from builtins import object
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+from __future__ import print_function
+from builtins import str
+from builtins import basestring
+from builtins import object
 import MySQLdb
 
 
@@ -42,7 +43,6 @@ class DbRecord(object):
             getattr(self, attr)) and not attr.startswith("__")]
         for mem in members:
             value = getattr(self, mem)
-            print(mem, "=", value)
 
     def getInsertString(self, tableName):
         """Create insert string for values for the member variables of the class.
@@ -60,7 +60,7 @@ class DbRecord(object):
             value = getattr(self, mem)
             if value is None:
                 value = ""
-            if isinstance(value, str):
+            if isinstance(value, basestring):
                 value = "'"+MySQLdb.escape_string(value)+"'"
             else:
                 value = str(value)
