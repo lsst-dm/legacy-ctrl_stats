@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+# flake8: noqa
 #
 # LSST Data Management System
 # Copyright 2008-2012 LSST Corporation.
@@ -21,6 +21,7 @@ from __future__ import absolute_import
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
+from __future__ import absolute_import
 from .jobAdInformation import JobAdInformation
 from .jobRemoteStatusUnknown import JobRemoteStatusUnknown
 from .jobRemoteStatusKnownAgain import JobRemoteStatusKnownAgain
