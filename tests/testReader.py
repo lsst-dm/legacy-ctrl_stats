@@ -20,6 +20,8 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+
+from builtins import str
 import os
 import unittest
 import lsst.utils.tests
@@ -30,6 +32,7 @@ from lsst.ctrl.stats.reader import Reader
 
 def setup_module(module):
     lsst.utils.tests.init()
+
 
 class TestReader(lsst.utils.tests.TestCase):
 

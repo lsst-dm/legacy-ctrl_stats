@@ -20,6 +20,8 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+
+from builtins import str
 import os
 import unittest
 import lsst.utils.tests
@@ -34,7 +36,8 @@ from lsst.ctrl.stats.reader import Reader
 def setup_module(module):
     lsst.utils.tests.init()
 
-class TestTerminated(unittest.TestCase):
+
+class TestTerminated(lsst.utils.tests.TestCase):
 
     def setUp(self):
         filename = os.path.join("tests", "testfiles", "terminated.log")
@@ -103,6 +106,7 @@ class TestTerminated(unittest.TestCase):
         self.assertEqual(rec.userRunRemoteUsage, 0)
         self.assertEqual(rec.userTotalLocalUsage, 0)
         self.assertEqual(rec.userTotalRemoteUsage, 0)
+
 
 class TerminatedMemoryTestCase(lsst.utils.tests.MemoryTestCase):
     pass
