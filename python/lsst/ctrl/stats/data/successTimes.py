@@ -19,11 +19,14 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+from builtins import object
+from future import standard_library
 from lsst.ctrl.stats.data.dbEntry import DbEntry
 from lsst.ctrl.stats.data.dbEntries import DbEntries
+standard_library.install_aliases()
 
 
-class SuccessTimes:
+class SuccessTimes(object):
     """
     Number of successful dagNode completions.
     """
@@ -33,7 +36,9 @@ class SuccessTimes:
         Constructor
         @param dbm database object to use to query
         """
-        query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), UNIX_TIMESTAMP(terminationTime) from submissions where terminationCode='005';"
+        query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), "
+        query = query + "UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), "
+        query = query + "UNIX_TIMESTAMP(terminationTime) from submissions where terminationCode='005';"
 
         results = dbm.execCommandN(query)
 
@@ -42,7 +47,7 @@ class SuccessTimes:
             dbEnt = DbEntry(res)
             ents.append(dbEnt)
 
-        ## DBEntries representing records of successful completions
+        # DBEntries representing records of successful completions
         self.entries = DbEntries(ents)
 
     def getEntries(self):

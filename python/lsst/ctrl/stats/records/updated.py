@@ -48,12 +48,12 @@ class Updated(Record):
 
         pat = "Image size of job updated: (?P<imageSize>[\d]+)"
 
-        ## size of the image for this job
+        # size of the image for this job
         self.imageSize = int(self.extract(pat, lines[0], "imageSize"))
 
-        ## memory used by this job in MB
+        # memory used by this job in MB
         self.memoryUsageMb = 0
-        ## resident size of this job in KB
+        # resident size of this job in KB
         self.residentSetSizeKb = 0
         if len(lines) == 3:
             pat = "(?P<memoryUsage>[\d]+)"

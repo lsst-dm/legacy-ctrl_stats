@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 #
 # LSST Data Management System
 # Copyright 2008-2012 LSST Corporation.
@@ -20,7 +19,7 @@ from __future__ import absolute_import
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-import re
+from __future__ import absolute_import
 from .record import Record
 
 # 012 (003.000.000) 07/12 22:36:52 Job was held.
@@ -46,16 +45,16 @@ class Held(Record):
 
         pat = r"Error from (?P<slot>[\w@\d\-.]+): (?P<reason>.+?)($)"
         slot, reason = self.extractPair(pat, lines[1], "slot", "reason")
-        ## slot name
+        # slot name
         self.slot = slot
-        ## reason job was held
+        # reason job was held
         self.reason = reason.strip()
 
         pat = r"Code (?P<code>[\d]+) Subcode (?P<subcode>[\d]+)"
         code, subcode = self.extractPair(pat, lines[2], "code", "subcode")
-        ## error code
+        # error code
         self.code = code
-        ## error subcode
+        # error subcode
         self.subcode = subcode
 
     def describe(self):
@@ -63,6 +62,8 @@ class Held(Record):
         @return a string describing the contents of this object
         """
         desc = super(Held, self).describe()
+        if desc is None:
+            return None
         s = "%s reason=%s" % (self.timestamp, self.reason)
         return s
 

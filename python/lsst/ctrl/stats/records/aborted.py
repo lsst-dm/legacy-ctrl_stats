@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 #
 # LSST Data Management System
 # Copyright 2008-2012 LSST Corporation.
@@ -20,7 +19,8 @@ from __future__ import absolute_import
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-import re
+
+from __future__ import absolute_import
 from .record import Record
 
 # Parses Aborted records of the form:
@@ -45,7 +45,7 @@ class Aborted(Record):
         """
         Record.__init__(self, year, lines)
 
-        ## reason for abort
+        # reason for abort
         self.reason = lines[1].strip()
 
     def describe(self):

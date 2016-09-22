@@ -1,3 +1,4 @@
+from builtins import object
 #
 # LSST Data Management System
 # Copyright 2008-2013 LSST Corporation.
@@ -21,7 +22,7 @@
 #
 
 
-class DbEntries:
+class DbEntries(object):
     """
     A representation of the database entries for a given run
     """
@@ -31,7 +32,7 @@ class DbEntries:
         Constructor
         @param entries representation of all database entries for a run
         """
-        ## objects representing database records
+        # objects representing database records
         self.entries = entries
 
     def getEntry(self, x):
@@ -45,7 +46,7 @@ class DbEntries:
     def getDagNode(self, dagNode):
         """
         Get an entry given a DAG node name
-        @param dagNode name of the 
+        @param dagNode name of the node
         @return the first entry in the list that matches dagNode
         """
         for ent in self.entries:
@@ -101,6 +102,6 @@ class DbEntries:
         @return the post job's submit time or None if no postJob exists
         """
         ent = self.getPostJob()
-        if ent == None:
+        if ent is None:
             return None
         return ent.submitTime

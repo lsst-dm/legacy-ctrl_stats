@@ -1,5 +1,6 @@
 from __future__ import print_function
 from __future__ import absolute_import
+from builtins import object
 #
 # LSST Data Management System
 # Copyright 2008-2012 LSST Corporation.
@@ -37,7 +38,7 @@ class Reader(object):
         """Read a Condor log file, classifying all the records into Record
         objects.
         """
-        ## RecordList containing all records from the log file
+        # RecordList containing all records from the log file
         self.recordList = RecordList()
         recordLines = []
 

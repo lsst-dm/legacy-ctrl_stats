@@ -19,9 +19,10 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+from builtins import object
 
 
-class DbEntry:
+class DbEntry(object):
     """
     A representation of a single database query
     """
@@ -30,17 +31,17 @@ class DbEntry:
         """
         Constructor
         """
-        ## the DAG node name
+        # the DAG node name
         self.dagNode = dbList[0]
-        ## the host where the job resided
+        # the host where the job resided
         self.executionHost = dbList[1]
-        ## the name of the slot
+        # the name of the slot
         self.slotName = dbList[2]
-        ## the time the job was submitted to HTCondor
+        # the time the job was submitted to HTCondor
         self.submitTime = dbList[3]
-        ## the time the job started execution
+        # the time the job started execution
         self.executionStartTime = dbList[4]
-        ## the time the job ended execution
+        # the time the job ended execution
         self.executionStopTime = dbList[5]
-        ## the time the job was terminated
+        # the time the job was terminated
         self.terminationTime = dbList[6]

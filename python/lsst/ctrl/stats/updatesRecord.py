@@ -20,7 +20,6 @@ from __future__ import absolute_import
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-import MySQLdb
 from .dbRecord import DbRecord
 
 
@@ -33,19 +32,19 @@ class UpdatesRecord(DbRecord):
         """
         Constructor
         """
-        ## condor id
+        # condor id
         self.condorId = None
-        ## dag node
+        # dag node
         self.dagNode = None
-        ## host where this job was executing
+        # host where this job was executing
         self.executionHost = None
-        ## time stamp of update
+        # time stamp of update
         self.timestamp = "0000-00-00 00:00:00"
-        ## image size of job
+        # image size of job
         self.imageSize = 0
-        ## memory usage of job in MB
+        # memory usage of job in MB
         self.memoryUsageMb = 0
-        ## resident memory size in KB
+        # resident memory size in KB
         self.residentSetSizeKb = 0
-        ## name of the HTCondor slot this job ran in
+        # name of the HTCondor slot this job ran in
         self.slotName = None

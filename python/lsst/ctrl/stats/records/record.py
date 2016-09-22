@@ -1,4 +1,6 @@
 from __future__ import print_function
+from builtins import str
+from builtins import object
 #
 # LSST Data Management System
 # Copyright 2008-2012 LSST Corporation.
@@ -35,7 +37,7 @@ class Record(object):
         @param year - the year to tag the job with
         @param lines - the strings making up this record
         """
-        ## strings making up this record
+        # strings making up this record
         self.lines = list(lines)
 
         pat = r"(?P<event>\d+) " + \
@@ -47,11 +49,11 @@ class Record(object):
         values = {}
         if info is not None:
             values = info.groupdict()
-            ## the event type
+            # the event type
             self.event = values["event"]
-            ## the condor id
+            # the condor id
             self.condorId = values["condorId"]
-            ## the timestamp
+            # the timestamp
             self.timestamp = str(year)+"-"+values["month"]+"-"+values["day"]+" "+values["timestamp"]
         else:
             print("error parsing record:")
@@ -153,10 +155,8 @@ class Record(object):
         extract time from a line
         @return usr and sys fields, computed in seconds
         """
-        pat = r"Usr \d+ " + \
-            r"(?P<usrHours>\d+):(?P<usrMinutes>\d+):(?P<usrSeconds>\d+), "  + \
-            r"Sys \d+ " + \
-            r"(?P<sysHours>\d+):(?P<sysMinutes>\d+):(?P<sysSeconds>\d+) "
+        pat = r"Usr \d+ (?P<usrHours>\d+):(?P<usrMinutes>\d+):(?P<usrSeconds>\d+), "
+        pat = pat + r"Sys \d+ (?P<sysHours>\d+):(?P<sysMinutes>\d+):(?P<sysSeconds>\d+) "
         values = self.extractValues(pat, line)
         usrHours = values["usrHours"]
         usrMinutes = values["usrMinutes"]
@@ -181,4 +181,4 @@ class Record(object):
         Describe this record
         @return a string describing this object type and time stamp
         """
-        return "%s, %s" % (self.__class__.__name__, rec.timestamp)
+        return "%s, %s" % (self.__class__.__name__, self.rec.timestamp)

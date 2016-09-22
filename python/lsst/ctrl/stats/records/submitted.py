@@ -48,13 +48,13 @@ class Submitted(Record):
         pat = r"\<(?P<hostAddr>\d+.\d+.\d+.\d+:\d+.+)\>"
 
         values = re.search(pat, lines[0]).groupdict()
-        ## the submitted host's network address
+        # the submitted host's network address
         self.submitHostAddr = values["hostAddr"]
 
         if len(lines) > 1:
             pat = "DAG Node: (?P<dagNode>\w+)"
             values = re.search(pat, lines[1]).groupdict()
-            ## the DAG node that's being worked on
+            # the DAG node that's being worked on
             self.dagNode = values["dagNode"]
         else:
             self.dagNode = None
@@ -64,6 +64,8 @@ class Submitted(Record):
         @return a string describing the contents of this object
         """
         desc = super(Submitted, self).describe()
+        if desc is None:
+            return None
         if self.dagNode is None:
             s = "%s condorId=%s" % (self.timestamp, self.condorId)
         else:

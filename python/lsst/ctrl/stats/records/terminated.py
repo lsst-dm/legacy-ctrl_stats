@@ -59,57 +59,57 @@ class Terminated(Record):
 
         # the pairs below are split this way because of doxygen complaints
         term, returnValue = self.extractPair(pat, lines[1], "term", "returnValue")
-        ## termination reason
+        # termination reason
         self.term = term
-        ## return value of terminated process
+        # return value of terminated process
         self.returnValue = returnValue
 
         userRunRemoteUsage, sysRunRemoteUsage = self.extractUsrSysTimes(lines[2])
-        ## remote user usage time
+        # remote user usage time
         self.userRunRemoteUsage = userRunRemoteUsage
-        ## remote system usage time
+        # remote system usage time
         self.sysRunRemoteUsage = sysRunRemoteUsage
 
         userRunLocalUsage, sysRunLocalUsage = self.extractUsrSysTimes(lines[3])
-        ## local user usage time
+        # local user usage time
         self.userRunLocalUsage = userRunLocalUsage
-        ## local system usage time
+        # local system usage time
         self.sysRunLocalUsage = sysRunLocalUsage
 
         userTotalRemoteUsage, sysTotalRemoteUsage = self.extractUsrSysTimes(lines[4])
-        ## total user remote usage time
+        # total user remote usage time
         self.userTotalRemoteUsage = userTotalRemoteUsage
-        ## total system remote usage time
+        # total system remote usage time
         self.sysTotalRemoteUsage = sysTotalRemoteUsage
 
         userTotalLocalUsage, sysTotalLocalUsage = self.extractUsrSysTimes(lines[5])
-        ## total user local usage time
+        # total user local usage time
         self.userTotalLocalUsage = userTotalLocalUsage
-        ## total system local usage time
+        # total system local usage time
         self.sysTotalLocalUsage = sysTotalLocalUsage
 
         pat = r"(?P<bytes>\d+) "
-        ## run bytes sent by job
+        # run bytes sent by job
         self.runBytesSent = int(self.extract(pat, lines[6], "bytes"))
-        ## run bytes received by job
+        # run bytes received by job
         self.runBytesReceived = int(self.extract(pat, lines[7], "bytes"))
-        ## total bytes sent by job
+        # total bytes sent by job
         self.totalBytesSent = int(self.extract(pat, lines[8], "bytes"))
-        ## total bytes received by job
+        # total bytes received by job
         self.totalBytesReceived = int(self.extract(pat, lines[9], "bytes"))
 
         pat = r"Partitionable Resources :\s+Usage\s+\Request\s+Allocated$"
 
-        ## disk usage
+        # disk usage
         self.diskUsage = None
 
-        ## disk requested
+        # disk requested
         self.diskRequest = None
 
-        ## memory usage
+        # memory usage
         self.memoryUsage = None
 
-        ## memory requested
+        # memory requested
         self.memoryRequest = None
 
         ret = re.search(pat, lines[10])
@@ -125,6 +125,8 @@ class Terminated(Record):
         @return a string describing the contents of this object
         """
         desc = super(Terminated, self).describe()
+        if desc is None:
+            return None
         s = "%s runUser=%s totalUser=%s" % (
             self.timestamp, self.userRunRemoteUsage, self.userTotalRemoteUsage)
         return s
