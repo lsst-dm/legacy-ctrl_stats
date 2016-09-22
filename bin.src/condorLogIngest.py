@@ -37,6 +37,8 @@ import argparse
 from lsst.ctrl.stats.databaseManager import DatabaseManager
 from lsst.ctrl.stats.logIngestor import LogIngestor
 from lsst.daf.persistence import DbAuth
+import lsst.log as log
+import lsst.utils
 
 standard_library.install_aliases()
 
@@ -61,6 +63,10 @@ condorLogIngest.py -H lsst10 -d testing -f worker.log'''
     parser.add_argument("-v", "--verbose", action="store_true", dest="verbose", help="verbose")
 
     args = parser.parse_args()
+
+    package = lsst.utils.getPackageDir("ctrl_stats")
+    configPath = os.path.join(package, "etc", "log4j.properties")
+    log.configure(configPath)
 
     host = args.host
     port = args.port
