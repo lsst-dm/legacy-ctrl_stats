@@ -1,7 +1,8 @@
-# 
+from __future__ import absolute_import
+#
 # LSST Data Management System
 # Copyright 2008-2012 LSST Corporation.
-# 
+#
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
 #
@@ -9,18 +10,18 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
-# You should have received a copy of the LSST License Statement and 
-# the GNU General Public License along with this program.  If not, 
+#
+# You should have received a copy of the LSST License Statement and
+# the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 import re
-from record import Record
+from .record import Record
 
 # Parses Evicted records of the form:
 #
@@ -36,12 +37,15 @@ from record import Record
 #        Memory (MB)          :       41        1       275
 # ...
 #
+
+
 class Evicted(Record):
     """
     Job evicted from machine
     A job was removed from a machine before it was finished.
     """
     # event number: 004
+
     def __init__(self, year, lines):
         """
         Constructor
@@ -50,48 +54,45 @@ class Evicted(Record):
         """
         Record.__init__(self, year, lines)
 
-        ## reason for eviction
+        # reason for eviction
         self.reason = lines[1].strip()
-
-
 
         pat = r"\((?P<term>\d+)\) Job was not checkpointed."
 
-        ## termination code
+        # termination code
         self.term = self.extract(pat, lines[1], "term")
 
         userRunRemoteUsage, sysRunRemoteUsage = self.extractUsrSysTimes(lines[2])
-        ## remote user run usage time
+        # remote user run usage time
         self.userRunRemoteUsage = userRunRemoteUsage
-        ## remote sys run usage time
+        # remote sys run usage time
         self.sysRunRemoteUsage = sysRunRemoteUsage
 
-        userRunLocalUsage, sysRunLocalUsage  = self.extractUsrSysTimes(lines[3])
+        userRunLocalUsage, sysRunLocalUsage = self.extractUsrSysTimes(lines[3])
 
-        ## local user run usage time
+        # local user run usage time
         self.userRunLocalUsage = userRunLocalUsage
-        ## local sys run usage time
-        self.sysRunLocalUsage  = sysRunLocalUsage
+        # local sys run usage time
+        self.sysRunLocalUsage = sysRunLocalUsage
 
         pat = r"(?P<bytes>\d+) "
-        ## bytes sent during the run
-        self.runBytesSent = int(self.extract(pat,lines[4], "bytes"))
-        ## bytes received during the run
-        self.runBytesReceived = int(self.extract(pat,lines[5], "bytes"))
-
+        # bytes sent during the run
+        self.runBytesSent = int(self.extract(pat, lines[4], "bytes"))
+        # bytes received during the run
+        self.runBytesReceived = int(self.extract(pat, lines[5], "bytes"))
 
         pat = r"Partitionable Resources :\s+Usage\s+\Request\s+Allocated$"
 
-        ## disk usage
+        # disk usage
         self.diskUsage = None
 
-        ## disk requested
+        # disk requested
         self.diskRequest = None
 
-        ## memory usage
+        # memory usage
         self.memoryUsage = None
 
-        ## memory requested
+        # memory requested
         self.memoryRequest = None
 
         ret = re.search(pat, lines[6])
@@ -101,7 +102,6 @@ class Evicted(Record):
         else:
             self.diskUsage, self.diskRequest, allocated = self.extractUsageRequestAllocated(lines[8])
             self.memoryUsage, self.memoryRequest, allocated = self.extractUsageRequestAllocated(lines[9])
-    
 
     def describe(self):
         """

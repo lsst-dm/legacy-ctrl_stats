@@ -1,7 +1,7 @@
-# 
+#
 # LSST Data Management System
 # Copyright 2008-2012 LSST Corporation.
-# 
+#
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
 #
@@ -9,22 +9,25 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
-# You should have received a copy of the LSST License Statement and 
-# the GNU General Public License along with this program.  If not, 
+#
+# You should have received a copy of the LSST License Statement and
+# the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+from future import standard_library
+from builtins import object
 import eups
 import os
-import re
-from lsst.ctrl.stats.records.record import Record
 from lsst.ctrl.stats.reader import Reader
 from lsst.ctrl.stats.classifier import Classifier
+
+standard_library.install_aliases()
+
 
 class LogIngestor(object):
     """
@@ -32,12 +35,13 @@ class LogIngestor(object):
     each job, consolidates the information, adds the information to database
     tables.
     """
+
     def __init__(self, dbm, database):
         """Sets up the database tables which will be written to
         @param dbm: a database manager object
         @param database: the database name to write to
         """
-        ## database object to use for queries
+        # database object to use for queries
         self.dbm = dbm
 
         submissionsTableName = "submissions"
@@ -51,27 +55,27 @@ class LogIngestor(object):
 
         pkg = eups.productDir("ctrl_stats")
 
-        filePath = os.path.join(pkg,"sql","eventCodes.sql")
+        filePath = os.path.join(pkg, "sql", "eventCodes.sql")
         dbm.loadSql(filePath, database)
 
-        filePath = os.path.join(pkg,"sql","submissions.sql")
+        filePath = os.path.join(pkg, "sql", "submissions.sql")
         dbm.loadSql(filePath, database)
 
-        filePath = os.path.join(pkg,"sql","totals.sql")
+        filePath = os.path.join(pkg, "sql", "totals.sql")
         dbm.loadSql(filePath, database)
 
-        filePath = os.path.join(pkg,"sql","updates.sql")
+        filePath = os.path.join(pkg, "sql", "updates.sql")
         dbm.loadSql(filePath, database)
 
-        ## full name of the submissions table
+        # full name of the submissions table
         self.submissionsTable = database+"."+submissionsTableName
-        ## full name of the updates table
+        # full name of the updates table
         self.updatesTable = database+"."+updatesTableName
-        ## full name of the totals table
+        # full name of the totals table
         self.totalsTable = database+"."+totalsTableName
 
     def ingest(self, filename):
-        """Read in a Condor event log, group records per Condor ID, 
+        """Read in a Condor event log, group records per Condor ID,
         consolidate that information, and put it into database tables.
         @param filename: a Condor event log
         """
@@ -94,4 +98,3 @@ class LogIngestor(object):
             # add total entry
             ins = totalsRecord.getInsertString(self.totalsTable)
             self.dbm.execCommand0(ins)
-

@@ -1,7 +1,8 @@
-# 
+from builtins import object
+#
 # LSST Data Management System
 # Copyright 2008-2013 LSST Corporation.
-# 
+#
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
 #
@@ -9,18 +10,19 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
-# You should have received a copy of the LSST License Statement and 
-# the GNU General Public License along with this program.  If not, 
+#
+# You should have received a copy of the LSST License Statement and
+# the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
-class DbEntries:
+
+class DbEntries(object):
     """
     A representation of the database entries for a given run
     """
@@ -30,7 +32,7 @@ class DbEntries:
         Constructor
         @param entries representation of all database entries for a run
         """
-        ## objects representing database records
+        # objects representing database records
         self.entries = entries
 
     def getEntry(self, x):
@@ -44,14 +46,14 @@ class DbEntries:
     def getDagNode(self, dagNode):
         """
         Get an entry given a DAG node name
-        @param dagNode name of the 
+        @param dagNode name of the node
         @return the first entry in the list that matches dagNode
         """
         for ent in self.entries:
             if ent.dagNode == dagNode:
                 return ent
         return None
-    
+
     def getPreJob(self):
         """
         Get the prejob entry
@@ -66,7 +68,7 @@ class DbEntries:
         """
         ent = self.getDagNode('A')
         return ent.executionStopTime
-    
+
     def getPostJob(self):
         """
         Get the postjob entry
@@ -100,6 +102,6 @@ class DbEntries:
         @return the post job's submit time or None if no postJob exists
         """
         ent = self.getPostJob()
-        if ent == None:
+        if ent is None:
             return None
         return ent.submitTime

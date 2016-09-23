@@ -1,7 +1,10 @@
-# 
+from __future__ import print_function
+from builtins import str
+from builtins import object
+#
 # LSST Data Management System
 # Copyright 2008-2012 LSST Corporation.
-# 
+#
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
 #
@@ -9,30 +12,32 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
-# You should have received a copy of the LSST License Statement and 
-# the GNU General Public License along with this program.  If not, 
+#
+# You should have received a copy of the LSST License Statement and
+# the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 import re
 import sys
 
+
 class Record(object):
     """
     Representation of a HTCondor record
     """
+
     def __init__(self, year, lines):
         """
         Constructor
         @param year - the year to tag the job with
         @param lines - the strings making up this record
         """
-        ## strings making up this record
+        # strings making up this record
         self.lines = list(lines)
 
         pat = r"(?P<event>\d+) " + \
@@ -40,33 +45,33 @@ class Record(object):
             r"(?P<month>\d+)\/(?P<day>\d+) " + \
             r"(?P<timestamp>\d+:\d+:\d+) "
 
-        info = re.search(pat,lines[0])
+        info = re.search(pat, lines[0])
         values = {}
         if info is not None:
             values = info.groupdict()
-            ## the event type
+            # the event type
             self.event = values["event"]
-            ## the condor id
+            # the condor id
             self.condorId = values["condorId"]
-            ## the timestamp
+            # the timestamp
             self.timestamp = str(year)+"-"+values["month"]+"-"+values["day"]+" "+values["timestamp"]
         else:
-            print "error parsing record:"
-            print lines[0]
+            print("error parsing record:")
+            print(lines[0])
             sys.exit(10)
 
     def printAll(self):
         """
         print a description of this record to the console
         """
-        print "class name = %s " % self.__class__.__name__
-        members = [attr for attr in dir(self) if not callable(getattr(self,attr)) and not attr.startswith("__")]
+        print("class name = %s " % self.__class__.__name__)
+        members = [attr for attr in dir(self) if not callable(
+            getattr(self, attr)) and not attr.startswith("__")]
         for mem in members:
             value = getattr(self, mem)
-            print mem, "=", value
+            print(mem, "=", value)
 
-
-    def extractValues(self,pat,line):
+    def extractValues(self, pat, line):
         """
         Extract all values given a pattern and line
         @param pat pattern to match
@@ -74,13 +79,13 @@ class Record(object):
         @return a dictionary of extracted values
         """
         try:
-            values = re.search(pat,line).groupdict()
+            values = re.search(pat, line).groupdict()
             return values
         except AttributeError:
-            print "exiting"
+            print("exiting")
             sys.exit(100)
 
-    def extract(self,pat,line,tag):
+    def extract(self, pat, line, tag):
         """
         Extract a single value from a line
         @param pat pattern to match
@@ -88,7 +93,7 @@ class Record(object):
         @param tag the specific tag to extract
         @return the extracted tag value
         """
-        values = re.search(pat,line).groupdict()
+        values = re.search(pat, line).groupdict()
         val = values[tag]
         return val
 
@@ -117,16 +122,15 @@ class Record(object):
         request = 0
 
         pat = r":\s+(?P<usage>\d+)\s+(?P<request>\d+)$"
-        values = re.search(pat,input)
+        values = re.search(pat, input)
         if values is not None:
-            val1, val2 = self.extractPair(pat,input,"usage","request")
+            val1, val2 = self.extractPair(pat, input, "usage", "request")
             usage = int(val1)
             request = int(val2)
         else:
             pat = r":\s+(?P<request>\d+)$"
-            request = int(self.extract(pat,input,"request"))
+            request = int(self.extract(pat, input, "request"))
         return usage, request
-
 
     def extractUsageRequestAllocated(self, line):
         """
@@ -151,11 +155,9 @@ class Record(object):
         extract time from a line
         @return usr and sys fields, computed in seconds
         """
-        pat = r"Usr \d+ " + \
-                r"(?P<usrHours>\d+):(?P<usrMinutes>\d+):(?P<usrSeconds>\d+), "  + \
-                r"Sys \d+ " + \
-                r"(?P<sysHours>\d+):(?P<sysMinutes>\d+):(?P<sysSeconds>\d+) "
-        values = self.extractValues(pat,line)
+        pat = r"Usr \d+ (?P<usrHours>\d+):(?P<usrMinutes>\d+):(?P<usrSeconds>\d+), "
+        pat = pat + r"Sys \d+ (?P<sysHours>\d+):(?P<sysMinutes>\d+):(?P<sysSeconds>\d+) "
+        values = self.extractValues(pat, line)
         usrHours = values["usrHours"]
         usrMinutes = values["usrMinutes"]
         usrSeconds = values["usrSeconds"]
@@ -179,4 +181,4 @@ class Record(object):
         Describe this record
         @return a string describing this object type and time stamp
         """
-        return "%s, %s" % (self.__class__.__name__,rec.timestamp)
+        return "%s, %s" % (self.__class__.__name__, self.rec.timestamp)
