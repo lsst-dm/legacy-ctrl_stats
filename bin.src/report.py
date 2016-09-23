@@ -81,7 +81,6 @@ report.py -H kaboom.ncsa.illinois.edu -p 3303 -d srp_2013_0601_140432 -S''')
 
     args = parser.parse_args()
 
-
     package = lsst.utils.getPackageDir("ctrl_stats")
     configPath = os.path.join(package, "etc", "log4j.properties")
     log.configure(configPath)
@@ -182,7 +181,7 @@ def printSummary(dbm, entries):
 
     # don't count preJob and postJob, so subtract 2
     count = entries.getLength()-2
-    
+
     print("Total worker submits: %d" % count)
     if submissionDuration > 0:
         print("Mean initial worker submissions per second: %d" % (count/submissionDuration))
@@ -194,7 +193,7 @@ def printSummary(dbm, entries):
     delay = initialFirstWorker.submitTime-entries.getPreJobExecutionStopTime()
     print("Delay of end of preJob to submission of first worker: %s" % timeStamp(delay))
 
-    ## initial submission here means all the workers that got submitted so that all nodes were occupied
+    # initial submission here means all the workers that got submitted so that all nodes were occupied
 
     node = initialFirstWorker.dagNode
     submitTime = dateTime(initialFirstWorker.submitTime)
