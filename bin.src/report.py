@@ -26,6 +26,7 @@
 # report.py -H lsst10 -p 3306 -d testing -S
 
 from __future__ import print_function
+from __future__ import division
 from future import standard_library
 from builtins import str
 from builtins import range
@@ -180,7 +181,7 @@ def printSummary(dbm, entries):
     submissionDuration = initialLastWorker.submitTime-initialLastWorker.submitTime
 
     # don't count preJob and postJob, so subtract 2
-    count = entries.getLength()-2
+    count = entries.getLength() - 2
 
     print("Total worker submits: %d" % count)
     if submissionDuration > 0:
@@ -307,7 +308,7 @@ def printSummary(dbm, entries):
         if totalStarts == 0:
             print("No workers scheduled for more than one slot")
         else:
-            print("Mean time to next worker start: %.2f seconds" % (totalMinutes/float(totalStarts)))
+            print("Mean time to next worker start: %.2f seconds" % (totalMinutes/totalStarts))
 
         print()
 
