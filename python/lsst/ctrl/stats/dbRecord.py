@@ -64,9 +64,8 @@ class DbRecord(object):
             if isinstance(value, (bytes, str)):
                 value = MySQLdb.escape_string(value)
                 if isinstance(value, bytes):
-                    value = "'" + value.decode() + "'"
-                else:
-                    value = "'"+value+"'"
+                    value = value.decode()
+                value = "'{}'".format(value)
             else:
                 value = str(value)
             valueList.append(value)
