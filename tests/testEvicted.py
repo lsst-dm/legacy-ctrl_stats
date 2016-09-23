@@ -20,6 +20,8 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+
+from builtins import str
 import os
 import unittest
 import lsst.utils.tests
@@ -33,6 +35,7 @@ from lsst.ctrl.stats.reader import Reader
 
 def setup_module(module):
     lsst.utils.tests.init()
+
 
 class TestEvicted(lsst.utils.tests.TestCase):
 
@@ -103,6 +106,7 @@ class TestEvicted(lsst.utils.tests.TestCase):
         self.assertEqual(rec.__class__.__name__, "Aborted")
         self.assertEqual(rec.timestamp, self.year+"-08-20 13:12:55")
         self.assertEqual(rec.reason, "via condor_rm (by user srp)")
+
 
 class EvictedMemoryTestCase(lsst.utils.tests.MemoryTestCase):
     pass

@@ -20,6 +20,8 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+
+from builtins import str
 import os
 import unittest
 import lsst.utils.tests
@@ -28,8 +30,10 @@ import lsst.ctrl.stats.records as recordslib
 from lsst.ctrl.stats.reader import Reader
 from lsst.ctrl.stats.classifier import Classifier
 
+
 def setup_module(module):
     lsst.utils.tests.init()
+
 
 class TestClassifier(lsst.utils.tests.TestCase):
 
@@ -106,6 +110,7 @@ class TestClassifier(lsst.utils.tests.TestCase):
         self.assertEqual(rec1.imageSize, 414292)
         self.assertEqual(rec1.memoryUsageMb, 40)
         self.assertEqual(rec1.residentSetSizeKb, 40640)
+
 
 class ClassifierMemoryTestCase(lsst.utils.tests.MemoryTestCase):
     pass
