@@ -47,7 +47,7 @@ class Executing(Record):
         pat = r"\<(?P<hostAddr>\S+)\>"
 
         values = re.search(pat, lines[0]).groupdict()
-        ## internet address of the host
+        # internet address of the host
         self.executingHostAddr = values["hostAddr"]
 
     def describe(self):

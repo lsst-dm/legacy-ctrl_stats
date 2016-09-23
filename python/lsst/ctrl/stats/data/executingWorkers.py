@@ -1,3 +1,4 @@
+from builtins import object
 #
 # LSST Data Management System
 # Copyright 2008-2013 LSST Corporation.
@@ -22,7 +23,7 @@
 from lsst.ctrl.stats.data.dbEntry import DbEntry
 
 
-class ExecutingWorkers:
+class ExecutingWorkers(object):
     """
     Represents executing workers
     """
@@ -31,11 +32,11 @@ class ExecutingWorkers:
         """
         Constructor
         """
-        ## the database to query
+        # the database to query
         self.dbm = dbm
-        ## the first job that executed
+        # the first job that executed
         self.firstExecutingWorker = self.getFirst()
-        ## the last job that executed
+        # the last job that executed
         self.lastExecutingWorker = self.getLast()
 
     def getFirstExecutingWorker(self):
@@ -54,7 +55,10 @@ class ExecutingWorkers:
         """
         @return the first job that executed
         """
-        query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), UNIX_TIMESTAMP(terminationTime)  from submissions where dagNode != 'A' and executionStartTime !='0000-00-00 00:00:00' order by executionStartTime limit 1;"
+        query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), "
+        query = query + "UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), "
+        query = query + "UNIX_TIMESTAMP(terminationTime)  from submissions where dagNode != 'A' and "
+        query = query + "executionStartTime !='0000-00-00 00:00:00' order by executionStartTime limit 1;"
 
         results = self.dbm.execCommandN(query)
         dbEntry = DbEntry(results[0])
@@ -65,7 +69,10 @@ class ExecutingWorkers:
         """
         @return the last job that executed
         """
-        query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), UNIX_TIMESTAMP(terminationTime) from submissions where dagNode != 'B' and executionStartTime !='0000-00-00 00:00:00' order by executionStopTime DESC limit 1;"
+        query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), "
+        query = query + "UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), "
+        query = query + "UNIX_TIMESTAMP(terminationTime) from submissions where dagNode != 'B' and "
+        query = query + "executionStartTime !='0000-00-00 00:00:00' order by executionStopTime DESC limit 1;"
 
         results = self.dbm.execCommandN(query)
         dbEntry = DbEntry(results[0])

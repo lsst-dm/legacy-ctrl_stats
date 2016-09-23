@@ -1,3 +1,4 @@
+from builtins import object
 #
 # LSST Data Management System
 # Copyright 2008-2013 LSST Corporation.
@@ -19,11 +20,9 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-from lsst.ctrl.stats.data.dbEntry import DbEntry
-from lsst.ctrl.stats.data.dbEntries import DbEntries
 
 
-class TerminationStatus:
+class TerminationStatus(object):
     """
     Representation of how all jobs ended, based on termination codes
     """
@@ -32,7 +31,7 @@ class TerminationStatus:
         """
         Constructor
         """
-        ## database object used to query
+        # database object used to query
         self.dbm = dbm
 
     def getTotals(self):
@@ -40,7 +39,9 @@ class TerminationStatus:
         Return the number of times job termination events occurred.
         @return list containing event type, number of occurrences pairs
         """
-        query = "select eventCodes.EventName, (select count(*) from submissions where submissions.terminationCode = eventCodes.eventCode and submissions.dagNode != 'A' and submissions.dagNode != 'B') as appears from eventCodes"
+        query = "select eventCodes.EventName, (select count(*) from submissions where "
+        query = query + "submissions.terminationCode = eventCodes.eventCode and submissions.dagNode "
+        query = query + "!= 'A' and submissions.dagNode != 'B') as appears from eventCodes"
 
         results = self.dbm.execCommandN(query)
 

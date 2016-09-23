@@ -54,45 +54,45 @@ class Evicted(Record):
         """
         Record.__init__(self, year, lines)
 
-        ## reason for eviction
+        # reason for eviction
         self.reason = lines[1].strip()
 
         pat = r"\((?P<term>\d+)\) Job was not checkpointed."
 
-        ## termination code
+        # termination code
         self.term = self.extract(pat, lines[1], "term")
 
         userRunRemoteUsage, sysRunRemoteUsage = self.extractUsrSysTimes(lines[2])
-        ## remote user run usage time
+        # remote user run usage time
         self.userRunRemoteUsage = userRunRemoteUsage
-        ## remote sys run usage time
+        # remote sys run usage time
         self.sysRunRemoteUsage = sysRunRemoteUsage
 
         userRunLocalUsage, sysRunLocalUsage = self.extractUsrSysTimes(lines[3])
 
-        ## local user run usage time
+        # local user run usage time
         self.userRunLocalUsage = userRunLocalUsage
-        ## local sys run usage time
+        # local sys run usage time
         self.sysRunLocalUsage = sysRunLocalUsage
 
         pat = r"(?P<bytes>\d+) "
-        ## bytes sent during the run
+        # bytes sent during the run
         self.runBytesSent = int(self.extract(pat, lines[4], "bytes"))
-        ## bytes received during the run
+        # bytes received during the run
         self.runBytesReceived = int(self.extract(pat, lines[5], "bytes"))
 
         pat = r"Partitionable Resources :\s+Usage\s+\Request\s+Allocated$"
 
-        ## disk usage
+        # disk usage
         self.diskUsage = None
 
-        ## disk requested
+        # disk requested
         self.diskRequest = None
 
-        ## memory usage
+        # memory usage
         self.memoryUsage = None
 
-        ## memory requested
+        # memory requested
         self.memoryRequest = None
 
         ret = re.search(pat, lines[6])

@@ -41,7 +41,7 @@ class JobAdInformation(Record):
         """
         Record.__init__(self, year, lines)
 
-        ## slot name in which this job is running
+        # slot name in which this job is running
         self.slotName = None
         pat = r"MachineSlotName = \"(?P<slotname>\S+)\""
         for line in lines:

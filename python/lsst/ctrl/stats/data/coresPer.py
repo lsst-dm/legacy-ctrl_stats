@@ -19,10 +19,11 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-import datetime
+from builtins import range
+from builtins import object
 
 
-class CoresPer:
+class CoresPer(object):
     """
     Base class to use by the CoresPer* classes
     """
@@ -31,11 +32,11 @@ class CoresPer:
         """
         Constructor
         """
-        ## the maximum number of cores
+        # the maximum number of cores
         self.maximumCores = -1
-        ## the time the core was first used
+        # the time the core was first used
         self.timeFirstUsed = None
-        ## the time the core was last used
+        # the time the core was last used
         self.timeLastUsed = None
 
     def calculateMax(self):

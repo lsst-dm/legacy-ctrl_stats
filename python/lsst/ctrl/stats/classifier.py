@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 #
 # LSST Data Management System
 # Copyright 2008-2012 LSST Corporation.
@@ -20,7 +19,9 @@ from __future__ import absolute_import
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-import sys
+
+from __future__ import absolute_import
+from builtins import object
 from .submissionsRecord import SubmissionsRecord
 from .totalsRecord import TotalsRecord
 from .updatesRecord import UpdatesRecord
@@ -28,7 +29,7 @@ import lsst.ctrl.stats.records as recordslib
 
 
 class Classifier(object):
-    """Takes a group of Condor event records and classifies them into 
+    """Takes a group of Condor event records and classifies them into
     groups of summary records
     """
 
@@ -122,7 +123,7 @@ class Classifier(object):
         return newRec
 
     def classify(self, records):
-        """Classify a list of Condor event records into secondary 
+        """Classify a list of Condor event records into secondary
         database records, recording statistics about data in the list.
         @param records: list containing Condor event records
         @return: list of submissions, a totalsRecord and a list of updates
@@ -136,7 +137,6 @@ class Classifier(object):
 
         fExecuting = False
         fEnded = False
-        imageSize = 0
         for rec in records:
             if rec.event == recordslib.jobAdInformation.eventCode:
                 entry.slotName = rec.slotName
@@ -176,7 +176,7 @@ class Classifier(object):
             elif rec.event == recordslib.aborted.eventCode:
                 # job was aborted
                 if not fEnded:
-                    if entry.terminationReason == None:
+                    if entry.terminationReason is None:
                         entry.terminationReason = rec.reason
                     entry.terminationCode = rec.event
                     entry.terminationTime = rec.timestamp

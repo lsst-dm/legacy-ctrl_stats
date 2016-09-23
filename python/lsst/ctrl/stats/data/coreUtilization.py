@@ -1,3 +1,4 @@
+from builtins import object
 #
 # LSST Data Management System
 # Copyright 2008-2013 LSST Corporation.
@@ -19,12 +20,9 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-import sys
-import collections
-from collections import defaultdict
 
 
-class DbCoreInfo:
+class DbCoreInfo(object):
     """
     Class to hold information about the host, slot and the time it started
     """
@@ -33,15 +31,15 @@ class DbCoreInfo:
         """
         Constructor
         """
-        ## the host on which the job was executing
+        # the host on which the job was executing
         self.executionHost = info[0]
-        ## the name of the HTCondor slot
+        # the name of the HTCondor slot
         self.slotName = info[1]
-        ## start of execution
+        # start of execution
         self.executionStartTime = info[2]
 
 
-class CoreUtilization:
+class CoreUtilization(object):
     """
     Get a listing of all the times at with a core is used.
     """
@@ -51,13 +49,15 @@ class CoreUtilization:
         Constructor
         @parameter dbm The database object to query.
         """
-        ## the database object to query
+        # the database object to query
         self.dbm = dbm
 
-        query = "select executionHost, slotName, min(UNIX_TIMESTAMP(executionStartTime)) from submissions where dagNode !='A' and dagNode != 'B'  group by executionHost, slotName order by min(UNIX_TIMESTAMP(executionStartTime))"
+        query = "select executionHost, slotName, min(UNIX_TIMESTAMP(executionStartTime)) from "
+        query = query + "submissions where dagNode !='A' and dagNode != 'B'  group by executionHost, "
+        query = query + "slotName order by min(UNIX_TIMESTAMP(executionStartTime))"
 
         results = self.dbm.execCommandN(query)
-        ## the list of all database records returned
+        # the list of all database records returned
         self.entries = []
         for res in results:
             coreInfo = DbCoreInfo(res)
@@ -77,6 +77,6 @@ class CoreUtilization:
 
     def coresUtilized(self):
         """
-        the maximum of cores that were utilitized 
+        the maximum of cores that were utilitized
         """
         return len(self.entries)

@@ -19,7 +19,7 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-import datetime
+from builtins import range
 from lsst.ctrl.stats.data.coresPer import CoresPer
 
 
@@ -35,16 +35,18 @@ class CoresPerSecond(CoresPer):
         @param the database object to query
         @param the entries to compare
         """
-        ## the database object to query
+        # the database object to query
         self.dbm = dbm
 
-        query = "select UNIX_TIMESTAMP(MIN(executionStartTime)), UNIX_TIMESTAMP(MAX(executionStopTime)) from submissions where UNIX_TIMESTAMP(executionStartTime) > 0 and dagNode != 'A' and dagNode != 'B' order by executionStartTime;"
+        query = "select UNIX_TIMESTAMP(MIN(executionStartTime)), UNIX_TIMESTAMP(MAX(executionStopTime)) "
+        query = query + "from submissions where UNIX_TIMESTAMP(executionStartTime) > 0 and dagNode != 'A' "
+        query = query + "and dagNode != 'B' order by executionStartTime;"
 
         results = self.dbm.execCommandN(query)
         startTime = results[0][0]
         stopTime = results[0][1]
 
-        ## the intervals between entries
+        # the intervals between entries
         self.values = []
         # cycle through the seconds, counting the number of cores being used
         # during each second
@@ -58,10 +60,10 @@ class CoresPerSecond(CoresPer):
 
             self.values.append([thisSecond, x])
 
-        maximumCores, timeFirstUsed, timeLastUsed = calculateMax()
-        ## the maximum number of cores use
+        maximumCores, timeFirstUsed, timeLastUsed = self.calculateMax()
+        # the maximum number of cores use
         self.maximumCores = maximumCores
-        ## the first time at which a core was used for this job
+        # the first time at which a core was used for this job
         self.timeFirstUsed = timeFirstUsed
-        ## the last time at which a core was used for this job
+        # the last time at which a core was used for this job
         self.timeLastUsed = timeLastUsed

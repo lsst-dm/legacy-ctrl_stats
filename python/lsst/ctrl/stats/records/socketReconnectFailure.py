@@ -37,7 +37,7 @@ class SocketReconnectFailure(Record):
         @param lines - the strings making up this record
         """
         Record.__init__(self, year, lines)
-        ## the reason for the failure
+        # the reason for the failure
         self.reason = lines[1].strip()+";"+lines[2].strip()
 
 eventClass = SocketReconnectFailure

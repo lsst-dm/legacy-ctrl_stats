@@ -24,8 +24,10 @@ import re
 from .record import Record
 
 #
+# note that the "Error" line below is one line in the output; it is split here to satisfy flake8
 # 007 (010.000.000) 10/22 13:54:20 Shadow exception!
-#     Error from slot3@lsst15.ncsa.illinois.edu: Failed to execute '/tmp/srp/big.sh' with arguments 20 21 22: (errno=8: 'Exec format error')
+#     Error from slot3@lsst15.ncsa.illinois.edu: Failed to execute '/tmp/srp/big.sh' with \
+#           arguments 20 21 22: (errno=8: 'Exec format error')
 #     0  -  Run Bytes Sent By Job
 #     0  -  Run Bytes Received By Job
 # ...
@@ -35,7 +37,7 @@ class ShadowException(Record):
     """
     Shadow exception
     The "condor_shadow", a program on the submit computer taht watches over
-    the job and performs some services for the job, failed for some 
+    the job and performs some services for the job, failed for some
     catastrophic reason..  The job will leave the machine and go back into
     the queue.
     """
@@ -49,13 +51,13 @@ class ShadowException(Record):
         Record.__init__(self, year, lines)
 
         pat = r"Error from (?P<slot>[\w]+@[\d]+@[\w\-.]+): (?P<reason>.+?)($)"
-        ## the slot the job was in at the time of this exception
+        # the slot the job was in at the time of this exception
         self.slot = None
-        ## the reason for the exception
+        # the reason for the exception
         self.reason = None
-        ## the number of bytes sent
+        # the number of bytes sent
         self.runBytesSent = None
-        ## the number of bytes received
+        # the number of bytes received
         self.runBytesReceived = None
         if re.search(pat, lines[1]) is not None:
             values = self.extractValues(pat, lines[1])

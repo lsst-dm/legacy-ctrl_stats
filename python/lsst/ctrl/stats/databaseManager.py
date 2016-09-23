@@ -26,7 +26,7 @@ from lsst.cat.MySQLBase import MySQLBase
 class DatabaseManager(MySQLBase):
     """Convenience class the MySQLBase class with which we hold the
     the username and password.  We do this so we can pass this object
-    around and not have to pass the user name and password all over 
+    around and not have to pass the user name and password all over
     the place.  Note: It was pointed out that this functionality may be
     better placed in MySQLBase itself, and if that happens this code
     should be removed and that new code should be used instead.
@@ -40,9 +40,9 @@ class DatabaseManager(MySQLBase):
         @param password: the users's password
         """
         MySQLBase.__init__(self, dbHostName, portNumber)
-        ## user
+        # user
         self.user = user
-        ## password
+        # password
         self.password = password
 
         self.connect(user, password)

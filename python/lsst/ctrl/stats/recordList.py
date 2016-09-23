@@ -1,4 +1,3 @@
-from __future__ import print_function
 #
 # LSST Data Management System
 # Copyright 2008-2012 LSST Corporation.
@@ -20,8 +19,10 @@ from __future__ import print_function
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+
+from __future__ import print_function
+from builtins import object
 from collections import OrderedDict
-import itertools
 
 
 class RecordList(object):
@@ -32,12 +33,11 @@ class RecordList(object):
         """
         Constructor
         """
-        ## ordered dictionary of records
+        # ordered dictionary of records
         self.records = OrderedDict()
 
     def append(self, rec):
-        """Append a record to the list of records corresponding to it's 
-        Condor ID
+        """Append a record to the list of records corresponding to it's Condor ID
         @param rec: a Condor event record object
         """
         condorId = rec.condorId
@@ -49,7 +49,7 @@ class RecordList(object):
             recordGroup.append(rec)
             self.records[condorId] = recordGroup
         # not equivalent
-        #self.records.get(rec.condorId, []).append(rec)
+        # self.records.get(rec.condorId, []).append(rec)
 
     def getRecords(self):
         """Accessor which returns all the record lists

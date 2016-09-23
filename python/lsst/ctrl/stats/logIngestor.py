@@ -19,12 +19,14 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+from future import standard_library
+from builtins import object
 import eups
 import os
-import re
-from lsst.ctrl.stats.records.record import Record
 from lsst.ctrl.stats.reader import Reader
 from lsst.ctrl.stats.classifier import Classifier
+
+standard_library.install_aliases()
 
 
 class LogIngestor(object):
@@ -39,7 +41,7 @@ class LogIngestor(object):
         @param dbm: a database manager object
         @param database: the database name to write to
         """
-        ## database object to use for queries
+        # database object to use for queries
         self.dbm = dbm
 
         submissionsTableName = "submissions"
@@ -65,15 +67,15 @@ class LogIngestor(object):
         filePath = os.path.join(pkg, "sql", "updates.sql")
         dbm.loadSql(filePath, database)
 
-        ## full name of the submissions table
+        # full name of the submissions table
         self.submissionsTable = database+"."+submissionsTableName
-        ## full name of the updates table
+        # full name of the updates table
         self.updatesTable = database+"."+updatesTableName
-        ## full name of the totals table
+        # full name of the totals table
         self.totalsTable = database+"."+totalsTableName
 
     def ingest(self, filename):
-        """Read in a Condor event log, group records per Condor ID, 
+        """Read in a Condor event log, group records per Condor ID,
         consolidate that information, and put it into database tables.
         @param filename: a Condor event log
         """

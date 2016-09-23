@@ -1,3 +1,4 @@
+from builtins import object
 #
 # LSST Data Management System
 # Copyright 2008-2013 LSST Corporation.
@@ -19,20 +20,18 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-from lsst.ctrl.stats.data.dbEntry import DbEntry
-from lsst.ctrl.stats.data.dbEntries import DbEntries
 
 
-class WorkerTotal:
+class WorkerTotal(object):
     """
-    Count the total number of workers. does not include the preJob or postJob 
+    Count the total number of workers. does not include the preJob or postJob
     """
 
     def __init__(self, dbm):
         """
         Constructor
         """
-        ## database object to use in query
+        # database object to use in query
         self.dbm = dbm
 
     def getTotal(self, tableName):
