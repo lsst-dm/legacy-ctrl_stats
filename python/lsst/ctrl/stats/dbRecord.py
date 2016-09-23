@@ -1,4 +1,3 @@
-from __future__ import print_function
 #
 # LSST Data Management System
 # Copyright 2008-2012 LSST Corporation.
@@ -20,6 +19,10 @@ from __future__ import print_function
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+from __future__ import print_function
+from builtins import str
+from builtins import bytes
+from builtins import object
 import MySQLdb
 
 
@@ -27,9 +30,9 @@ class DbRecord(object):
     """Base class for database record objects.  This object uses introspection
     to discover the names of member variables used in subclasses to create
     it's output.  This allows the additions/deletions of fields in a
-    subclassed object without having to make changes to methods.  
+    subclassed object without having to make changes to methods.
 
-    The names of the fields in those objects are expected to match those 
+    The names of the fields in those objects are expected to match those
     of the database table in which they are being written.
     """
 
@@ -43,8 +46,7 @@ class DbRecord(object):
             print(mem, "=", value)
 
     def getInsertString(self, tableName):
-        """Create insert string for values for the member variables of 
-        the class.
+        """Create insert string for values for the member variables of the class.
         @param tableName: the table name in which this record will be put
         """
         members = [attr for attr in dir(self) if not callable(
@@ -59,8 +61,12 @@ class DbRecord(object):
             value = getattr(self, mem)
             if value is None:
                 value = ""
-            if type(value) == type(str()):
-                value = "'"+MySQLdb.escape_string(value)+"'"
+            if isinstance(value, (bytes, str)):
+                value = MySQLdb.escape_string(value)
+                if isinstance(value, bytes):
+                    value = "'" + value.decode() + "'"
+                else:
+                    value = "'"+value+"'"
             else:
                 value = str(value)
             valueList.append(value)
