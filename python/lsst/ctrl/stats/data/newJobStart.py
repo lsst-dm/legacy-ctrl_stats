@@ -97,13 +97,13 @@ class NewJobStart(object):
                 else:
                     totals[-1] = totals[-1] + 1
             else:
-                for i in range(length-1):
-                    timeToNext = timeList[i+1][0] - timeList[i][1]
+                for i in range(length - 1):
+                    timeToNext = timeList[i + 1][0] - timeList[i][1]
                     if timeToNext < 0:
                         print("ERROR!")
                         print("length = ", length)
                         print("i = ", i)
-                        print("timeList[i+1][0] = ", timeList[i+1][0])
+                        print("timeList[i + 1][0] = ", timeList[i + 1][0])
                         print("timeList[i][1] = ", timeList[i][1])
                         print("timeToNext = ", timeToNext)
                         print(timeList)
