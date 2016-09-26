@@ -68,11 +68,11 @@ class LogIngestor(object):
         dbm.loadSql(filePath, database)
 
         # full name of the submissions table
-        self.submissionsTable = database+"."+submissionsTableName
+        self.submissionsTable = database + "." + submissionsTableName
         # full name of the updates table
-        self.updatesTable = database+"."+updatesTableName
+        self.updatesTable = database + "." + updatesTableName
         # full name of the totals table
-        self.totalsTable = database+"."+totalsTableName
+        self.totalsTable = database + "." + totalsTableName
 
     def ingest(self, filename):
         """Read in a Condor event log, group records per Condor ID,
