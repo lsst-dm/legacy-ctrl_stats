@@ -1,6 +1,3 @@
-from __future__ import print_function
-from __future__ import absolute_import
-from builtins import object
 #
 # LSST Data Management System
 # Copyright 2008-2012 LSST Corporation.
@@ -22,6 +19,9 @@ from builtins import object
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import object
 import os
 import sys
 import re

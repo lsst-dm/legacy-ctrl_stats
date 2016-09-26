@@ -1,4 +1,3 @@
-from builtins import object
 #
 # LSST Data Management System
 # Copyright 2008-2013 LSST Corporation.
@@ -20,6 +19,7 @@ from builtins import object
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+from builtins import object
 
 
 class WorkerTotal(object):
