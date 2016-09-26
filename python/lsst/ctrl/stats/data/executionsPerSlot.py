@@ -48,7 +48,7 @@ class ExecutionsPerSlot(object):
         avg = 0
         for res in self.results:
             avg = avg + res[1]
-        return int(avg/len(self.results)+0.5)
+        return int(avg/len(self.results) + 0.5)
 
     def min(self):
         """
