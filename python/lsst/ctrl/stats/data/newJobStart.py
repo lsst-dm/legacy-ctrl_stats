@@ -1,7 +1,7 @@
-# 
+#
 # LSST Data Management System
 # Copyright 2008-2013 LSST Corporation.
-# 
+#
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
 #
@@ -9,59 +9,67 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
-# You should have received a copy of the LSST License Statement and 
-# the GNU General Public License along with this program.  If not, 
+#
+# You should have received a copy of the LSST License Statement and
+# the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-import datetime
+from __future__ import print_function
+from builtins import range
+from builtins import object
 import sys
 import collections
 from collections import defaultdict
 
-class DbStartInfo:
+
+class DbStartInfo(object):
     """
     Starting record
     """
+
     def __init__(self, info):
         """
         Constructor
         """
-        ## name of DAG node
+        # name of DAG node
         self.dagNode = info[0]
-        ## host job executed on
+        # host job executed on
         self.executionHost = info[1]
-        ## name of slot which ran this job
+        # name of slot which ran this job
         self.slotName = info[2]
-        ## time of start of execution
+        # time of start of execution
         self.executionStartTime = info[3]
-        ## time of termination of execution
+        # time of termination of execution
         self.terminationTime = info[4]
-        ## time the next execution started in this slot
+        # time the next execution started in this slot
         self.timeToNext = -1
 
-class NewJobStart:
+
+class NewJobStart(object):
     """
     represents when each job was started
     """
-
 
     def __init__(self, dbm):
         """
         Constructor
         """
-        ## database object to use in queries
+        # database object to use in queries
         self.dbm = dbm
 
-        query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(terminationTime) from submissions where executionStartTime != '0000-00-00 00:00:00' and dagNode != 'A' and dagNode !='B' and slotName !='' order by executionHost, slotName, executionStartTime;"
+        query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(executionStartTime), "
+        query = query + "UNIX_TIMESTAMP(terminationTime) from submissions where "
+        query = query + "executionStartTime != '0000-00-00 00:00:00' and dagNode != 'A' and "
+        query = query + "dagNode !='B' and slotName !='' order by executionHost, slotName, "
+        query = query + "executionStartTime;"
 
         results = self.dbm.execCommandN(query)
-        ## list of DBStartInfo record representing the results of the new job start query
+        # list of DBStartInfo record representing the results of the new job start query
         self.entries = []
         for res in results:
             startInfo = DbStartInfo(res)
@@ -74,9 +82,9 @@ class NewJobStart:
         """
         mylist = []
         for ent in self.entries:
-            mylist.append((ent.executionHost+"/"+ent.slotName,[ent.executionStartTime,ent.terminationTime]))
+            mylist.append((ent.executionHost+"/"+ent.slotName, [ent.executionStartTime, ent.terminationTime]))
         d = defaultdict(list)
-        for k,v in mylist:
+        for k, v in mylist:
             d[k].append(v)
 
         totals = {}
@@ -89,18 +97,16 @@ class NewJobStart:
                 else:
                     totals[-1] = totals[-1] + 1
             else:
-                for i in range(length-1):
-                    #if i == 0:
-                    #    print datetime.datetime.fromtimestamp(timeList[0][0]).strftime('%Y-%m-%d %H:%M:%S')
-                    timeToNext = timeList[i+1][0] - timeList[i][1]
+                for i in range(length - 1):
+                    timeToNext = timeList[i + 1][0] - timeList[i][1]
                     if timeToNext < 0:
-                        print "ERROR!"
-                        print "length = ",length
-                        print "i = ",i
-                        print "timeList[i+1][0] = ", timeList[i+1][0]
-                        print "timeList[i][1] = ", timeList[i][1]
-                        print "timeToNext = ",timeToNext
-                        print timeList
+                        print("ERROR!")
+                        print("length = ", length)
+                        print("i = ", i)
+                        print("timeList[i + 1][0] = ", timeList[i + 1][0])
+                        print("timeList[i][1] = ", timeList[i][1])
+                        print("timeToNext = ", timeToNext)
+                        print(timeList)
                         sys.exit(100)
                     if timeToNext not in totals:
                         totals[timeToNext] = 1
@@ -108,7 +114,6 @@ class NewJobStart:
                         totals[timeToNext] = totals[timeToNext] + 1
         od = collections.OrderedDict(sorted(totals.items()))
         return od
-            
 
     def consolidate(self):
         """

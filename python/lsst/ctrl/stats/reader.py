@@ -1,7 +1,7 @@
-# 
+#
 # LSST Data Management System
 # Copyright 2008-2012 LSST Corporation.
-# 
+#
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
 #
@@ -9,31 +9,36 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
-# You should have received a copy of the LSST License Statement and 
-# the GNU General Public License along with this program.  If not, 
+#
+# You should have received a copy of the LSST License Statement and
+# the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import object
 import os
 import sys
 import re
 import datetime
-from recordList import RecordList
+from .recordList import RecordList
 import lsst.ctrl.stats.records
+
 
 class Reader(object):
     """Reads in a Condor log file
     """
+
     def __init__(self, inputFile):
         """Read a Condor log file, classifying all the records into Record
         objects.
         """
-        ## RecordList containing all records from the log file
+        # RecordList containing all records from the log file
         self.recordList = RecordList()
         recordLines = []
 
@@ -56,8 +61,8 @@ class Reader(object):
                     if rec is not None:
                         self.recordList.append(rec)
                     else:
-                        print "couldn't classify:"
-                        print recordLines
+                        print("couldn't classify:")
+                        print(recordLines)
                         sys.exit(10)
                     recordLines = []
                 else:
@@ -81,15 +86,14 @@ class Reader(object):
         # parse itself.
 
         pat = r"(?P<event>\d\d\d)"
-        values = re.search(pat,lines[0]).groupdict()
+        values = re.search(pat, lines[0]).groupdict()
         eventNumber = values["event"]
 
-
         if eventNumber in lsst.ctrl.stats.records.byCode:
-            rec = lsst.ctrl.stats.records.byCode[eventNumber](year,lines)
+            rec = lsst.ctrl.stats.records.byCode[eventNumber](year, lines)
             return rec
         else:
             return None
-    
+
 if __name__ == "__main__":
     records = Reader(sys.argv[1])

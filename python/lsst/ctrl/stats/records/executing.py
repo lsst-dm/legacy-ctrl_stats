@@ -1,7 +1,7 @@
-# 
+#
 # LSST Data Management System
 # Copyright 2008-2012 LSST Corporation.
-# 
+#
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
 #
@@ -9,29 +9,33 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
-# You should have received a copy of the LSST License Statement and 
-# the GNU General Public License along with this program.  If not, 
+#
+# You should have received a copy of the LSST License Statement and
+# the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+from __future__ import absolute_import
 import re
-from record import Record
+from .record import Record
 
 # Parses Executing records of the form:
 #
 # 001 (244585.000.000) 08/20 13:09:36 Job executing on host: <192.168.1.121:47727>
 # ...
 #
+
+
 class Executing(Record):
     """
     Job executing
     A job is running.  It might occur more than once.
     """
+
     def __init__(self, year, lines):
         """
         Constructor
@@ -42,8 +46,8 @@ class Executing(Record):
 
         pat = r"\<(?P<hostAddr>\S+)\>"
 
-        values = re.search(pat,lines[0]).groupdict()
-        ## internet address of the host
+        values = re.search(pat, lines[0]).groupdict()
+        # internet address of the host
         self.executingHostAddr = values["hostAddr"]
 
     def describe(self):
