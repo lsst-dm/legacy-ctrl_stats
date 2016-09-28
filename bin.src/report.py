@@ -213,9 +213,14 @@ def printSummary(dbm, entries):
     dagNode = firstExecutingWorker.dagNode
     startTime = firstExecutingWorker.executionStartTime
     stopTime = firstExecutingWorker.executionStopTime
-    print("First executing worker %s started at %s" % (dagNode, dateTime(startTime)))
-    print("First executing worker %s stopped at %s" % (dagNode, dateTime(stopTime)))
-    print("First executing worker %s run duration %s" % (dagNode, timeStamp(stopTime-startTime)))
+    if startTime is None:
+        print("warning: First executing worker has not set start time")
+    if stopTime is None:
+        print("warning: First executing worker has not set stop time")
+    if startTime is not None and stopTime is not None:
+        print("First executing worker %s started at %s" % (dagNode, dateTime(startTime)))
+        print("First executing worker %s stopped at %s" % (dagNode, dateTime(stopTime)))
+        print("First executing worker %s run duration %s" % (dagNode, timeStamp(stopTime-startTime)))
     print()
 
     # last worker in the list
@@ -223,10 +228,17 @@ def printSummary(dbm, entries):
     dagNode = lastWorker.dagNode
     startTime = lastWorker.executionStartTime
     stopTime = lastWorker.executionStopTime
-    print("Last submitted worker %s submitted at %s" % (dagNode, dateTime(lastWorker.submitTime)))
-    print("Last submitted worker %s started executing at %s" % (dagNode, dateTime(startTime)))
-    print("Last submitted worker %s stopped executing at %s" % (dagNode, dateTime(stopTime)))
-    print("Last submitted worker %s run duration %s" % (dagNode, timeStamp(stopTime-startTime)))
+
+    if startTime is None:
+        print("warning: Last submitted worker has not set start time")
+    if stopTime is None:
+        print("warning: Last submitted worker has not set stop time")
+    
+    if startTime is not None and stopTime is not None:
+        print("Last submitted worker %s submitted at %s" % (dagNode, dateTime(lastWorker.submitTime)))
+        print("Last submitted worker %s started executing at %s" % (dagNode, dateTime(startTime)))
+        print("Last submitted worker %s stopped executing at %s" % (dagNode, dateTime(stopTime)))
+        print("Last submitted worker %s run duration %s" % (dagNode, timeStamp(stopTime-startTime)))
     print()
 
     # last executing worker is not necessarily the last worker that was
@@ -262,7 +274,7 @@ def printSummary(dbm, entries):
     print("Minimum submitted worker run time: %s" % timeStamp(min))
     print("Maximum submitted worker run time: %s" % timeStamp(max))
     print("Mean submitted worker run time: %s" % timeStamp(avg))
-
+    print()
     successTimes = SuccessTimes(dbm)
     successEntries = successTimes.getEntries()
 
@@ -270,6 +282,7 @@ def printSummary(dbm, entries):
     print("Minimum successful worker run time: %s" % timeStamp(min))
     print("Maximum successful worker run time: %s" % timeStamp(max))
     print("Mean successful worker run time: %s" % timeStamp(avg))
+    print()
 
     printCoreUtilizationSummary(dbm, entries)
 
@@ -327,7 +340,11 @@ def printSummary(dbm, entries):
 
 
 def dateTime(val):
-    return datetime.datetime.fromtimestamp(val).strftime('%Y-%m-%d %H:%M:%S')
+    if val == None:
+        timeVal = 0
+    else:
+        timeVal = val
+    return datetime.datetime.fromtimestamp(timeVal).strftime('%Y-%m-%d %H:%M:%S')
 
 # return the number of seconds
 
@@ -352,7 +369,14 @@ def jobRunTimes(ents):
         if ent.executionStartTime == 0:
             continue
         workers = workers + 1
-        runTime = ent.terminationTime - ent.executionStartTime
+        if ent.terminationTime is None:
+            print("warning: job termination time is invalid.")
+            runTime = 0
+        elif ent.executionStartTime is None:
+            print("warning: job execution start time is invalid.")
+            runTime = 0
+        else:
+            runTime = ent.terminationTime - ent.executionStartTime
         totalRunTime = totalRunTime+runTime
         if runTime < minRunTime:
             minRunTime = runTime
