@@ -340,7 +340,7 @@ def printSummary(dbm, entries):
 
 
 def dateTime(val):
-    if val == None:
+    if val is None:
         timeVal = 0
     else:
         timeVal = val
