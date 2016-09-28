@@ -230,7 +230,7 @@ class Classifier(object):
             # global number of bytesReceived for this record group
             totalsEntry.totalBytesReceived += ent.bytesReceived
             # number of times execution started
-            if ent.executionStartTime != "0000-00-00 00:00:00":
+            if ent.executionStartTime is not None:
                 totalsEntry.executions += 1
             # number of times termination occurred because of shadow exceptions
             if ent.terminationCode == recordslib.shadowException.eventCode:

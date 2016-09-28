@@ -64,7 +64,7 @@ class NewJobStart(object):
 
         query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(executionStartTime), "
         query = query + "UNIX_TIMESTAMP(terminationTime) from submissions where "
-        query = query + "executionStartTime != '0000-00-00 00:00:00' and dagNode != 'A' and "
+        query = query + "executionStartTime != 0 and dagNode != 'A' and "
         query = query + "dagNode !='B' and slotName !='' order by executionHost, slotName, "
         query = query + "executionStartTime;"
 
@@ -100,13 +100,7 @@ class NewJobStart(object):
                 for i in range(length - 1):
                     timeToNext = timeList[i + 1][0] - timeList[i][1]
                     if timeToNext < 0:
-                        print("ERROR!")
-                        print("length = ", length)
-                        print("i = ", i)
-                        print("timeList[i + 1][0] = ", timeList[i + 1][0])
-                        print("timeList[i][1] = ", timeList[i][1])
-                        print("timeToNext = ", timeToNext)
-                        print(timeList)
+                        print("ERROR! invalid data in the submissions table")
                         sys.exit(100)
                     if timeToNext not in totals:
                         totals[timeToNext] = 1
