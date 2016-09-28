@@ -58,7 +58,7 @@ class ExecutingWorkers(object):
         query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), "
         query = query + "UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), "
         query = query + "UNIX_TIMESTAMP(terminationTime)  from submissions where dagNode != 'A' and "
-        query = query + "executionStartTime !='0000-00-00 00:00:00' order by executionStartTime limit 1;"
+        query = query + "executionStartTime != 0 order by executionStartTime limit 1;"
 
         results = self.dbm.execCommandN(query)
         dbEntry = DbEntry(results[0])
@@ -72,7 +72,7 @@ class ExecutingWorkers(object):
         query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), "
         query = query + "UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), "
         query = query + "UNIX_TIMESTAMP(terminationTime) from submissions where dagNode != 'B' and "
-        query = query + "executionStartTime !='0000-00-00 00:00:00' order by executionStopTime DESC limit 1;"
+        query = query + "executionStartTime != 0 order by executionStopTime DESC limit 1;"
 
         results = self.dbm.execCommandN(query)
         dbEntry = DbEntry(results[0])
