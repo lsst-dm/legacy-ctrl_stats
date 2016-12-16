@@ -1,6 +1,8 @@
 setupRequired(python_future)
 setupRequired(base)
-setupRequired(cat)
+setupRequired(db)
+setupRequired(utils)
+setupRequired(daf_persistence)
 setupRequired(python_mysqlclient)
 
 envAppend(PYTHONPATH, ${PRODUCT_DIR}/python)
