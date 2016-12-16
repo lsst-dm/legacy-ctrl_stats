@@ -49,9 +49,9 @@ class Reader(object):
         fileModified = datetime.datetime.fromtimestamp(t)
         year = fileModified.year
 
-        file = open(inputFile)
+        fd = open(inputFile)
         while 1:
-            lines = file.readlines(100000)
+            lines = fd.readlines(100000)
             if not lines:
                 break
             for line in lines:

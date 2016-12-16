@@ -52,14 +52,14 @@ class CoresPerInterval(CoresPer):
         # during each second
         last = startTime
         if (startTime+interval > stopTime):
-            next = stopTime
+            nextTime = stopTime
         else:
-            next = startTime+interval
+            nextTime = startTime+interval
         stepInterval = 0
         while True:
             x = 0
             length = entries.getLength()
-            intervalRangeSet = set(range(last, next+1))
+            intervalRangeSet = set(range(last, nextTime+1))
 
             for i in range(length):
                 ent = entries.getEntry(i)
@@ -70,13 +70,13 @@ class CoresPerInterval(CoresPer):
             self.values.append([last, x])
             stepInterval = stepInterval+1
 
-            if next >= stopTime:
+            if nextTime >= stopTime:
                 return
-            last = next
-            if (next+interval) > stopTime:
-                next = stopTime
+            last = nextTime
+            if (nextTime+interval) > stopTime:
+                nextTime = stopTime
             else:
-                next = next+interval
+                nextTime = nextTime+interval
 
         maximumCores, timeFirstUsed, timeLastUsed = self.calculateMax()
         # the maximum number of cores use

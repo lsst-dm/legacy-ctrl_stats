@@ -120,6 +120,7 @@ report.py -H kaboom.ncsa.illinois.edu -p 3303 -d srp_2013_0601_140432 -S''')
         writeDateValues(values)
     elif args.summary:
         printSummary(dbm, entries)
+    dbm.close()
 
 
 def printCoreUtilizationSummary(dbm, entries):
@@ -270,17 +271,17 @@ def printSummary(dbm, entries):
     print()
 
     # run times
-    min, max, avg = jobRunTimes(entries)
-    print("Minimum submitted worker run time: %s" % timeStamp(min))
-    print("Maximum submitted worker run time: %s" % timeStamp(max))
+    minVal, maxVal, avg = jobRunTimes(entries)
+    print("Minimum submitted worker run time: %s" % timeStamp(minVal))
+    print("Maximum submitted worker run time: %s" % timeStamp(maxVal))
     print("Mean submitted worker run time: %s" % timeStamp(avg))
     print()
     successTimes = SuccessTimes(dbm)
     successEntries = successTimes.getEntries()
 
-    min, max, avg = jobRunTimes(successEntries)
-    print("Minimum successful worker run time: %s" % timeStamp(min))
-    print("Maximum successful worker run time: %s" % timeStamp(max))
+    minVal, maxVal, avg = jobRunTimes(successEntries)
+    print("Minimum successful worker run time: %s" % timeStamp(minVal))
+    print("Maximum successful worker run time: %s" % timeStamp(maxVal))
     print("Mean successful worker run time: %s" % timeStamp(avg))
     print()
 
@@ -289,10 +290,10 @@ def printSummary(dbm, entries):
     # Executions per Slot
     executionsPerSlot = ExecutionsPerSlot(dbm)
     avg = executionsPerSlot.average()
-    min = executionsPerSlot.min()
-    max = executionsPerSlot.max()
-    print("Minimum executions per slot: %d" % min)
-    print("Maximum executions per slot: %d" % max)
+    minVal = executionsPerSlot.min()
+    maxVal = executionsPerSlot.max()
+    print("Minimum executions per slot: %d" % minVal)
+    print("Maximum executions per slot: %d" % maxVal)
     print("Mean executions per slot: %d" % avg)
     print()
 
