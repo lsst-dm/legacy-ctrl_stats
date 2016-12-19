@@ -46,11 +46,11 @@ class DatabaseManager(object):
         """
         utils.loadSqlScript(self.conn, filePath, database)
 
-    def execCommand0(self, cmd):
+    def execCommand0(self, cmd, *args):
         """Execute a command with no results
         @param cmd SQL command to execute
         """
-        self.conn.execute(cmd)
+        self.conn.execute(cmd, *args)
 
     def execCommand1(self, cmd):
         """Execute a command with one result

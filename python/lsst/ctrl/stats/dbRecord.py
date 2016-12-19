@@ -23,7 +23,6 @@ from __future__ import print_function
 from builtins import str
 from builtins import bytes
 from builtins import object
-import MySQLdb
 
 
 class DbRecord(object):
@@ -45,32 +44,18 @@ class DbRecord(object):
             value = getattr(self, mem)
             print(mem, "=", value)
 
-    def getInsertString(self, tableName):
+    def getInsertQuery(self, tableName):
         """Create insert string for values for the member variables of the class.
         @param tableName: the table name in which this record will be put
         """
         members = [attr for attr in dir(self) if not callable(
             getattr(self, attr)) and not attr.startswith("__")]
 
-        # columns names
+        values = [getattr(self, mem) for mem in members]
+        values = ["" if value is None else value for value in values]
+
+        valuePlaceholders = ','.join(['%s']*len(members))  # string like "%s,%s,%s,%s,..."
         columns = ",".join(members)
-
-        # MySQL escaped strings and values
-        valueList = []
-        for mem in members:
-            value = getattr(self, mem)
-            if value is None:
-                value = ""
-            if isinstance(value, (bytes, str)):
-                value = MySQLdb.escape_string(value)
-                if isinstance(value, bytes):
-                    value = value.decode()
-                value = "'{}'".format(value)
-            else:
-                value = str(value)
-            valueList.append(value)
-        values = ",".join(valueList)
-
-        cmd = "INSERT INTO %s (%s) VALUES (%s)" % (tableName, columns, values)
-
-        return cmd
+        cmd = "INSERT INTO {} ({}) VALUES ({})".format(tableName, columns, valuePlaceholders)
+        # return non-interpolated query and value list
+        return cmd, values
