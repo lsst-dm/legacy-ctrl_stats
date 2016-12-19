@@ -99,6 +99,7 @@ condorLogIngest.py -H lsst10 -d testing -f worker.log'''
                 print("warning: %s does not exist." % filename)
             continue
         logIngestor.ingest(filename)
+    dbm.close()
 
 if __name__ == "__main__":
     run()

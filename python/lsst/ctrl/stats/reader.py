@@ -49,24 +49,19 @@ class Reader(object):
         fileModified = datetime.datetime.fromtimestamp(t)
         year = fileModified.year
 
-        file = open(inputFile)
-        while 1:
-            lines = file.readlines(100000)
-            if not lines:
-                break
-            for line in lines:
-                line = line.rstrip('\n')
-                if line == "...":
-                    rec = self.classify(year, recordLines)
-                    if rec is not None:
-                        self.recordList.append(rec)
-                    else:
-                        print("couldn't classify:")
-                        print(recordLines)
-                        sys.exit(10)
-                    recordLines = []
+        for line in open(inputFile):
+            line = line.rstrip('\n')
+            if line == "...":
+                rec = self.classify(year, recordLines)
+                if rec is not None:
+                    self.recordList.append(rec)
                 else:
-                    recordLines.append(line)
+                    print("couldn't classify:")
+                    print(recordLines)
+                    sys.exit(10)
+                recordLines = []
+            else:
+                recordLines.append(line)
 
     def getRecords(self):
         """Accessor to a list of all Records

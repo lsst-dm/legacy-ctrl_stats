@@ -20,36 +20,71 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
-from lsst.cat.MySQLBase import MySQLBase
+from lsst.db import utils
+from lsst.db.engineFactory import getEngineFromArgs
+# from lsst.db.testHelper import readCredentialFile
 
 
-class DatabaseManager(MySQLBase):
-    """Convenience class the MySQLBase class with which we hold the
-    the username and password.  We do this so we can pass this object
-    around and not have to pass the user name and password all over
-    the place.  Note: It was pointed out that this functionality may be
-    better placed in MySQLBase itself, and if that happens this code
-    should be removed and that new code should be used instead.
+class DatabaseManager(object):
+    """
     """
 
-    def __init__(self, dbHostName, portNumber, user, password):
-        """Creates a connection to a MySQL server
-        @param dbHostName: a server where the MySQL daemon resides
-        @param portNumber: the port number the MySQL daemon is listening on
+    def __init__(self, dbHostName, portNumber, user, passwd):
+        """Creates a connection to an sql server
+        @param dbHostName: a server where the database daemon resides
+        @param portNumber: the port number the database daemon is listening on
         @param user: the user name to connect as
-        @param password: the users's password
+        @param passwd: the users's password
         """
-        MySQLBase.__init__(self, dbHostName, portNumber)
-        # user
-        self.user = user
-        # password
-        self.password = password
 
-        self.connect(user, password)
+        self.conn = getEngineFromArgs(username=user, password=passwd, host=dbHostName, port=portNumber).connect()
 
     def loadSql(self, filePath, database):
         """Load an SQL file into a database
         @param filePath: the SQL file to load
         @param database: the database to use
         """
-        self.loadSqlScript(filePath, self.user, self.password, database)
+        utils.loadSqlScript(self.conn, filePath, database)
+
+    def execCommand0(self, cmd, *args):
+        """Execute a command with no results
+        @param cmd SQL command to execute
+        """
+        self.conn.execute(cmd, *args)
+
+    def execCommand1(self, cmd):
+        """Execute a command with one result
+        @param cmd SQL command to execute
+        @return single result
+        """
+        results = self.conn.execute(cmd)
+        val = results.fetchone()
+        items = val.items()
+        return items[0][1]
+
+    def execCommandN(self, cmd):
+        """Execute a command with N results
+        @param cmd SQL command to execute
+        @return results
+        """
+        result = self.conn.execute(cmd)
+        values = result.fetchall()
+        return values
+
+    def dbExists(self, dbName):
+        """Check for database existence
+        @return True if database exists, False otherwise
+        """
+        return utils.dbExists(self.conn, dbName)
+
+    def createDb(self, dbName):
+        """Create a database
+        @param dbName name of database to create
+        """
+        utils.createDb(self.conn, dbName)
+
+    def close(self):
+        """Close connection to server
+        """
+        self.conn.close()
+        self.conn = None

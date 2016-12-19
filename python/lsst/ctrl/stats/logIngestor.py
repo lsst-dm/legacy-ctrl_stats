@@ -89,12 +89,12 @@ class LogIngestor(object):
             entries, totalsRecord, updateEntries = classifier.classify(records[job])
             # add submission records
             for ent in entries:
-                ins = ent.getInsertString(self.submissionsTable)
-                self.dbm.execCommand0(ins)
+                cmd, args = ent.getInsertQuery(self.submissionsTable)
+                self.dbm.execCommand0(cmd, *args)
             # add update records
             for ent in updateEntries:
-                ins = ent.getInsertString(self.updatesTable)
-                self.dbm.execCommand0(ins)
+                cmd, args = ent.getInsertQuery(self.updatesTable)
+                self.dbm.execCommand0(cmd, *args)
             # add total entry
-            ins = totalsRecord.getInsertString(self.totalsTable)
-            self.dbm.execCommand0(ins)
+            cmd, args = totalsRecord.getInsertQuery(self.totalsTable)
+            self.dbm.execCommand0(cmd, *args)
