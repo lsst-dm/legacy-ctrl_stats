@@ -43,11 +43,9 @@ class Reader(object):
         recordLines = []
 
         # For some reason, condor doesn't put the year on the date,
-        # so the nearest guess we can make is by looking at the file modified
-        # info, and use that year.
-        t = os.path.getmtime(inputFile)
-        fileModified = datetime.datetime.fromtimestamp(t)
-        year = fileModified.year
+        # so we assum this year.
+        year = str(datetime.date.today().year)
+
 
         for line in open(inputFile):
             line = line.rstrip('\n')
