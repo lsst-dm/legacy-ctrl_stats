@@ -48,7 +48,8 @@ class Executing(Record):
 
         values = re.search(pat, lines[0]).groupdict()
         # internet address of the host
-        self.executingHostAddr = values["hostAddr"]
+        hostValues = values["hostAddr"].split("?")
+        self.executingHostAddr = hostValues[0]
 
     def describe(self):
         """
