@@ -28,6 +28,7 @@ import lsst.utils.tests
 import lsst.ctrl.stats.records as recordslib
 from datetime import date
 from lsst.ctrl.stats.reader import Reader
+import eups
 
 
 def setup_module(module):
@@ -37,13 +38,11 @@ def setup_module(module):
 class TestReader(lsst.utils.tests.TestCase):
 
     def setUp(self):
-        filename = os.path.join("tests", "testfiles", "reader_test.log")
-        reader = Reader(filename)
+        pkg = eups.productDir("ctrl_stats")
+        metrics = os.path.join(pkg, "tests", "testfiles", "test.metrics")
+        filename = os.path.join(pkg, "tests", "testfiles", "reader_test.log")
+        reader = Reader(metrics, filename)
         self.records = reader.getRecords()
-        # Condor doesn't emit the the current year in records.  The classifier
-        # code assumes it's the current year, and prepends that, so we have
-        # to assume that here as well when testing for the date.
-        self.year = str(date.today().year)
 
     def test1(self):
         # check to see we have the number of records we expect
@@ -74,7 +73,7 @@ class TestReader(lsst.utils.tests.TestCase):
         self.assertEqual(rec.imageSize, 272192)
         self.assertEqual(rec.memoryUsageMb, 40)
         self.assertEqual(rec.residentSetSizeKb, 40640)
-        self.assertEqual(rec.timestamp, self.year+"-10-17 20:00:07")
+        self.assertTrue(rec.timestamp.endswith("-10-17 20:00:07"))
 
     def test5(self):
         # check validity of second Updated record
@@ -97,7 +96,7 @@ class TestReader(lsst.utils.tests.TestCase):
         self.assertEqual(rec.sysRunRemoteUsage, 1)
         self.assertEqual(rec.sysTotalLocalUsage, 0)
         self.assertEqual(rec.sysTotalRemoteUsage, 1)
-        self.assertEqual(rec.timestamp, self.year+"-10-17 20:00:14")
+        self.assertTrue(rec.timestamp.endswith("-10-17 20:00:14"))
         self.assertEqual(rec.totalBytesReceived, 1449)
         self.assertEqual(rec.totalBytesSent, 25594)
         self.assertEqual(rec.userRunLocalUsage, 0)

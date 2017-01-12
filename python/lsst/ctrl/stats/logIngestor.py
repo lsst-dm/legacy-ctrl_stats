@@ -74,13 +74,14 @@ class LogIngestor(object):
         # full name of the totals table
         self.totalsTable = database + "." + totalsTableName
 
-    def ingest(self, filename):
+    def ingest(self, metrics, filename):
         """Read in a Condor event log, group records per Condor ID,
         consolidate that information, and put it into database tables.
+        @param metrics: a Condor metrics file
         @param filename: a Condor event log
         """
         # read and parse in the Condor log
-        reader = Reader(filename)
+        reader = Reader(metrics, filename)
         # get the record groups, which are grouped by condor id
         records = reader.getRecords()
 

@@ -28,6 +28,7 @@ import lsst.utils.tests
 import lsst.ctrl.stats.records as recordslib
 from datetime import date
 from lsst.ctrl.stats.reader import Reader
+import eups
 
 # This is a set of tests for HTCondor user (non-dagman) job logs, for
 # a job that terminated properly
@@ -40,13 +41,11 @@ def setup_module(module):
 class TestTerminated(lsst.utils.tests.TestCase):
 
     def setUp(self):
-        filename = os.path.join("tests", "testfiles", "terminated.log")
-        reader = Reader(filename)
+        pkg = eups.productDir("ctrl_stats")
+        metrics = os.path.join(pkg, "tests", "testfiles", "test.metrics")
+        filename = os.path.join(pkg, "tests", "testfiles", "terminated.log")
+        reader = Reader(metrics, filename)
         self.records = reader.getRecords()
-        # Condor doesn't emit the the current year in records.  The classifier
-        # code assumes it's the current year, and prepends that, so we have
-        # to assume that here as well when testing for the date.
-        self.year = str(date.today().year)
 
     def test1(self):
         # check to see we have the number of records we expect
@@ -76,7 +75,7 @@ class TestTerminated(lsst.utils.tests.TestCase):
         self.assertEqual(rec.imageSize, 467144)
         self.assertEqual(rec.memoryUsageMb, 10)
         self.assertEqual(rec.residentSetSizeKb, 9360)
-        self.assertEqual(rec.timestamp, self.year+"-08-21 10:27:31")
+        self.assertTrue(rec.timestamp.endswith("-08-21 10:27:31"))
 
     def test5(self):
         # check validity of second Updated record
@@ -99,7 +98,7 @@ class TestTerminated(lsst.utils.tests.TestCase):
         self.assertEqual(rec.sysRunRemoteUsage, 0)
         self.assertEqual(rec.sysTotalLocalUsage, 0)
         self.assertEqual(rec.sysTotalRemoteUsage, 0)
-        self.assertEqual(rec.timestamp, self.year+"-08-21 10:29:43")
+        self.assertTrue(rec.timestamp.endswith("-08-21 10:29:43"))
         self.assertEqual(rec.totalBytesReceived, 0)
         self.assertEqual(rec.totalBytesSent, 0)
         self.assertEqual(rec.userRunLocalUsage, 0)

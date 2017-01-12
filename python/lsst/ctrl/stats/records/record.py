@@ -24,6 +24,7 @@ from builtins import str
 from builtins import object
 import re
 import sys
+import datetime
 
 
 class Record(object):
@@ -37,6 +38,9 @@ class Record(object):
         @param year - the year to tag the job with
         @param lines - the strings making up this record
         """
+
+        self.timeFormat = "%Y-%m-%d %H:%M:%S"
+
         # strings making up this record
         self.lines = list(lines)
 
@@ -59,6 +63,24 @@ class Record(object):
             print("error parsing record:")
             print(lines[0])
             sys.exit(10)
+
+    def getTimestamp(self):
+        return self.timestamp
+
+    def setTimestamp(self, timestamp):
+        self.timestamp = timestamp
+
+    def getDatetime(self):
+        return datetime.datetime.strptime(self.timestamp, self.timeFormat)
+
+    def addYear(self):
+        # add one year to the current timestamp, accounting for leap years
+        d = self.getDatetime()
+        try:
+            d = d.replace(year = d.year + 1)
+        except ValueError:
+            d = d + (date(d.year + 1, 1, 1) - date(d.year, 1, 1))
+        self.timestamp = datetime.datetime.strftime(d, self.timeFormat)
 
     def printAll(self):
         """
@@ -181,4 +203,4 @@ class Record(object):
         Describe this record
         @return a string describing this object type and time stamp
         """
-        return "%s, %s" % (self.__class__.__name__, self.rec.timestamp)
+        return "%s, %s" % (self.__class__.__name__, self.timestamp)

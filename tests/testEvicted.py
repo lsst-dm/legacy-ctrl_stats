@@ -22,6 +22,7 @@
 #
 
 from builtins import str
+import eups
 import os
 import unittest
 import lsst.utils.tests
@@ -40,13 +41,11 @@ def setup_module(module):
 class TestEvicted(lsst.utils.tests.TestCase):
 
     def setUp(self):
-        filename = os.path.join("tests", "testfiles", "evicted.log")
-        reader = Reader(filename)
+        pkg = eups.productDir("ctrl_stats")
+        metrics = os.path.join(pkg, "tests", "testfiles", "test.metrics")
+        filename = os.path.join(pkg, "tests", "testfiles", "evicted.log")
+        reader = Reader(metrics, filename)
         self.records = reader.getRecords()
-        # Condor doesn't emit the the current year in records.  The classifier
-        # code assumes it's the current year, and prepends that, so we have
-        # to assume that here as well when testing for the date.
-        self.year = str(date.today().year)
 
     def test1(self):
         # check to see we have the number of records we expect
@@ -76,7 +75,7 @@ class TestEvicted(lsst.utils.tests.TestCase):
         self.assertEqual(rec.imageSize, 467532)
         self.assertEqual(rec.memoryUsageMb, 10)
         self.assertEqual(rec.residentSetSizeKb, 9856)
-        self.assertEqual(rec.timestamp, self.year+"-08-20 13:09:37")
+        self.assertTrue(rec.timestamp.endswith("-08-20 13:09:37"))
 
     def test5(self):
         # check validity of second Updated record
@@ -95,7 +94,7 @@ class TestEvicted(lsst.utils.tests.TestCase):
         self.assertEqual(rec.memoryUsage, 41)
         self.assertEqual(rec.runBytesReceived, 0)
         self.assertEqual(rec.runBytesSent, 0)
-        self.assertEqual(rec.timestamp, self.year+"-08-20 13:12:55")
+        self.assertTrue(rec.timestamp.endswith("-08-20 13:12:55"))
         self.assertEqual(rec.userRunLocalUsage, 0)
         self.assertEqual(rec.userRunRemoteUsage, 0)
 
@@ -104,7 +103,7 @@ class TestEvicted(lsst.utils.tests.TestCase):
         self.assertIn("244585.000.000", self.records)
         rec = self.records["244585.000.000"][5]
         self.assertEqual(rec.__class__.__name__, "Aborted")
-        self.assertEqual(rec.timestamp, self.year+"-08-20 13:12:55")
+        self.assertTrue(rec.timestamp.endswith("-08-20 13:12:55"))
         self.assertEqual(rec.reason, "via condor_rm (by user srp)")
 
 

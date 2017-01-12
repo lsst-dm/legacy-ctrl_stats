@@ -28,14 +28,15 @@ import re
 import datetime
 from .recordList import RecordList
 import lsst.ctrl.stats.records
+import yaml
 
 
 class Reader(object):
     """Reads in a Condor log file
     """
 
-    def __init__(self, inputFile):
-        """Read a Condor log file, classifying all the records into Record
+    def __init__(self, metrics, inputFile):
+        """Read a HTCondor metrics file, an HTCondor log file, classifying all the records into Record
         objects.
         """
         # RecordList containing all records from the log file
@@ -44,9 +45,23 @@ class Reader(object):
 
         # For some reason, condor doesn't put the year on the date,
         # so we assum this year.
-        year = str(datetime.date.today().year)
 
+        metricList = None
+        with open(metrics, 'r') as stream:
+            try:
+                metricList = yaml.load(stream)
+            except yaml.YAMLError as exc:
+                print(exc)
+                return
 
+        d = datetime.datetime.fromtimestamp(metricList['start_time'])
+        startDate = d
+        startYear = d.year
+        d = datetime.datetime.fromtimestamp(metricList['end_time'])
+        endYear = d.year
+
+        year = startYear
+        prevDate = None
         for line in open(inputFile):
             line = line.rstrip('\n')
             if line == "...":
@@ -60,6 +75,25 @@ class Reader(object):
                 recordLines = []
             else:
                 recordLines.append(line)
+
+        # if all the records in the same year, we're done
+        if startYear == endYear:
+            return
+
+        # the records span years, so readjust when we run over the year
+        # threshold
+        records = self.getRecords()
+        for job in self.getRecords():
+            jobNumber = job
+            jobStates = records[jobNumber]
+            previousDate = startDate
+            for rec in jobStates:
+                currentDate = rec.getDatetime()
+                if previousDate != None:
+                    if previousDate > currentDate:
+                        rec.addYear()
+                previousDate = rec.getDatetime()
+            
 
     def getRecords(self):
         """Accessor to a list of all Records
@@ -89,4 +123,4 @@ class Reader(object):
             return None
 
 if __name__ == "__main__":
-    records = Reader(sys.argv[1])
+    records = Reader(sys.argv[1], sys.argv[2])
