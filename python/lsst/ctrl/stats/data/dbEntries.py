@@ -94,7 +94,10 @@ class DbEntries(object):
         Get the last worker job in the execution
         @return an entry representing the last worker
         """
-        return self.entries[-2]
+        if len(self.entries) > 2:
+            return self.entries[-2]
+        else:
+            return None
 
     def getPostJobSubmitTime(self):
         """

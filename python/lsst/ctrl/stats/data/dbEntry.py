@@ -21,7 +21,6 @@
 #
 from builtins import object
 
-
 class DbEntry(object):
     """
     A representation of a single database query
@@ -33,15 +32,33 @@ class DbEntry(object):
         """
         # the DAG node name
         self.dagNode = dbList[0]
+
         # the host where the job resided
         self.executionHost = dbList[1]
+
         # the name of the slot
         self.slotName = dbList[2]
+
         # the time the job was submitted to HTCondor
-        self.submitTime = dbList[3]
+        if dbList[3] == 0:
+            self.submitTime = None
+        else:
+            self.submitTime = dbList[3]
+
         # the time the job started execution
-        self.executionStartTime = dbList[4]
+        if dbList[4] == 0:
+            self.executionStartTime = None
+        else:
+            self.executionStartTime = dbList[4]
+
         # the time the job ended execution
-        self.executionStopTime = dbList[5]
+        if dbList[5] == 0:
+            self.executionStopTime = None
+        else:
+            self.executionStopTime = dbList[5]
+
         # the time the job was terminated
-        self.terminationTime = dbList[6]
+        if dbList[6] == 0:
+            self.terminationTime = None
+        else:
+            self.terminationTime = dbList[6]
