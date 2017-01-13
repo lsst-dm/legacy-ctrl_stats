@@ -88,11 +88,11 @@ class Reader(object):
             jobStates = records[jobNumber]
             previousDate = startDate
             for rec in jobStates:
-                currentDate = rec.getDatetime()
+                currentDate = rec.datetime
                 if previousDate != None:
                     if previousDate > currentDate:
                         rec.addYear()
-                previousDate = rec.getDatetime()
+                previousDate = rec.datetime
             
 
     def getRecords(self):

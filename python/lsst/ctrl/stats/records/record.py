@@ -64,12 +64,13 @@ class Record(object):
             print(lines[0])
             sys.exit(10)
 
-    def getDatetime(self):
+    @property
+    def datetime(self):
         return datetime.datetime.strptime(self.timestamp, self.timeFormat)
 
     def addYear(self):
         # add one year to the current timestamp, accounting for leap years
-        d = self.getDatetime()
+        d = self.datetime
         try:
             d = d.replace(year = d.year + 1)
         except ValueError:
