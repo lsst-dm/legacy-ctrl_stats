@@ -32,18 +32,20 @@ from .record import Record
 
 
 class Updated(Record):
-    """
-    Image size of job updated
+    """Image size of job updated
+
     An informational event, to update the amount of memory that the job is
     using while running.  It does not reflect the state of the job.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
         pat = "Image size of job updated: (?P<imageSize>[\d]+)"

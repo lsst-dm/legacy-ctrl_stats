@@ -40,18 +40,19 @@ from .record import Record
 
 
 class Evicted(Record):
-    """
-    Job evicted from machine
+    """Job evicted from machine
+
     A job was removed from a machine before it was finished.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
-    # event number: 004
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
         # reason for eviction

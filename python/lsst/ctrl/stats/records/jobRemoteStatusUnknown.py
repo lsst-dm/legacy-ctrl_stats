@@ -24,18 +24,20 @@ from .record import Record
 
 
 class JobRemoteStatusUnknown(Record):
-    """
-    The job's remote status is unknown
+    """The job's remote status is unknown
+
     No updates of the job's remote status have been received for the
     configured amount of time (default is 15 minutes)
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
 eventClass = JobRemoteStatusUnknown

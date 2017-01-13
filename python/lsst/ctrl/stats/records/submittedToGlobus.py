@@ -32,18 +32,20 @@ from .record import Record
 
 
 class SubmittedToGlobus(Record):
-    """
-    Job submitted to Globus
+    """Job submitted to Globus
+
     A grid job has been delegated to Globus (version 2, 3, or 4).  This event
     is no longer used, but is here for completeness.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
 eventClass = SubmittedToGlobus

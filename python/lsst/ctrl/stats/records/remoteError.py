@@ -24,18 +24,20 @@ from .record import Record
 
 
 class RemoteError(Record):
-    """
-    Remote error
+    """Remote error
+
     The "condor_stater" (which monitors the job on the execution machine) has
     failed.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
 eventClass = RemoteError

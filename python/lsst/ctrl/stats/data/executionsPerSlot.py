@@ -24,15 +24,15 @@ import sys
 
 
 class ExecutionsPerSlot(object):
-    """
-    Represents the number of times workers have run in HTCondor slots
+    """Represents the number of times workers have run in HTCondor slots
+
+    Parameters
+    ----------
+    dbm: `DatabaseManager`
+        the database manager to use to query
     """
 
     def __init__(self, dbm):
-        """
-        Constructor
-        """
-        # database object used for queries
         self.dbm = dbm
         query = "select concat(executionHost, '/', slotName) as slot, count(*) "
         query = query + "as timesUsed from submissions where dagNode != 'A' and dagNode != 'B' "

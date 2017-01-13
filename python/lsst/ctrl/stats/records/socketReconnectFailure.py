@@ -24,18 +24,20 @@ from .record import Record
 
 
 class SocketReconnectFailure(Record):
-    """
-    Remote system call reconnect failure
+    """Remote system call reconnect failure
+
     The "condor_shadow" and "condor_starter" (which communicate while the
     job runs) were unable to resume contact before the job lease expired.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
         # the reason for the failure
         self.reason = lines[1].strip()+";"+lines[2].strip()

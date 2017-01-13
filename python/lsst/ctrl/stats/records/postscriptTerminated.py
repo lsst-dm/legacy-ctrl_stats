@@ -24,19 +24,21 @@ from .record import Record
 
 
 class PostscriptTerminated(Record):
-    """
-    POST script terminated
+    """POST script terminated
+
     A node in a DAGMan work flow has a script that should be run after a
     job.  The script is run on the submit host.  This event signals that the
     post script has completed.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
 eventClass = PostscriptTerminated

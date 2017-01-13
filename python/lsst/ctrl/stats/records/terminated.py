@@ -44,15 +44,19 @@ from .record import Record
 
 
 class Terminated(Record):
-    """
-    Job terminated
+    """ Job terminated
+
     The job has completed.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        """
         Record.__init__(self, year, lines)
 
         pat = r"\((?P<term>\d+)\) Normal termination \(return value (?P<returnValue>\d+)\)"

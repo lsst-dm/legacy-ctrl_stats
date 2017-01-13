@@ -26,19 +26,21 @@ from .record import Record
 
 
 class JobAdInformation(Record):
-    """
-    Job ad information event triggered
+    """Job ad information event triggered
+
     Extra job ClassAd attributed are noted.  This event is written
     as a supplement to other events when the configuration paramter
     EVENT_LOG_JOB_AD_INFORMATION_ATTRS is set.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
         # slot name in which this job is running

@@ -34,20 +34,22 @@ from .record import Record
 
 
 class ShadowException(Record):
-    """
-    Shadow exception
+    """Shadow exception
+
     The "condor_shadow", a program on the submit computer taht watches over
     the job and performs some services for the job, failed for some
     catastrophic reason..  The job will leave the machine and go back into
     the queue.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
         pat = r"Error from (?P<slot>[\w]+@[\d]+@[\w\-.]+): (?P<reason>.+?)($)"

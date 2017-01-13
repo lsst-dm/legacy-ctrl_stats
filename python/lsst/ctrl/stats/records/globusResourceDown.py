@@ -24,18 +24,20 @@ from .record import Record
 
 
 class GlobusResourceDown(Record):
-    """
-    Detected Down Globus Resource
+    """Detected Down Globus Resource
+
     The Globus resource that a job wants to run on has become unavailable.
     This event is no longer used, but is here for completeness.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
 eventClass = GlobusResourceDown

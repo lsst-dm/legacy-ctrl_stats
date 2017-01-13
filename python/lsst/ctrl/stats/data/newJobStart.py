@@ -28,38 +28,40 @@ from collections import defaultdict
 
 
 class DbStartInfo(object):
-    """
-    Starting record
+    """Starting record of a job
+
+    Parameters
+    ----------
+    info: list
+        The list has the following sequence
+        info[0] - name of DAG node
+        info[1] - host job executed on
+        info[2] - name of the slot which ran this job
+        info[3] - time of start of execution
+        info[4] - time of termination of execution
     """
 
     def __init__(self, info):
-        """
-        Constructor
-        """
-        # name of DAG node
         self.dagNode = info[0]
-        # host job executed on
         self.executionHost = info[1]
-        # name of slot which ran this job
         self.slotName = info[2]
-        # time of start of execution
         self.executionStartTime = info[3]
-        # time of termination of execution
         self.terminationTime = info[4]
+
         # time the next execution started in this slot
         self.timeToNext = -1
 
 
 class NewJobStart(object):
-    """
-    represents when each job was started
+    """Represents when each job was started
+
+    Parameters
+    ----------
+    dbm: `DatabaseManager`
+        the database manager to use to query
     """
 
     def __init__(self, dbm):
-        """
-        Constructor
-        """
-        # database object to use in queries
         self.dbm = dbm
 
         query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(executionStartTime), "

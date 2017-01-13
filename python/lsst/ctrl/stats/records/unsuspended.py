@@ -24,15 +24,19 @@ from .record import Record
 
 
 class Unsuspended(Record):
-    """
-    Job was unsuspended
+    """Job was unsuspended
+
     The job has resumed execution, after being suspended earlier.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        """
         Record.__init__(self, year, lines)
 
 

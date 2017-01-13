@@ -24,17 +24,19 @@ from .record import Record
 
 
 class Generic(Record):
-    """
-    Generic log event
+    """Generic log event
+
     Listed in documention as not used, but here for completeness.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
 

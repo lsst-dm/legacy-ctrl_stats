@@ -23,8 +23,12 @@ from builtins import object
 
 
 class DbEntries(object):
-    """
-    A representation of the database entries for a given run
+    """A representation of the database entries for a given run
+
+    Parameters
+    ----------
+    entries: list of dbEntry
+         representation of all database entries for a run
     """
 
     def __init__(self, entries):

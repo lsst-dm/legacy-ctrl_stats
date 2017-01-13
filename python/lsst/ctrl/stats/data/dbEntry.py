@@ -22,42 +22,45 @@
 from builtins import object
 
 class DbEntry(object):
-    """
-    A representation of a single database query
+    """A representation of a single database query
+
+    Parameters
+    ----------
+    dbList : list
+        The elements are strings expected in the following sequence:
+
+        dbList[0] - the dag node name
+        dbList[1] - the host where the job executed
+        dbList[2] - the name of the slot where the job ran
+        dbList[3] - the time the job was submitted to HTCondor
+        dbList[4] - the time the job started execution
+        dbList[5] - the time the job ended execution
+        dbList[6] - the time the job was terminated
     """
 
     def __init__(self, dbList):
-        """
-        Constructor
-        """
-        # the DAG node name
+
         self.dagNode = dbList[0]
 
-        # the host where the job resided
         self.executionHost = dbList[1]
 
-        # the name of the slot
         self.slotName = dbList[2]
 
-        # the time the job was submitted to HTCondor
         if dbList[3] == 0:
             self.submitTime = None
         else:
             self.submitTime = dbList[3]
 
-        # the time the job started execution
         if dbList[4] == 0:
             self.executionStartTime = None
         else:
             self.executionStartTime = dbList[4]
 
-        # the time the job ended execution
         if dbList[5] == 0:
             self.executionStopTime = None
         else:
             self.executionStopTime = dbList[5]
 
-        # the time the job was terminated
         if dbList[6] == 0:
             self.terminationTime = None
         else:

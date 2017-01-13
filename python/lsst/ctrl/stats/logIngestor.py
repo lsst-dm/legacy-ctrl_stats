@@ -30,18 +30,17 @@ standard_library.install_aliases()
 
 
 class LogIngestor(object):
-    """
-    Reads a Condor log file, classifies and groups all the records for
-    each job, consolidates the information, adds the information to database
-    tables.
+    """Sets up the database tables so a dagman log file can be written
+
+    Parameters
+    ----------
+    dbm: `DatabaseManager`
+        a database manager object
+    database: `str`
+        the database name to write to
     """
 
     def __init__(self, dbm, database):
-        """Sets up the database tables which will be written to
-        @param dbm: a database manager object
-        @param database: the database name to write to
-        """
-        # database object to use for queries
         self.dbm = dbm
 
         submissionsTableName = "submissions"

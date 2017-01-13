@@ -24,17 +24,19 @@ from .record import Record
 
 
 class GridResourceUp(Record):
-    """
-    Grid Resource Back Up
+    """Grid Resource Back Up
+
     A grid resource that was previously unavailable is now available.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
 eventClass = GridResourceUp

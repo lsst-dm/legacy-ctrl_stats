@@ -31,18 +31,20 @@ from .record import Record
 
 
 class Submitted(Record):
-    """
-    Job submitted
+    """Job submitted
+
     This event occurs when a user submits a job. It is the first event you
     will see for a job, and it should only occur once.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
         pat = r"\<(?P<hostAddr>\d+.\d+.\d+.\d+:\d+.+)\>"

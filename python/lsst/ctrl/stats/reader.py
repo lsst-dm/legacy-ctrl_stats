@@ -32,13 +32,18 @@ import yaml
 
 
 class Reader(object):
-    """Reads in a Condor log file
+    """Reads a metrics files, nodes.log file and classifies them into Records
+
+    Parameters
+    ----------
+    metrics: `str`
+        the name of the metrics file to read
+    logFile: `str`
+        the name of the nodes.log file to read
+
     """
 
-    def __init__(self, metrics, inputFile):
-        """Read a HTCondor metrics file, an HTCondor log file, classifying all the records into Record
-        objects.
-        """
+    def __init__(self, metrics, logFile):
         # RecordList containing all records from the log file
         self.recordList = RecordList()
         recordLines = []
@@ -62,7 +67,7 @@ class Reader(object):
 
         year = startYear
         prevDate = None
-        for line in open(inputFile):
+        for line in open(logFile):
             line = line.rstrip('\n')
             if line == "...":
                 rec = self.classify(year, recordLines)
