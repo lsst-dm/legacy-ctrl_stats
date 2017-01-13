@@ -29,7 +29,6 @@ from datetime import date
 import lsst.ctrl.stats.records as recordslib
 from lsst.ctrl.stats.reader import Reader
 from lsst.ctrl.stats.classifier import Classifier
-import eups
 
 
 def setup_module(module):
@@ -39,9 +38,9 @@ def setup_module(module):
 class TestClassifier(lsst.utils.tests.TestCase):
 
     def setUp(self):
-        pkg = eups.productDir("ctrl_stats")
-        metrics = os.path.join(pkg, "tests", "testfiles", "test.metrics")
-        filename = os.path.join(pkg, "tests", "testfiles", "reader_test.log")
+        pkgDir = os.path.abspath(os.path.dirname(__file__))
+        metrics = os.path.join(pkgDir, "testfiles", "test.metrics")
+        filename = os.path.join(pkgDir, "testfiles", "reader_test.log")
         reader = Reader(metrics, filename)
         self.records = reader.getRecords()
 

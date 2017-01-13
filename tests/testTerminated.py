@@ -28,7 +28,6 @@ import lsst.utils.tests
 import lsst.ctrl.stats.records as recordslib
 from datetime import date
 from lsst.ctrl.stats.reader import Reader
-import eups
 
 # This is a set of tests for HTCondor user (non-dagman) job logs, for
 # a job that terminated properly
@@ -41,9 +40,9 @@ def setup_module(module):
 class TestTerminated(lsst.utils.tests.TestCase):
 
     def setUp(self):
-        pkg = eups.productDir("ctrl_stats")
-        metrics = os.path.join(pkg, "tests", "testfiles", "test.metrics")
-        filename = os.path.join(pkg, "tests", "testfiles", "terminated.log")
+        pkgDir = os.path.abspath(os.path.dirname(__file__))
+        metrics = os.path.join(pkgDir, "testfiles", "test.metrics")
+        filename = os.path.join(pkgDir, "testfiles", "terminated.log")
         reader = Reader(metrics, filename)
         self.records = reader.getRecords()
 

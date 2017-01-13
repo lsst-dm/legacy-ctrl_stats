@@ -22,7 +22,6 @@
 #
 
 from builtins import str
-import eups
 import os
 import unittest
 import lsst.utils.tests
@@ -41,9 +40,9 @@ def setup_module(module):
 class TestEvicted(lsst.utils.tests.TestCase):
 
     def setUp(self):
-        pkg = eups.productDir("ctrl_stats")
-        metrics = os.path.join(pkg, "tests", "testfiles", "test.metrics")
-        filename = os.path.join(pkg, "tests", "testfiles", "evicted.log")
+        pkgDir = os.path.abspath(os.path.dirname(__file__))
+        metrics = os.path.join(pkgDir, "testfiles", "test.metrics")
+        filename = os.path.join(pkgDir, "testfiles", "evicted.log")
         reader = Reader(metrics, filename)
         self.records = reader.getRecords()
 
