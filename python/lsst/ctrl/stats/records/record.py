@@ -64,12 +64,6 @@ class Record(object):
             print(lines[0])
             sys.exit(10)
 
-    def getTimestamp(self):
-        return self.timestamp
-
-    def setTimestamp(self, timestamp):
-        self.timestamp = timestamp
-
     def getDatetime(self):
         return datetime.datetime.strptime(self.timestamp, self.timeFormat)
 
