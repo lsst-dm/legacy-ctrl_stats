@@ -74,7 +74,7 @@ class TestTerminated(lsst.utils.tests.TestCase):
         self.assertEqual(rec.imageSize, 467144)
         self.assertEqual(rec.memoryUsageMb, 10)
         self.assertEqual(rec.residentSetSizeKb, 9360)
-        self.assertTrue(rec.timestamp.endswith("-08-21 10:27:31"))
+        self.assertEqual(rec.timestamp, "2016-08-21 10:27:31")
 
     def test5(self):
         # check validity of second Updated record
@@ -97,7 +97,7 @@ class TestTerminated(lsst.utils.tests.TestCase):
         self.assertEqual(rec.sysRunRemoteUsage, 0)
         self.assertEqual(rec.sysTotalLocalUsage, 0)
         self.assertEqual(rec.sysTotalRemoteUsage, 0)
-        self.assertTrue(rec.timestamp.endswith("-08-21 10:29:43"))
+        self.assertEqual(rec.timestamp, "2016-08-21 10:29:43")
         self.assertEqual(rec.totalBytesReceived, 0)
         self.assertEqual(rec.totalBytesSent, 0)
         self.assertEqual(rec.userRunLocalUsage, 0)

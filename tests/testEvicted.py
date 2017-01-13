@@ -74,7 +74,7 @@ class TestEvicted(lsst.utils.tests.TestCase):
         self.assertEqual(rec.imageSize, 467532)
         self.assertEqual(rec.memoryUsageMb, 10)
         self.assertEqual(rec.residentSetSizeKb, 9856)
-        self.assertTrue(rec.timestamp.endswith("-08-20 13:09:37"))
+        self.assertEqual(rec.timestamp, "2016-08-20 13:09:37")
 
     def test5(self):
         # check validity of second Updated record
@@ -93,7 +93,7 @@ class TestEvicted(lsst.utils.tests.TestCase):
         self.assertEqual(rec.memoryUsage, 41)
         self.assertEqual(rec.runBytesReceived, 0)
         self.assertEqual(rec.runBytesSent, 0)
-        self.assertTrue(rec.timestamp.endswith("-08-20 13:12:55"))
+        self.assertEqual(rec.timestamp, "2016-08-20 13:12:55")
         self.assertEqual(rec.userRunLocalUsage, 0)
         self.assertEqual(rec.userRunRemoteUsage, 0)
 
@@ -102,7 +102,7 @@ class TestEvicted(lsst.utils.tests.TestCase):
         self.assertIn("244585.000.000", self.records)
         rec = self.records["244585.000.000"][5]
         self.assertEqual(rec.__class__.__name__, "Aborted")
-        self.assertTrue(rec.timestamp.endswith("-08-20 13:12:55"))
+        self.assertEqual(rec.timestamp, "2016-08-20 13:12:55")
         self.assertEqual(rec.reason, "via condor_rm (by user srp)")
 
 

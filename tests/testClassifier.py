@@ -30,7 +30,6 @@ import lsst.ctrl.stats.records as recordslib
 from lsst.ctrl.stats.reader import Reader
 from lsst.ctrl.stats.classifier import Classifier
 
-
 def setup_module(module):
     lsst.utils.tests.init()
 
@@ -53,10 +52,10 @@ class TestClassifier(lsst.utils.tests.TestCase):
         rec = entries[0]
         self.assertEqual(rec.condorId, "063.000.000")
         self.assertEqual(rec.dagNode, "A2")
-        self.assertTrue(rec.submitTime.endswith("-10-17 19:59:57"))
+        self.assertEqual(rec.submitTime, "2016-10-17 19:59:57")
         self.assertEqual(rec.executionHost, "141.142.225.136:41156")
-        self.assertTrue(rec.executionStartTime.endswith("-10-17 20:00:04"))
-        self.assertTrue(rec.executionStopTime.endswith("-10-17 20:00:14"))
+        self.assertEqual(rec.executionStartTime, "2016-10-17 20:00:04")
+        self.assertEqual(rec.executionStopTime, "2016-10-17 20:00:14")
         self.assertEqual(rec.updateImageSize, 414300)
         self.assertEqual(rec.updateMemoryUsageMb, 81)
         self.assertEqual(rec.updateResidentSetSizeKb, 81996)
@@ -68,7 +67,7 @@ class TestClassifier(lsst.utils.tests.TestCase):
         self.assertEqual(rec.finalMemoryRequestMb, 81)
         self.assertEqual(rec.bytesSent, 25595)
         self.assertEqual(rec.bytesReceived, 1449)
-        self.assertTrue(rec.terminationTime.endswith("-10-17 20:00:14"))
+        self.assertEqual(rec.terminationTime, "2016-10-17 20:00:14")
         self.assertEqual(rec.terminationCode, recordslib.terminated.eventCode)
 
     def test2(self):
@@ -78,7 +77,7 @@ class TestClassifier(lsst.utils.tests.TestCase):
         classifier = Classifier()
         self.assertIn("063.000.000", self.records)
         entries, total, updates = classifier.classify(self.records["063.000.000"])
-        self.assertTrue(total.firstSubmitTime.endswith("-10-17 19:59:57"))
+        self.assertEqual(total.firstSubmitTime, "2016-10-17 19:59:57")
         self.assertEqual(total.totalBytesSent, 25595)
         self.assertEqual(total.totalBytesReceived, 1449)
         self.assertEqual(total.submissions, 1)
