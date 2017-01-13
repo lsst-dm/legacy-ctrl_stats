@@ -61,7 +61,7 @@ class ExecutingWorkers(object):
         query = query + "executionStartTime != 0 order by executionStartTime limit 1;"
 
         results = self.dbm.execCommandN(query)
-        if len(results) == 0:
+        if not results:
             return None
         dbEntry = DbEntry(results[0])
 

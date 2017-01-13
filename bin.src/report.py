@@ -305,7 +305,7 @@ def printSummary(dbm, entries):
     totals = newJobStart.calculate()
 
     # execution switch over
-    if len(list(totals)) == 0:
+    if not totals:
         print("Could not calculate execution times between workers because")
         print("no valid entries were found, or more than one worker never")
         print("executed on the same slot. Check to see if workers were")
