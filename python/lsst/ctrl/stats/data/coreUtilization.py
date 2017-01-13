@@ -53,7 +53,7 @@ class CoreUtilization(object):
         self.dbm = dbm
 
         query = "select executionHost, slotName, min(UNIX_TIMESTAMP(executionStartTime)) from "
-        query = query + "submissions where dagNode !='A' and dagNode != 'B' and  executionStartTime != '0000-00-00 00:00:00' group by executionHost, "
+        query = query + "submissions where dagNode !='A' and dagNode != 'B' and executionStartTime != '0000-00-00 00:00:00' group by executionHost, "
         query = query + "slotName order by min(UNIX_TIMESTAMP(executionStartTime))"
 
         results = self.dbm.execCommandN(query)
