@@ -178,6 +178,9 @@ def printSummary(dbm, entries):
     printPostJobSummary(dbm, entries)
 
     initialFirstWorker = entries.getFirstWorker()
+    if initialFirstWorker is None:
+        print("No workers ran")
+        return
     initialLastWorker = entries.getLastWorker()
     submissionDuration = initialLastWorker.submitTime-initialLastWorker.submitTime
 
@@ -189,6 +192,7 @@ def printSummary(dbm, entries):
         print("Mean initial worker submissions per second: %d" % (count/submissionDuration))
     else:
         print("Initial workers all submitted at the same time")
+
     print()
 
     # first worker
@@ -301,9 +305,10 @@ def printSummary(dbm, entries):
     totals = newJobStart.calculate()
 
     # execution switch over
-    if len(list(totals)) == 0:
+    if not totals:
         print("Could not calculate execution times between workers because")
-        print("no valid entries were found.  Check to see if workers were")
+        print("no valid entries were found, or more than one worker never")
+        print("executed on the same slot. Check to see if workers were")
         print("executed, and/or if valid slot names were set.")
         print()
     else:
@@ -371,11 +376,11 @@ def jobRunTimes(ents):
             continue
         workers = workers + 1
         if ent.terminationTime is None:
-            print("warning: job termination time is invalid.")
             runTime = 0
+            continue
         elif ent.executionStartTime is None:
-            print("warning: job execution start time is invalid.")
             runTime = 0
+            continue
         else:
             runTime = ent.terminationTime - ent.executionStartTime
         totalRunTime = totalRunTime+runTime

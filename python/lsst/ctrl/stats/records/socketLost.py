@@ -24,18 +24,20 @@ from .record import Record
 
 
 class SocketLost(Record):
-    """
-    Remote system call socket lost
+    """Remote system call socket lost
+
     The "condor_shadow" and "condor_starter" (which communicate while the
     job runs) have lost contact.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
 eventClass = SocketLost

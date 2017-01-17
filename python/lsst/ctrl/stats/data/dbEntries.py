@@ -23,8 +23,12 @@ from builtins import object
 
 
 class DbEntries(object):
-    """
-    A representation of the database entries for a given run
+    """A representation of the database entries for a given run
+
+    Parameters
+    ----------
+    entries: list of dbEntry
+         representation of all database entries for a run
     """
 
     def __init__(self, entries):
@@ -94,7 +98,10 @@ class DbEntries(object):
         Get the last worker job in the execution
         @return an entry representing the last worker
         """
-        return self.entries[-2]
+        if len(self.entries) > 2:
+            return self.entries[-2]
+        else:
+            return None
 
     def getPostJobSubmitTime(self):
         """

@@ -24,14 +24,12 @@ from .dbRecord import DbRecord
 
 
 class UpdatesRecord(DbRecord):
-    """Representation of an "updates" SQL table row.  Note that the names
-    here must match those of the SQL columns.
+    """Representation of an "updates" SQL table row.
+
+    Note that the names here must match those of the SQL columns.
     """
 
     def __init__(self):
-        """
-        Constructor
-        """
         # condor id
         self.condorId = None
         # dag node

@@ -26,17 +26,21 @@ from lsst.db.engineFactory import getEngineFromArgs
 
 
 class DatabaseManager(object):
-    """
+    """Creates a connection to an sql server
+
+    Parameters
+    ----------
+    dbHostName: `str`
+        a server where the database daemon resides
+    portNumber: `int`
+        the port number the database daemon is listening on
+    user: `str`
+        the user name to connect as
+    passwd: `str`
+        the users's password
     """
 
     def __init__(self, dbHostName, portNumber, user, passwd):
-        """Creates a connection to an sql server
-        @param dbHostName: a server where the database daemon resides
-        @param portNumber: the port number the database daemon is listening on
-        @param user: the user name to connect as
-        @param passwd: the users's password
-        """
-
         self.conn = getEngineFromArgs(username=user, password=passwd, host=dbHostName, port=portNumber).connect()
 
     def loadSql(self, filePath, database):

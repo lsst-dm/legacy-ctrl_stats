@@ -24,17 +24,19 @@ from lsst.ctrl.stats.data.coresPer import CoresPer
 
 
 class CoresPerInterval(CoresPer):
-    """
-    Count the number of cores that are active during a specific interval
+    """Count the number of cores that are active during a specific interval
+
+    Parameters
+    ----------
+    dbm: `DatabaseManager`
+        the database object to query
+    entries: dbEntry list
+        the set of entries to compare
+    interval: `int`
+        seconds
     """
 
     def __init__(self, dbm, entries, interval):
-        """
-        query the database for the number of cores active during an interval
-        @param dbm the database object to query
-        @param entries the set of entries to compare
-        @param interval the time interval
-        """
         # the database object to query
         self.dbm = dbm
 

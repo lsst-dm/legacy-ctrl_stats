@@ -48,11 +48,12 @@ do
     shift
 done
 
-nodes=S2012Pipe.diamond.dag.nodes.log
 prejob=worker-pre.log
 postjob=worker-post.log
-nodesfile=$directory/$nodes
+nodesfile=$directory/*.nodes.log
+metricsfile=$directory/*.metrics
 prefile=$directory/logs/$prejob
 postfile=$directory/logs/$postjob
 dbname=`basename $directory`
-condorLogIngest.py -H $host -p $port -d $dbname -f $prefile $nodesfile $postfile
+echo condorLogIngest.py -H $host -p $port -d $dbname -m $metricsfile -f $prefile $nodesfile $postfile
+condorLogIngest.py -H $host -p $port -d $dbname -m $metricsfile -f $prefile $nodesfile $postfile

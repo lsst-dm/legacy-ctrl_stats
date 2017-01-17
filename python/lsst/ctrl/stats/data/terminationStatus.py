@@ -23,15 +23,15 @@ from builtins import object
 
 
 class TerminationStatus(object):
-    """
-    Representation of how all jobs ended, based on termination codes
+    """Representation of how all jobs ended, based on termination codes
+
+    Parameters
+    ----------
+    dbm: `DatabaseManager`
+        the database manager to use to query
     """
 
     def __init__(self, dbm):
-        """
-        Constructor
-        """
-        # database object used to query
         self.dbm = dbm
 
     def getTotals(self):

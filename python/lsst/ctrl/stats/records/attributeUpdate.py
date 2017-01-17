@@ -24,17 +24,19 @@ from .record import Record
 
 
 class AttributeUpdate(Record):
-    """
-    Attribute update
+    """Attribute update.
+
     Undefined by Condor documentation
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
 eventClass = AttributeUpdate

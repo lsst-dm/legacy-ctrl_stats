@@ -30,7 +30,6 @@ import lsst.ctrl.stats.records as recordslib
 from lsst.ctrl.stats.reader import Reader
 from lsst.ctrl.stats.classifier import Classifier
 
-
 def setup_module(module):
     lsst.utils.tests.init()
 
@@ -38,8 +37,10 @@ def setup_module(module):
 class TestClassifier(lsst.utils.tests.TestCase):
 
     def setUp(self):
-        filename = os.path.join("tests", "testfiles", "reader_test.log")
-        reader = Reader(filename)
+        pkgDir = os.path.abspath(os.path.dirname(__file__))
+        metrics = os.path.join(pkgDir, "testfiles", "test.metrics")
+        filename = os.path.join(pkgDir, "testfiles", "reader_test.log")
+        reader = Reader(metrics, filename)
         self.records = reader.getRecords()
 
     def test1(self):
@@ -48,17 +49,13 @@ class TestClassifier(lsst.utils.tests.TestCase):
         self.assertIn("063.000.000", self.records)
         entries, total, updates = classifier.classify(self.records["063.000.000"])
 
-        # Condor doesn't emit the the current year in records.  The classifier
-        # code assumes it's the current year, and prepends that, so we have
-        # to assume that here as well when testing for the date.
-        year = str(date.today().year)
         rec = entries[0]
         self.assertEqual(rec.condorId, "063.000.000")
         self.assertEqual(rec.dagNode, "A2")
-        self.assertEqual(rec.submitTime, year+"-10-17 19:59:57")
+        self.assertEqual(rec.submitTime, "2016-10-17 19:59:57")
         self.assertEqual(rec.executionHost, "141.142.225.136:41156")
-        self.assertEqual(rec.executionStartTime, year+"-10-17 20:00:04")
-        self.assertEqual(rec.executionStopTime, year+"-10-17 20:00:14")
+        self.assertEqual(rec.executionStartTime, "2016-10-17 20:00:04")
+        self.assertEqual(rec.executionStopTime, "2016-10-17 20:00:14")
         self.assertEqual(rec.updateImageSize, 414300)
         self.assertEqual(rec.updateMemoryUsageMb, 81)
         self.assertEqual(rec.updateResidentSetSizeKb, 81996)
@@ -70,18 +67,17 @@ class TestClassifier(lsst.utils.tests.TestCase):
         self.assertEqual(rec.finalMemoryRequestMb, 81)
         self.assertEqual(rec.bytesSent, 25595)
         self.assertEqual(rec.bytesReceived, 1449)
-        self.assertEqual(rec.terminationTime, year+"-10-17 20:00:14")
+        self.assertEqual(rec.terminationTime, "2016-10-17 20:00:14")
         self.assertEqual(rec.terminationCode, recordslib.terminated.eventCode)
 
     def test2(self):
         # see note about "year", above
-        year = str(date.today().year)
         # test that total record is correct
 
         classifier = Classifier()
         self.assertIn("063.000.000", self.records)
         entries, total, updates = classifier.classify(self.records["063.000.000"])
-        self.assertEqual(total.firstSubmitTime, year+"-10-17 19:59:57")
+        self.assertEqual(total.firstSubmitTime, "2016-10-17 19:59:57")
         self.assertEqual(total.totalBytesSent, 25595)
         self.assertEqual(total.totalBytesReceived, 1449)
         self.assertEqual(total.submissions, 1)

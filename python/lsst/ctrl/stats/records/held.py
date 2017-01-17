@@ -29,18 +29,20 @@ from .record import Record
 
 
 class Held(Record):
-    """
-    Job was held
+    """Job was held
+
     The job has transitioned to the hold state.
     This might happen if the user applies the "condor_hold" command to the job.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
         pat = r"Error from (?P<slot>[\w@\d\-.]+): (?P<reason>.+?)($)"

@@ -30,18 +30,17 @@ standard_library.install_aliases()
 
 
 class LogIngestor(object):
-    """
-    Reads a Condor log file, classifies and groups all the records for
-    each job, consolidates the information, adds the information to database
-    tables.
+    """Sets up the database tables so a dagman log file can be written
+
+    Parameters
+    ----------
+    dbm: `DatabaseManager`
+        a database manager object
+    database: `str`
+        the database name to write to
     """
 
     def __init__(self, dbm, database):
-        """Sets up the database tables which will be written to
-        @param dbm: a database manager object
-        @param database: the database name to write to
-        """
-        # database object to use for queries
         self.dbm = dbm
 
         submissionsTableName = "submissions"
@@ -74,13 +73,14 @@ class LogIngestor(object):
         # full name of the totals table
         self.totalsTable = database + "." + totalsTableName
 
-    def ingest(self, filename):
+    def ingest(self, metrics, filename):
         """Read in a Condor event log, group records per Condor ID,
         consolidate that information, and put it into database tables.
+        @param metrics: a Condor metrics file
         @param filename: a Condor event log
         """
         # read and parse in the Condor log
-        reader = Reader(filename)
+        reader = Reader(metrics, filename)
         # get the record groups, which are grouped by condor id
         records = reader.getRecords()
 

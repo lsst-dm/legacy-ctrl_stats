@@ -32,17 +32,19 @@ from .record import Record
 
 
 class Aborted(Record):
-    """
-    Job aborted
+    """Job aborted.
+
     The user canceled the job.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
         # reason for abort

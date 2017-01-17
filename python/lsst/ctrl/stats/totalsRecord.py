@@ -24,14 +24,12 @@ from .submissionsRecord import SubmissionsRecord
 
 
 class TotalsRecord(SubmissionsRecord):
-    """Representation of a "totals" SQL table row.  Note that the names
-    here must match those of the SQL columns.
+    """Representation of a "totals" SQL table row.
+
+    Note that the names here must match those of the SQL columns.
     """
 
     def __init__(self, rec):
-        """
-        Constructor
-        """
         SubmissionsRecord.__init__(self, rec)
         # this first time this job was submitted
         self.firstSubmitTime = "0000-00-00 00:00:00"

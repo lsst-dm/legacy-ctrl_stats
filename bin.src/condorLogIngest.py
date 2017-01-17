@@ -58,6 +58,8 @@ condorLogIngest.py -H lsst10 -d testing -f worker.log'''
                         dest="port", help="mysql server port", type=int)
     parser.add_argument("-d", "--database", action="store", default=None,
                         dest="database", help="database name", type=str, required=True)
+    parser.add_argument("-m", "--metrics", action="store", default=None, dest="metrics",
+                        help="condor log files", type=str, required=True)
     parser.add_argument("-f", "--file", action="store", default=None, dest="filenames",
                         help="condor log files", nargs='+', type=str, required=True)
     parser.add_argument("-v", "--verbose", action="store_true", dest="verbose", help="verbose")
@@ -98,7 +100,7 @@ condorLogIngest.py -H lsst10 -d testing -f worker.log'''
             if args.verbose:
                 print("warning: %s does not exist." % filename)
             continue
-        logIngestor.ingest(filename)
+        logIngestor.ingest(args.metrics, filename)
     dbm.close()
 
 if __name__ == "__main__":

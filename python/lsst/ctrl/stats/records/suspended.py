@@ -24,19 +24,21 @@ from .record import Record
 
 
 class Suspended(Record):
-    """
-    Job was suspended
+    """Job was suspended
+
     The job is still on the computer, but is no longer executing.  This
     is usually for a policy reason, such as an interactive user using the
     computer.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
 eventClass = Suspended

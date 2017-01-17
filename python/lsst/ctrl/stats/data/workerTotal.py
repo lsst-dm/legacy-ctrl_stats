@@ -23,14 +23,15 @@ from builtins import object
 
 
 class WorkerTotal(object):
-    """
-    Count the total number of workers. does not include the preJob or postJob
+    """Count the total number of workers. doesn't include the preJob or postJob
+
+    Parameters
+    ----------
+    dbm: `DatabaseManager`
+        the database manager to use to query
     """
 
     def __init__(self, dbm):
-        """
-        Constructor
-        """
         # database object to use in query
         self.dbm = dbm
 

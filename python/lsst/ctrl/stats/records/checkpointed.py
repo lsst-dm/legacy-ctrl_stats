@@ -24,19 +24,21 @@ from .record import Record
 
 
 class Checkpointed(Record):
-    """
-    Job was checkpointed
+    """Job was checkpointed
+
     The job's complete state was written to a checkpoint file.  This might
     happen without the job being removed from the machine, because the
     checkpointing can happen periodically.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
 eventClass = Checkpointed

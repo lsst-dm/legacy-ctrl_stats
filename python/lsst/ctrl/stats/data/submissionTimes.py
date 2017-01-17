@@ -27,16 +27,19 @@ standard_library.install_aliases()
 
 
 class SubmissionTimes(object):
-    """
-    Representation of the submission times of each of the dagNodes
+    """Representation of the submission times of each of the dagNodes
+
+    This query sorts by submission time, and dagNode.  The dagNode
+    needs to be sorted this way because otherwise it comes out A1, A10, A11,
+    A12, A2, A3, A4, instead of A1, A2, A3, A4, etc.
+
+    Parameters
+    ----------
+    dbm: `DatabaseManager`
+        the database manager to use to query
     """
 
     def __init__(self, dbm):
-        """
-        This query sorts by submission time, and dagNode.  The dagNode
-        needs to be sorted this way because otherwise it comes out A1, A10, A11, A12, A2, A3, A4,
-        instead of A1, A2, A3, A4, etc.
-        """
         query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), "
         query = query + "UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), "
         query = query + "UNIX_TIMESTAMP(terminationTime) from submissions order by submitTime, "

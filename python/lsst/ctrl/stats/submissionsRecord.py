@@ -24,14 +24,12 @@ from .dbRecord import DbRecord
 
 
 class SubmissionsRecord(DbRecord):
-    """Representation of a "submissions" SQL table row.  Note that the names
-    here must match those of the SQL columns.
+    """Representation of a "submissions" SQL table row.
+
+    Note that the names here must match those of the SQL columns.
     """
 
     def __init__(self, rec=None):
-        """
-        Constructor
-        """
         if rec is None:
             # condor id
             self.condorId = None

@@ -31,24 +31,27 @@ from .record import Record
 
 
 class Executing(Record):
-    """
-    Job executing
+    """Job executing
+
     A job is running.  It might occur more than once.
+
+    Parameters
+    ----------
+    year: `str`
+        the year to tag the job with
+    lines: list
+        the strings making up this record
     """
 
     def __init__(self, year, lines):
-        """
-        Constructor
-        @param year - the year to tag the job with
-        @param lines - the strings making up this record
-        """
         Record.__init__(self, year, lines)
 
         pat = r"\<(?P<hostAddr>\S+)\>"
 
         values = re.search(pat, lines[0]).groupdict()
         # internet address of the host
-        self.executingHostAddr = values["hostAddr"]
+        hostValues = values["hostAddr"].split("?")
+        self.executingHostAddr = hostValues[0]
 
     def describe(self):
         """

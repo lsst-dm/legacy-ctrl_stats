@@ -24,17 +24,16 @@ from lsst.ctrl.stats.data.coresPer import CoresPer
 
 
 class CoresPerSecond(CoresPer):
-    """
-    calculate the number of cores that are being used each second of the
+    """calculate the number of cores that are being used each second of the
     execution time span
+
+    dbm: `DatabaseManager`
+        the DatabaseManager to query with
+    entries: list of DbEntry
+        entries to compare
     """
 
     def __init__(self, dbm, entries):
-        """
-        Constructor
-        @param the database object to query
-        @param the entries to compare
-        """
         # the database object to query
         self.dbm = dbm
 

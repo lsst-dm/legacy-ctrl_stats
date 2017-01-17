@@ -27,15 +27,15 @@ standard_library.install_aliases()
 
 
 class SuccessTimes(object):
-    """
-    Number of successful dagNode completions.
+    """Number of successful dagNode completions.
+
+    Parameters
+    ----------
+    dbm: `DatabaseManager`
+        the database manager to use to query
     """
 
     def __init__(self, dbm):
-        """
-        Constructor
-        @param dbm database object to use to query
-        """
         query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), "
         query = query + "UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), "
         query = query + "UNIX_TIMESTAMP(terminationTime) from submissions where terminationCode='005';"

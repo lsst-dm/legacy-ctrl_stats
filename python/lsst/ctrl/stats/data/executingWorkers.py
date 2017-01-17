@@ -24,16 +24,17 @@ from lsst.ctrl.stats.data.dbEntry import DbEntry
 
 
 class ExecutingWorkers(object):
-    """
-    Represents executing workers
+    """Represents executing workers
+
+    Parameters
+    ----------
+    dbm: `DatabaseManager`
+        the database manager to use to query
     """
 
     def __init__(self, dbm):
-        """
-        Constructor
-        """
-        # the database to query
         self.dbm = dbm
+
         # the first job that executed
         self.firstExecutingWorker = self.getFirst()
         # the last job that executed
@@ -61,6 +62,8 @@ class ExecutingWorkers(object):
         query = query + "executionStartTime != 0 order by executionStartTime limit 1;"
 
         results = self.dbm.execCommandN(query)
+        if not results:
+            return None
         dbEntry = DbEntry(results[0])
 
         return dbEntry
