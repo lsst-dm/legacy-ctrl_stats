@@ -26,6 +26,8 @@ import os
 import sys
 import re
 import datetime
+from dateutil import tz
+import time
 from .recordList import RecordList
 import lsst.ctrl.stats.records
 import yaml
@@ -60,6 +62,7 @@ class Reader(object):
                 return
 
         d = datetime.datetime.fromtimestamp(metricList['start_time'])
+        d = d.replace(tzinfo=tz.tzlocal())
         startDate = d
         startYear = d.year
         d = datetime.datetime.fromtimestamp(metricList['end_time'])
@@ -67,19 +70,20 @@ class Reader(object):
 
         year = startYear
         prevDate = None
-        for line in open(logFile):
-            line = line.rstrip('\n')
-            if line == "...":
-                rec = self.classify(year, recordLines)
-                if rec is not None:
-                    self.recordList.append(rec)
+        with open(logFile) as infile:
+            for line in infile:
+                line = line.rstrip('\n')
+                if line == "...":
+                    rec = self.classify(year, recordLines)
+                    if rec is not None:
+                        self.recordList.append(rec)
+                    else:
+                        print("couldn't classify:")
+                        print(recordLines)
+                        sys.exit(10)
+                    recordLines = []
                 else:
-                    print("couldn't classify:")
-                    print(recordLines)
-                    sys.exit(10)
-                recordLines = []
-            else:
-                recordLines.append(line)
+                    recordLines.append(line)
 
         # if all the records in the same year, we're done
         if startYear == endYear:
@@ -93,11 +97,11 @@ class Reader(object):
             jobStates = records[jobNumber]
             previousDate = startDate
             for rec in jobStates:
-                currentDate = rec.datetime
+                currentDate = rec.recDatetime
                 if previousDate != None:
                     if previousDate > currentDate:
                         rec.addYear()
-                previousDate = rec.datetime
+                previousDate = rec.recDatetime
             
 
     def getRecords(self):
