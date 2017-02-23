@@ -102,7 +102,7 @@ class Terminated(Record):
         # total bytes received by job
         self.totalBytesReceived = int(self.extract(pat, lines[9], "bytes"))
 
-        pat = r"Partitionable Resources :\s+Usage\s+\Request\s+Allocated$"
+        pat = r"Partitionable Resources :\s+Usage\s+Request\s+Allocated$"
 
         # disk usage
         self.diskUsage = None
