@@ -26,13 +26,13 @@ import os
 import unittest
 import lsst.utils.tests
 import lsst.ctrl.stats.records as recordslib
-from datetime import date
+import datetime
 from lsst.ctrl.stats.reader import Reader
+from helper.tolocal import tolocal
 
 
 def setup_module(module):
     lsst.utils.tests.init()
-
 
 class TestReader(lsst.utils.tests.TestCase):
 
@@ -72,7 +72,7 @@ class TestReader(lsst.utils.tests.TestCase):
         self.assertEqual(rec.imageSize, 272192)
         self.assertEqual(rec.memoryUsageMb, 40)
         self.assertEqual(rec.residentSetSizeKb, 40640)
-        self.assertEqual(rec.timestamp, "2016-10-17 20:00:07")
+        self.assertEqual(rec.timestamp, tolocal("2016-10-17 20:00:07"))
 
     def test5(self):
         # check validity of second Updated record
@@ -95,7 +95,7 @@ class TestReader(lsst.utils.tests.TestCase):
         self.assertEqual(rec.sysRunRemoteUsage, 1)
         self.assertEqual(rec.sysTotalLocalUsage, 0)
         self.assertEqual(rec.sysTotalRemoteUsage, 1)
-        self.assertEqual(rec.timestamp, "2016-10-17 20:00:14")
+        self.assertEqual(rec.timestamp, tolocal("2016-10-17 20:00:14"))
         self.assertEqual(rec.totalBytesReceived, 1449)
         self.assertEqual(rec.totalBytesSent, 25594)
         self.assertEqual(rec.userRunLocalUsage, 0)

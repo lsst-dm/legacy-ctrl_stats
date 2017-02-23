@@ -26,7 +26,8 @@ import os
 import unittest
 import lsst.utils.tests
 import lsst.ctrl.stats.records as recordslib
-from datetime import date
+import datetime
+from helper.tolocal import tolocal
 from lsst.ctrl.stats.reader import Reader
 
 # This is a set of tests for HTCondor user (non-dagman) job logs, for
@@ -35,7 +36,6 @@ from lsst.ctrl.stats.reader import Reader
 
 def setup_module(module):
     lsst.utils.tests.init()
-
 
 class TestTerminated(lsst.utils.tests.TestCase):
 
@@ -74,7 +74,7 @@ class TestTerminated(lsst.utils.tests.TestCase):
         self.assertEqual(rec.imageSize, 467144)
         self.assertEqual(rec.memoryUsageMb, 10)
         self.assertEqual(rec.residentSetSizeKb, 9360)
-        self.assertEqual(rec.timestamp, "2016-08-21 10:27:31")
+        self.assertEqual(rec.timestamp, tolocal("2016-08-21 10:27:31"))
 
     def test5(self):
         # check validity of second Updated record
@@ -97,7 +97,7 @@ class TestTerminated(lsst.utils.tests.TestCase):
         self.assertEqual(rec.sysRunRemoteUsage, 0)
         self.assertEqual(rec.sysTotalLocalUsage, 0)
         self.assertEqual(rec.sysTotalRemoteUsage, 0)
-        self.assertEqual(rec.timestamp, "2016-08-21 10:29:43")
+        self.assertEqual(rec.timestamp, tolocal("2016-08-21 10:29:43"))
         self.assertEqual(rec.totalBytesReceived, 0)
         self.assertEqual(rec.totalBytesSent, 0)
         self.assertEqual(rec.userRunLocalUsage, 0)

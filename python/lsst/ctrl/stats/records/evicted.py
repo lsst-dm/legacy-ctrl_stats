@@ -82,7 +82,7 @@ class Evicted(Record):
         # bytes received during the run
         self.runBytesReceived = int(self.extract(pat, lines[5], "bytes"))
 
-        pat = r"Partitionable Resources :\s+Usage\s+\Request\s+Allocated$"
+        pat = r"Partitionable Resources :\s+Usage\s+Request\s+Allocated$"
 
         # disk usage
         self.diskUsage = None

@@ -26,13 +26,14 @@ import os
 import unittest
 import lsst.utils.tests
 import lsst.ctrl.stats.records as recordslib
-from datetime import date
+import datetime
+from dateutil import tz, parser
 from lsst.ctrl.stats.reader import Reader
+from helper.tolocal import tolocal
 
 
 def setup_module(module):
     lsst.utils.tests.init()
-
 
 class TestYearWrap(lsst.utils.tests.TestCase):
 
@@ -52,49 +53,49 @@ class TestYearWrap(lsst.utils.tests.TestCase):
         self.assertIn("061.000.000", self.records)
         rec = self.records["061.000.000"][0]
         self.assertEqual(rec.__class__.__name__, "Submitted")
-        self.assertEqual(rec.timestamp, "2016-12-31 19:59:53")
+        self.assertEqual(rec.timestamp, tolocal("2016-12-31 19:59:53"))
         rec = self.records["061.000.000"][1]
         self.assertEqual(rec.__class__.__name__, "Executing")
-        self.assertEqual(rec.timestamp, "2016-12-31 19:59:55")
+        self.assertEqual(rec.timestamp, tolocal("2016-12-31 19:59:55"))
         rec = self.records["061.000.000"][2]
         self.assertEqual(rec.__class__.__name__, "Terminated")
-        self.assertEqual(rec.timestamp, "2016-12-31 19:59:55")
+        self.assertEqual(rec.timestamp, tolocal("2016-12-31 19:59:55"))
 
     def test3(self):
         # check validity of Executing record
         self.assertIn("062.000.000", self.records)
         rec = self.records["062.000.000"][1]
         self.assertEqual(rec.__class__.__name__, "Executing")
-        self.assertEqual(rec.timestamp, "2016-12-31 19:59:58")
+        self.assertEqual(rec.timestamp, tolocal("2016-12-31 19:59:58"))
 
         rec = self.records["062.000.000"][2]
         self.assertEqual(rec.__class__.__name__, "Updated")
-        self.assertEqual(rec.timestamp, "2017-01-01 20:00:07")
+        self.assertEqual(rec.timestamp, tolocal("2017-01-01 20:00:07"))
 
         rec = self.records["062.000.000"][4]
         self.assertEqual(rec.__class__.__name__, "Terminated")
-        self.assertEqual(rec.timestamp, "2017-01-01 20:00:14")
+        self.assertEqual(rec.timestamp, tolocal("2017-01-01 20:00:14"))
 
     def test4(self):
         # check validity of Executing record
         self.assertIn("063.000.000", self.records)
         rec = self.records["063.000.000"][1]
         self.assertEqual(rec.__class__.__name__, "Executing")
-        self.assertEqual(rec.timestamp, "2016-12-31 20:00:04")
+        self.assertEqual(rec.timestamp, tolocal("2016-12-31 20:00:04"))
 
         rec = self.records["063.000.000"][3]
         self.assertEqual(rec.__class__.__name__, "Terminated")
-        self.assertEqual(rec.timestamp, "2017-01-01 20:00:14")
+        self.assertEqual(rec.timestamp, tolocal("2017-01-01 20:00:14"))
 
     def test7(self):
         # check validity of post record
         self.assertIn("065.000.000", self.records)
         rec = self.records["065.000.000"][0]
-        self.assertEqual(rec.timestamp, "2017-01-01 20:00:16")
+        self.assertEqual(rec.timestamp, tolocal("2017-01-01 20:00:16"))
         rec = self.records["065.000.000"][1]
-        self.assertEqual(rec.timestamp, "2017-01-01 20:00:17")
+        self.assertEqual(rec.timestamp, tolocal("2017-01-01 20:00:17"))
         rec = self.records["065.000.000"][2]
-        self.assertEqual(rec.timestamp, "2017-01-01 20:00:19")
+        self.assertEqual(rec.timestamp, tolocal("2017-01-01 20:00:19"))
 
 class ReaderMemoryTestCase(lsst.utils.tests.MemoryTestCase):
     pass

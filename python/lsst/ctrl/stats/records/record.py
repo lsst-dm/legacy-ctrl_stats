@@ -25,7 +25,7 @@ from builtins import object
 import re
 import sys
 import datetime
-
+from dateutil import tz, parser
 
 class Record(object):
     """Representation of a HTCondor record
@@ -39,7 +39,7 @@ class Record(object):
     """
 
     def __init__(self, year, lines):
-        self.timeFormat = "%Y-%m-%d %H:%M:%S"
+        self.timeFormat = "%Y-%m-%d %H:%M:%S%z"
 
         # strings making up this record
         self.lines = list(lines)
@@ -47,7 +47,7 @@ class Record(object):
         pat = r"(?P<event>\d+) " + \
             r"\((?P<condorId>.+?.)\) " + \
             r"(?P<month>\d+)\/(?P<day>\d+) " + \
-            r"(?P<timestamp>\d+:\d+:\d+) "
+            r"(?P<hours>\d+):(?P<minutes>\d+):(?P<seconds>\d+) "
 
         info = re.search(pat, lines[0])
         values = {}
@@ -58,23 +58,27 @@ class Record(object):
             # the condor id
             self.condorId = values["condorId"]
             # the timestamp
-            self.timestamp = str(year)+"-"+values["month"]+"-"+values["day"]+" "+values["timestamp"]
+            dt = datetime.datetime(year, int(values["month"]), 
+                int(values["day"]), int(values["hours"]),
+                int(values["minutes"]), int(values["seconds"]))
+            dt = dt.replace(tzinfo=tz.tzlocal())
+            self.timestamp = dt.strftime(self.timeFormat)
         else:
             print("error parsing record:")
             print(lines[0])
             sys.exit(10)
 
     @property
-    def datetime(self):
-        return datetime.datetime.strptime(self.timestamp, self.timeFormat)
+    def recDatetime(self):
+        return parser.parse(self.timestamp)
 
     def addYear(self):
         # add one year to the current timestamp, accounting for leap years
-        d = self.datetime
+        d = self.recDatetime
         try:
             d = d.replace(year = d.year + 1)
         except ValueError:
-            d = d + (date(d.year + 1, 1, 1) - date(d.year, 1, 1))
+            d = d + (datetime.date(d.year + 1, 1, 1) - datetime.date(d.year, 1, 1))
         self.timestamp = datetime.datetime.strftime(d, self.timeFormat)
 
     def printAll(self):
