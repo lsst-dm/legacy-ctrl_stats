@@ -40,10 +40,10 @@ class SubmissionTimes(object):
     """
 
     def __init__(self, dbm):
-        query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), "
-        query = query + "UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), "
-        query = query + "UNIX_TIMESTAMP(terminationTime) from submissions order by submitTime, "
-        query = query + "length(dagNode), dagNode;"
+        query = "select dagNode, executionHost, slotName, \
+UNIX_TIMESTAMP(submitTime), UNIX_TIMESTAMP(executionStartTime), \
+UNIX_TIMESTAMP(executionStopTime), UNIX_TIMESTAMP(terminationTime) \
+from submissions order by submitTime, length(dagNode), dagNode;"
 
         results = dbm.execCommandN(query)
 

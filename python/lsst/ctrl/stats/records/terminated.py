@@ -59,16 +59,19 @@ class Terminated(Record):
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
 
-        pat = r"\((?P<term>\d+)\) Normal termination \(return value (?P<returnValue>\d+)\)"
+        pat = r"\((?P<term>\d+)\) Normal termination " + \
+              r"\(return value (?P<returnValue>\d+)\)"
 
         # the pairs below are split this way because of doxygen complaints
-        term, returnValue = self.extractPair(pat, lines[1], "term", "returnValue")
+        term, returnValue = self.extractPair(pat, lines[1], "term",
+                                             "returnValue")
         # termination reason
         self.term = term
         # return value of terminated process
         self.returnValue = returnValue
 
-        userRunRemoteUsage, sysRunRemoteUsage = self.extractUsrSysTimes(lines[2])
+        userRunRemoteUsage, sysRunRemoteUsage = \
+            self.extractUsrSysTimes(lines[2])
         # remote user usage time
         self.userRunRemoteUsage = userRunRemoteUsage
         # remote system usage time
@@ -80,13 +83,15 @@ class Terminated(Record):
         # local system usage time
         self.sysRunLocalUsage = sysRunLocalUsage
 
-        userTotalRemoteUsage, sysTotalRemoteUsage = self.extractUsrSysTimes(lines[4])
+        userTotalRemoteUsage, sysTotalRemoteUsage = \
+            self.extractUsrSysTimes(lines[4])
         # total user remote usage time
         self.userTotalRemoteUsage = userTotalRemoteUsage
         # total system remote usage time
         self.sysTotalRemoteUsage = sysTotalRemoteUsage
 
-        userTotalLocalUsage, sysTotalLocalUsage = self.extractUsrSysTimes(lines[5])
+        userTotalLocalUsage, sysTotalLocalUsage = \
+            self.extractUsrSysTimes(lines[5])
         # total user local usage time
         self.userTotalLocalUsage = userTotalLocalUsage
         # total system local usage time
@@ -105,24 +110,33 @@ class Terminated(Record):
         pat = r"Partitionable Resources :\s+Usage\s+Request\s+Allocated$"
 
         # disk usage
-        self.diskUsage = None
+        self.diskUsage = 0
 
         # disk requested
-        self.diskRequest = None
+        self.diskRequest = 0
 
         # memory usage
-        self.memoryUsage = None
+        self.memoryUsage = 0
 
         # memory requested
-        self.memoryRequest = None
+        self.memoryRequest = 0
 
-        ret = re.search(pat, lines[10])
+        ret = None
+        try:
+            ret = re.search(pat, lines[10])
+        except IndexError:
+            return
+
         if ret is None:
-            self.diskUsage, self.diskRequest = self.extractUsageRequest(lines[12])
-            self.memoryUsage, self.memoryRequest = self.extractUsageRequest(lines[13])
+            self.diskUsage, self.diskRequest = \
+                self.extractUsageRequest(lines[12])
+            self.memoryUsage, self.memoryRequest = \
+                self.extractUsageRequest(lines[13])
         else:
-            self.diskUsage, self.diskRequest, allocated = self.extractUsageRequestAllocated(lines[12])
-            self.memoryUsage, self.memoryRequest, allocated = self.extractUsageRequestAllocated(lines[13])
+            self.diskUsage, self.diskRequest, allocated = \
+                self.extractUsageRequestAllocated(lines[12])
+            self.memoryUsage, self.memoryRequest, allocated = \
+                self.extractUsageRequestAllocated(lines[13])
 
     def describe(self):
         """

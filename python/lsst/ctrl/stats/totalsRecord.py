@@ -32,7 +32,7 @@ class TotalsRecord(SubmissionsRecord):
     def __init__(self, rec):
         SubmissionsRecord.__init__(self, rec)
         # this first time this job was submitted
-        self.firstSubmitTime = "0000-00-00 00:00:00"
+        self.firstSubmitTime = 0
         # number of bytes sent
         self.totalBytesSent = 0
         # number of bytes received
@@ -53,9 +53,11 @@ class TotalsRecord(SubmissionsRecord):
         self.evicted = 0
         # job was aborted
         self.aborted = 0
-        # number of slots this job used (probably because of it being rescheduled)
+        # number of slots this job used (probably because of it
+        # being rescheduled)
         self.slotsUsed = 0
-        # number of hosts this job used (probably because of it being rescheduled)
+        # number of hosts this job used (probably because of it
+        # being rescheduled)
         self.hostsUsed = 0
         # the name of the slot that was last used
         self.slotName = None

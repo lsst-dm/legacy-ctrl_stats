@@ -21,6 +21,7 @@
 #
 from builtins import object
 
+
 class DbEntry(object):
     """A representation of a single database query
 

@@ -41,7 +41,9 @@ class DatabaseManager(object):
     """
 
     def __init__(self, dbHostName, portNumber, user, passwd):
-        self.conn = getEngineFromArgs(username=user, password=passwd, host=dbHostName, port=portNumber).connect()
+        self.conn = getEngineFromArgs(username=user, password=passwd,
+                                      host=dbHostName,
+                                      port=portNumber).connect()
 
     def loadSql(self, filePath, database):
         """Load an SQL file into a database

@@ -47,7 +47,8 @@ class ExecutingWorkers(object):
         return self.firstExecutingWorker
 
     def getLastExecutingWorker(self):
-        """
+        """last executing job is not necessarily the last job that was
+        submitted.  It's the last job that was executing at the end of the run.
         @return the last worker that executed
         """
         return self.lastExecutingWorker
@@ -56,10 +57,11 @@ class ExecutingWorkers(object):
         """
         @return the first job that executed
         """
-        query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), "
-        query = query + "UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), "
-        query = query + "UNIX_TIMESTAMP(terminationTime)  from submissions where dagNode != 'A' and "
-        query = query + "executionStartTime != 0 order by executionStartTime limit 1;"
+        query = "select dagNode, executionHost, slotName, \
+UNIX_TIMESTAMP(submitTime), UNIX_TIMESTAMP(executionStartTime), \
+UNIX_TIMESTAMP(executionStopTime), UNIX_TIMESTAMP(terminationTime) \
+from submissions where dagNode != 'A' and slotName !='' and \
+executionStartTime != 0 order by executionStartTime limit 1;"
 
         results = self.dbm.execCommandN(query)
         if not results:
@@ -72,10 +74,11 @@ class ExecutingWorkers(object):
         """
         @return the last job that executed
         """
-        query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), "
-        query = query + "UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), "
-        query = query + "UNIX_TIMESTAMP(terminationTime) from submissions where dagNode != 'B' and "
-        query = query + "executionStartTime != 0 order by executionStopTime DESC limit 1;"
+        query = "select dagNode, executionHost, slotName, \
+UNIX_TIMESTAMP(submitTime), UNIX_TIMESTAMP(executionStartTime), \
+UNIX_TIMESTAMP(executionStopTime), UNIX_TIMESTAMP(terminationTime) \
+from submissions where dagNode != 'B' and executionStartTime != 0 \
+order by executionStopTime DESC limit 1;"
 
         results = self.dbm.execCommandN(query)
         dbEntry = DbEntry(results[0])

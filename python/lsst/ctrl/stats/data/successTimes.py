@@ -36,9 +36,10 @@ class SuccessTimes(object):
     """
 
     def __init__(self, dbm):
-        query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(submitTime), "
-        query = query + "UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(executionStopTime), "
-        query = query + "UNIX_TIMESTAMP(terminationTime) from submissions where terminationCode='005';"
+        query = "select dagNode, executionHost, slotName, \
+UNIX_TIMESTAMP(submitTime), UNIX_TIMESTAMP(executionStartTime), \
+UNIX_TIMESTAMP(executionStopTime), UNIX_TIMESTAMP(terminationTime) \
+from submissions where terminationCode='005';"
 
         results = dbm.execCommandN(query)
 

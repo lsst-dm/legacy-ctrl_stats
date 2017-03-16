@@ -63,7 +63,8 @@ class Evicted(Record):
         # termination code
         self.term = self.extract(pat, lines[1], "term")
 
-        userRunRemoteUsage, sysRunRemoteUsage = self.extractUsrSysTimes(lines[2])
+        userRunRemoteUsage, sysRunRemoteUsage = \
+            self.extractUsrSysTimes(lines[2])
         # remote user run usage time
         self.userRunRemoteUsage = userRunRemoteUsage
         # remote sys run usage time
@@ -98,11 +99,15 @@ class Evicted(Record):
 
         ret = re.search(pat, lines[6])
         if ret is None:
-            self.diskUsage, self.diskRequest = self.extractUsageRequest(lines[8])
-            self.memoryUsage, self.memoryRequest = self.extractUsageRequest(lines[9])
+            self.diskUsage, self.diskRequest = \
+                self.extractUsageRequest(lines[8])
+            self.memoryUsage, self.memoryRequest = \
+                self.extractUsageRequest(lines[9])
         else:
-            self.diskUsage, self.diskRequest, allocated = self.extractUsageRequestAllocated(lines[8])
-            self.memoryUsage, self.memoryRequest, allocated = self.extractUsageRequestAllocated(lines[9])
+            self.diskUsage, self.diskRequest, allocated = \
+                self.extractUsageRequestAllocated(lines[8])
+            self.memoryUsage, self.memoryRequest, allocated = \
+                self.extractUsageRequestAllocated(lines[9])
 
     def describe(self):
         """

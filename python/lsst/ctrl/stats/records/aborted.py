@@ -57,5 +57,6 @@ class Aborted(Record):
         s = "%s %s" % (self.timestamp, self.reason)
         return s
 
+
 eventClass = Aborted
 eventCode = "009"

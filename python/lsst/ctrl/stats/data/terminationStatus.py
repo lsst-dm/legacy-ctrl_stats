@@ -39,9 +39,10 @@ class TerminationStatus(object):
         Return the number of times job termination events occurred.
         @return list containing event type, number of occurrences pairs
         """
-        query = "select eventCodes.EventName, (select count(*) from submissions where "
-        query = query + "submissions.terminationCode = eventCodes.eventCode and submissions.dagNode "
-        query = query + "!= 'A' and submissions.dagNode != 'B') as appears from eventCodes"
+        query = "select eventCodes.EventName, (select count(*) from \
+submissions where submissions.terminationCode = eventCodes.eventCode \
+and submissions.dagNode != 'A' and submissions.dagNode != 'B' and \
+submissions.slotName != '') as appears from eventCodes"
 
         results = self.dbm.execCommandN(query)
 

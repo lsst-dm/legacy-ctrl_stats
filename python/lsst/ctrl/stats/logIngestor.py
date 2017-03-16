@@ -86,7 +86,8 @@ class LogIngestor(object):
 
         classifier = Classifier()
         for job in records:
-            entries, totalsRecord, updateEntries = classifier.classify(records[job])
+            entries, totalsRecord, updateEntries = \
+                classifier.classify(records[job])
             # add submission records
             for ent in entries:
                 cmd, args = ent.getInsertQuery(self.submissionsTable)

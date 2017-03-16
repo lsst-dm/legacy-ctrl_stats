@@ -40,7 +40,8 @@ class WorkerTotal(object):
         return the total number of workers, not including prejob and postjob
         @return total number of workers
         """
-        query = "select  count(dagNode) from %s where dagNode != 'A' and dagNode != 'B'" % tableName
+        query = "select  count(dagNode) from %s where dagNode != 'A' and \
+dagNode != 'B' and slotName != ''" % tableName
 
         results = self.dbm.execCommand1(query)
 

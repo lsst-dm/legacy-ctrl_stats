@@ -36,8 +36,9 @@ class SubmitsPerInterval(object):
         # database object used to query
         self.dbm = dbm
 
-        query = "select UNIX_TIMESTAMP(submitTime), count(*) as count from submissions where "
-        query = query + "dagNode !='A' and dagNode != 'B' group by submitTime;"
+        query = "select UNIX_TIMESTAMP(submitTime), count(*) as count \
+from submissions where dagNode !='A' and dagNode != 'B' and slotName != '' \
+group by submitTime;"
 
         results = self.dbm.execCommandN(query)
         startTime = results[0][0]

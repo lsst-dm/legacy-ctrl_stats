@@ -23,7 +23,8 @@ from __future__ import absolute_import
 from .record import Record
 
 # 012 (003.000.000) 07/12 22:36:52 Job was held.
-#        Error from slot2@big15.ncsa.illnois.edu: the job manager could not stage out a file
+#        Error from slot2@big15.ncsa.illnois.edu: the job manager could not \
+# stage out a file
 #        Code 2 Subcode 155
 # ...
 
@@ -68,6 +69,7 @@ class Held(Record):
             return None
         s = "%s reason=%s" % (self.timestamp, self.reason)
         return s
+
 
 eventClass = Held
 eventCode = "012"
