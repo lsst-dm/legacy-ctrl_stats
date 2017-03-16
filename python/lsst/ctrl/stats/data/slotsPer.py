@@ -23,42 +23,42 @@ from builtins import range
 from builtins import object
 
 
-class CoresPer(object):
+class SlotsPer(object):
     """
-    Base class to use by the CoresPer* classes
+    Base class to use by the SlotsPer* classes
     """
 
     def __init__(self):
-        # the maximum number of cores
-        self.maximumCores = -1
-        # the time the core was first used
+        # the maximum number of slots
+        self.maximumSlots = -1
+        # the time the slot was first used
         self.timeFirstUsed = None
-        # the time the core was last used
+        # the time the slot was last used
         self.timeLastUsed = None
 
     def calculateMax(self):
         """
-        count the number of cores used at maximum
-        also calculate the first time that many cores were used
-        and the last time that many cores were used.
+        count the number of slots used at maximum
+        also calculate the first time that many slots were used
+        and the last time that many slots were used.
         """
-        self.maximumCores = -1
+        self.maximumSlots = -1
         self.timeFirstUsed = None
         self.timeLastUsed = None
         for j in range(len(self.values)):
             val = self.values[j]
             timeValue = val[0]
-            cores = val[1]
-            # this counts the times the maximum cores
+            slots = val[1]
+            # this counts the times the maximum slots
             # were first used
-            if cores > self.maximumCores:
-                self.maximumCores = cores
+            if slots > self.maximumSlots:
+                self.maximumSlots = slots
                 self.timeFirstUsed = timeValue
             # this extra conditional also tallies the
-            # last time all the cores were used
-            if cores == self.maximumCores:
+            # last time all the slots were used
+            if slots == self.maximumSlots:
                 self.timeLastUsed = timeValue
-        return self.maximumCores, self.timeFirstUsed, self.timeLastUsed
+        return self.maximumSlots, self.timeFirstUsed, self.timeLastUsed
 
     def getValues(self):
         """
@@ -66,20 +66,20 @@ class CoresPer(object):
         """
         return self.values
 
-    def getMaximumCores(self):
+    def getMaximumSlots(self):
         """
-        returns maximum number of cores utilitized
+        returns maximum number of slots utilitized
         """
-        return self.maximumCores
+        return self.maximumSlots
 
-    def maximumCoresFirstUsed(self):
+    def maximumSlotsFirstUsed(self):
         """
-        returns the time the maximum number of cores were being utilitized
+        returns the time the maximum number of slots were being utilitized
         """
         return self.timeFirstUsed
 
-    def maximumCoresLastUsed(self):
+    def maximumSlotsLastUsed(self):
         """
-        returns the last time the maximum number of cores were being utilitized
+        returns the last time the maximum number of slots were being utilitized
         """
         return self.timeLastUsed

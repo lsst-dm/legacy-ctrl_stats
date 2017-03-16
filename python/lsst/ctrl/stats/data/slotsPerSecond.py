@@ -20,11 +20,11 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 from builtins import range
-from lsst.ctrl.stats.data.coresPer import CoresPer
+from lsst.ctrl.stats.data.slotsPer import SlotsPer
 
 
-class CoresPerSecond(CoresPer):
-    """calculate the number of cores that are being used each second of the
+class SlotsPerSecond(SlotsPer):
+    """calculate the number of slots that are being used each second of the
     execution time span
 
     dbm: `DatabaseManager`
@@ -37,9 +37,10 @@ class CoresPerSecond(CoresPer):
         # the database object to query
         self.dbm = dbm
 
-        query = "select UNIX_TIMESTAMP(MIN(executionStartTime)), UNIX_TIMESTAMP(MAX(executionStopTime)) "
-        query = query + "from submissions where UNIX_TIMESTAMP(executionStartTime) > 0 and dagNode != 'A' "
-        query = query + "and dagNode != 'B' order by executionStartTime;"
+        query = "select UNIX_TIMESTAMP(MIN(executionStartTime)), \
+UNIX_TIMESTAMP(MAX(executionStopTime)) from submissions where \
+UNIX_TIMESTAMP(executionStartTime) > 0 and dagNode != 'A' \
+and dagNode != 'B' and slotName != '' order by executionStartTime;"
 
         results = self.dbm.execCommandN(query)
         startTime = results[0][0]
@@ -47,22 +48,23 @@ class CoresPerSecond(CoresPer):
 
         # the intervals between entries
         self.values = []
-        # cycle through the seconds, counting the number of cores being used
+        # cycle through the seconds, counting the number of slots being used
         # during each second
         for thisSecond in range(startTime, stopTime+1):
             x = 0
             length = entries.getLength()
             for i in range(length):
                 ent = entries.getEntry(i)
-                if (thisSecond >= ent.executionStartTime) and (thisSecond <= ent.executionStopTime):
-                    x = x + 1
+                if (thisSecond >= ent.executionStartTime) and \
+                   (thisSecond <= ent.executionStopTime):
+                        x = x + 1
 
             self.values.append([thisSecond, x])
 
-        maximumCores, timeFirstUsed, timeLastUsed = self.calculateMax()
-        # the maximum number of cores use
-        self.maximumCores = maximumCores
-        # the first time at which a core was used for this job
+        maximumSlots, timeFirstUsed, timeLastUsed = self.calculateMax()
+        # the maximum number of slots use
+        self.maximumSlots = maximumSlots
+        # the first time at which a slot was used for this job
         self.timeFirstUsed = timeFirstUsed
-        # the last time at which a core was used for this job
+        # the last time at which a slot was used for this job
         self.timeLastUsed = timeLastUsed
