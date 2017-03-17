@@ -27,6 +27,7 @@ import sys
 import datetime
 from dateutil import tz, parser
 
+
 class Record(object):
     """Representation of a HTCondor record
 
@@ -58,11 +59,21 @@ class Record(object):
             # the condor id
             self.condorId = values["condorId"]
             # the timestamp
-            dt = datetime.datetime(year, int(values["month"]), 
-                int(values["day"]), int(values["hours"]),
-                int(values["minutes"]), int(values["seconds"]))
+            dt = datetime.datetime(year, int(values["month"]),
+                                   int(values["day"]), int(values["hours"]),
+                                   int(values["minutes"]),
+                                   int(values["seconds"]))
             dt = dt.replace(tzinfo=tz.tzlocal())
+            #
+            # self.timestamp is deprecated!
+            # time from the log, with the local time zone, as a string
             self.timestamp = dt.strftime(self.timeFormat)
+
+            # time from the log, with the local time zone, as a string
+            self.logdatetime = dt.strftime(self.timeFormat)
+
+            # time from the log
+            self.utctimestamp = self._utcDatetime(dt)
         else:
             print("error parsing record:")
             print(lines[0])
@@ -72,14 +83,27 @@ class Record(object):
     def recDatetime(self):
         return parser.parse(self.timestamp)
 
+    def _utcseconds(self, dt):
+        utc_dt = dt.astimezone(tz.tzutc())
+        epoch = datetime.datetime(1970, 1, 1, 0, 0, 0)
+        epoch = epoch.replace(tzinfo=tz.tzutc())
+        return (utc_dt - epoch).total_seconds()
+
+    def _utcDatetime(self, dt):
+        timeFormat = "%Y-%m-%d %H:%M:%S"
+        utc_dt = dt.astimezone(tz.tzutc())
+        return utc_dt.strftime(timeFormat)
+
     def addYear(self):
         # add one year to the current timestamp, accounting for leap years
         d = self.recDatetime
         try:
             d = d.replace(year = d.year + 1)
         except ValueError:
-            d = d + (datetime.date(d.year + 1, 1, 1) - datetime.date(d.year, 1, 1))
+            d = d + (datetime.date(d.year + 1, 1, 1) -
+                     datetime.date(d.year, 1, 1))
         self.timestamp = datetime.datetime.strftime(d, self.timeFormat)
+        self.utctimestamp = self._utcDatetime(d)
 
     def printAll(self):
         """
@@ -176,8 +200,9 @@ class Record(object):
         extract time from a line
         @return usr and sys fields, computed in seconds
         """
-        pat = r"Usr \d+ (?P<usrHours>\d+):(?P<usrMinutes>\d+):(?P<usrSeconds>\d+), "
-        pat = pat + r"Sys \d+ (?P<sysHours>\d+):(?P<sysMinutes>\d+):(?P<sysSeconds>\d+) "
+        pat = r"Usr \d+ (?P<usrHours>\d+):(?P<usrMinutes>\d+):" + \
+              r"(?P<usrSeconds>\d+), Sys \d+ (?P<sysHours>\d+):" + \
+              r"(?P<sysMinutes>\d+):(?P<sysSeconds>\d+) "
         values = self.extractValues(pat, line)
         usrHours = values["usrHours"]
         usrMinutes = values["usrMinutes"]
@@ -196,10 +221,3 @@ class Record(object):
         """
         s = "%s %s %s" % (self.event, self.condorId, self.timestamp)
         return s
-
-    def str(self):
-        """
-        Describe this record
-        @return a string describing this object type and time stamp
-        """
-        return "%s, %s" % (self.__class__.__name__, self.timestamp)

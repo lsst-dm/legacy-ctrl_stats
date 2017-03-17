@@ -22,12 +22,10 @@
 from __future__ import print_function
 from __future__ import absolute_import
 from builtins import object
-import os
 import sys
 import re
 import datetime
 from dateutil import tz
-import time
 from .recordList import RecordList
 import lsst.ctrl.stats.records
 import yaml
@@ -69,7 +67,7 @@ class Reader(object):
         endYear = d.year
 
         year = startYear
-        prevDate = None
+
         with open(logFile) as infile:
             for line in infile:
                 line = line.rstrip('\n')
@@ -98,11 +96,10 @@ class Reader(object):
             previousDate = startDate
             for rec in jobStates:
                 currentDate = rec.recDatetime
-                if previousDate != None:
+                if previousDate is not None:
                     if previousDate > currentDate:
                         rec.addYear()
                 previousDate = rec.recDatetime
-            
 
     def getRecords(self):
         """Accessor to a list of all Records
@@ -130,6 +127,7 @@ class Reader(object):
             return rec
         else:
             return None
+
 
 if __name__ == "__main__":
     records = Reader(sys.argv[1], sys.argv[2])

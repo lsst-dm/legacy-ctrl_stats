@@ -91,17 +91,14 @@ class DbEntries(object):
         Get the first worker job in the execution
         @return an entry representing the first worker
         """
-        return self.getDagNode('A1')
+        return self.entries[0]
 
     def getLastWorker(self):
         """
         Get the last worker job in the execution
         @return an entry representing the last worker
         """
-        if len(self.entries) > 2:
-            return self.entries[-2]
-        else:
-            return None
+        return self.entries[-1]
 
     def getPostJobSubmitTime(self):
         """

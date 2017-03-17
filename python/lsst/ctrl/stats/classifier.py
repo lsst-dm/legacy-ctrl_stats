@@ -43,7 +43,7 @@ class Classifier(object):
         updateEntry.condorId = entry.condorId
         updateEntry.dagNode = entry.dagNode
         updateEntry.executionHost = entry.executionHost
-        updateEntry.timestamp = rec.timestamp
+        updateEntry.utctimestamp = rec.utctimestamp
         updateEntry.imageSize = rec.imageSize
         updateEntry.memoryUsageMb = rec.memoryUsageMb
         updateEntry.residentSetSizeKb = rec.residentSetSizeKb
@@ -55,7 +55,7 @@ class Classifier(object):
         @param entry: an entry to fill in
         @param rec: a record containing information
         """
-        entry.executionStopTime = rec.timestamp
+        entry.executionStopTime = rec.utctimestamp
         entry.userRunRemoteUsage = rec.userRunRemoteUsage
         entry.sysRunRemoteUsage = rec.sysRunRemoteUsage
         entry.bytesSent = rec.runBytesSent
@@ -64,7 +64,7 @@ class Classifier(object):
         entry.finalDiskRequestKb = rec.diskRequest
         entry.finalMemoryUsageMb = rec.memoryUsage
         entry.finalMemoryRequestMb = rec.memoryRequest
-        entry.terminationTime = rec.timestamp
+        entry.terminationTime = rec.utctimestamp
         entry.terminationCode = rec.event
         entry.terminationReason = "Terminated normally"
 
@@ -107,7 +107,7 @@ class Classifier(object):
         @param rec: a record containing information
         """
         entry.terminationCode = rec.event
-        entry.terminationTime = rec.timestamp
+        entry.terminationTime = rec.utctimestamp
         entry.terminationReason = rec.reason
 
     def createResubmissionRecord(self, entry, rec):
@@ -119,7 +119,7 @@ class Classifier(object):
         newRec = SubmissionsRecord()
         newRec.condorId = rec.condorId
         newRec.dagNode = entry.dagNode
-        newRec.submitTime = rec.timestamp
+        newRec.submitTime = rec.utctimestamp
         return newRec
 
     def classify(self, records):
@@ -143,7 +143,7 @@ class Classifier(object):
             elif rec.event == recordslib.submitted.eventCode:
                 entry.condorId = rec.condorId
                 entry.dagNode = rec.dagNode
-                entry.submitTime = rec.timestamp
+                entry.submitTime = rec.utctimestamp
             elif rec.event == recordslib.executing.eventCode:
                 # Only record the first time this is seen for this
                 # entry records, since Condor can spit out multiple
@@ -151,7 +151,7 @@ class Classifier(object):
                 # (aborts, restarts, etc) in between.  (As per Condor docs).
                 if fExecuting is False:
                     entry.executionHost = rec.executingHostAddr
-                    entry.executionStartTime = rec.timestamp
+                    entry.executionStartTime = rec.utctimestamp
                 fExecuting = True
             elif rec.event == recordslib.updated.eventCode:
                 updateEntry = self.createUpdatesRecord(entry, rec)
@@ -179,7 +179,7 @@ class Classifier(object):
                     if entry.terminationReason is None:
                         entry.terminationReason = rec.reason
                     entry.terminationCode = rec.event
-                    entry.terminationTime = rec.timestamp
+                    entry.terminationTime = rec.utctimestamp
                 fEnded = False
             elif rec.event == recordslib.shadowException.eventCode:
                 # something happened with the shadow daemon, and this
@@ -224,20 +224,23 @@ class Classifier(object):
 
         slotSet = set()
         slotName = None
+        shadowCode = recordslib.shadowException.eventCode
+        socketCode = recordslib.socketReconnectFailure.eventCode
         for ent in entries:
             # global number of bytesSent for this record group
             totalsEntry.totalBytesSent += ent.bytesSent
             # global number of bytesReceived for this record group
             totalsEntry.totalBytesReceived += ent.bytesReceived
             # number of times execution started
-            if ent.executionStartTime is not None:
+            if ent.executionStartTime != 0:
                 totalsEntry.executions += 1
+
             # number of times termination occurred because of shadow exceptions
-            if ent.terminationCode == recordslib.shadowException.eventCode:
+            if ent.terminationCode == shadowCode:
                 totalsEntry.shadowException += 1
             # number of times termination occurred because of socket
             # reconnection failures
-            elif ent.terminationCode == recordslib.socketReconnectFailure.eventCode:
+            elif ent.terminationCode == socketCode:
                 totalsEntry.socketReconnectFailure += 1
             # if execution occured, add it to the lists of unique hosts
             if ent.executionHost is not None:
