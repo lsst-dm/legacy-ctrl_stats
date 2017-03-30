@@ -83,15 +83,15 @@ class Record(object):
         return parser.parse(self.timestamp)
 
     def _utcseconds(self, dt):
-        utc_dt = dt.astimezone(tz.tzutc())
+        utcDt = dt.astimezone(tz.tzutc())
         epoch = datetime.datetime(1970, 1, 1, 0, 0, 0)
         epoch = epoch.replace(tzinfo=tz.tzutc())
-        return (utc_dt - epoch).total_seconds()
+        return (utcDt - epoch).total_seconds()
 
     def _utcDatetime(self, dt):
         timeFormat = "%Y-%m-%d %H:%M:%S"
-        utc_dt = dt.astimezone(tz.tzutc())
-        return utc_dt.strftime(timeFormat)
+        utcDt = dt.astimezone(tz.tzutc())
+        return utcDt.strftime(timeFormat)
 
     def addYear(self):
         # add one year to the current timestamp, accounting for leap years

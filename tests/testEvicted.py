@@ -27,7 +27,7 @@ import unittest
 import lsst.utils.tests
 import lsst.ctrl.stats.records as recordslib
 from lsst.ctrl.stats.reader import Reader
-from helper.timeutils import add_tzlocal, utc_tzlocal
+from helper.timeutils import addTzLocal, utcTzLocal
 
 # This is a set of tests for HTCondor user (non-dagman) job logs for a job
 # that was evicted
@@ -74,8 +74,8 @@ class TestEvicted(lsst.utils.tests.TestCase):
         self.assertEqual(rec.imageSize, 467532)
         self.assertEqual(rec.memoryUsageMb, 10)
         self.assertEqual(rec.residentSetSizeKb, 9856)
-        self.assertEqual(utc_tzlocal(rec.utctimestamp),
-                         add_tzlocal("2016-08-20 13:09:37"))
+        self.assertEqual(utcTzLocal(rec.utctimestamp),
+                         addTzLocal("2016-08-20 13:09:37"))
 
     def test5(self):
         # check validity of second Updated record
@@ -94,8 +94,8 @@ class TestEvicted(lsst.utils.tests.TestCase):
         self.assertEqual(rec.memoryUsage, 41)
         self.assertEqual(rec.runBytesReceived, 0)
         self.assertEqual(rec.runBytesSent, 0)
-        self.assertEqual(utc_tzlocal(rec.utctimestamp),
-                         add_tzlocal("2016-08-20 13:12:55"))
+        self.assertEqual(utcTzLocal(rec.utctimestamp),
+                         addTzLocal("2016-08-20 13:12:55"))
         self.assertEqual(rec.userRunLocalUsage, 0)
         self.assertEqual(rec.userRunRemoteUsage, 0)
 
@@ -104,8 +104,8 @@ class TestEvicted(lsst.utils.tests.TestCase):
         self.assertIn("244585.000.000", self.records)
         rec = self.records["244585.000.000"][5]
         self.assertEqual(rec.__class__.__name__, "Aborted")
-        self.assertEqual(utc_tzlocal(rec.utctimestamp),
-                         add_tzlocal("2016-08-20 13:12:55"))
+        self.assertEqual(utcTzLocal(rec.utctimestamp),
+                         addTzLocal("2016-08-20 13:12:55"))
         self.assertEqual(rec.reason, "via condor_rm (by user srp)")
 
 

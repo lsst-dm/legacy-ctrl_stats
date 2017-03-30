@@ -26,7 +26,7 @@ import os
 import unittest
 import lsst.utils.tests
 from lsst.ctrl.stats.reader import Reader
-from helper.timeutils import utc_tzlocal, add_tzlocal
+from helper.timeutils import utcTzLocal, addTzLocal
 
 
 def setup_module(module):
@@ -43,7 +43,7 @@ class TestYearWrap(lsst.utils.tests.TestCase):
         self.records = reader.getRecords()
 
     def assertTimeEqual(self, utctimestamp, dateString):
-        self.assertEqual(utc_tzlocal(utctimestamp), add_tzlocal(dateString))
+        self.assertEqual(utcTzLocal(utctimestamp), addTzLocal(dateString))
 
     def test1(self):
         # check to see we have the number of records we expect

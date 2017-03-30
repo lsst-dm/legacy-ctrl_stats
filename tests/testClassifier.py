@@ -28,7 +28,7 @@ import lsst.utils.tests
 import lsst.ctrl.stats.records as recordslib
 from lsst.ctrl.stats.reader import Reader
 from lsst.ctrl.stats.classifier import Classifier
-from helper.timeutils import add_tzlocal, utc_tzlocal
+from helper.timeutils import addTzLocal, utcTzLocal
 
 
 def setup_module(module):
@@ -53,13 +53,13 @@ class TestClassifier(lsst.utils.tests.TestCase):
         rec = entries[0]
         self.assertEqual(rec.condorId, "063.000.000")
         self.assertEqual(rec.dagNode, "A2")
-        self.assertEqual(utc_tzlocal(rec.submitTime),
-                         add_tzlocal("2016-10-17 19:59:57"))
+        self.assertEqual(utcTzLocal(rec.submitTime),
+                         addTzLocal("2016-10-17 19:59:57"))
         self.assertEqual(rec.executionHost, "141.142.225.136:41156")
-        self.assertEqual(utc_tzlocal(rec.executionStartTime),
-                         add_tzlocal("2016-10-17 20:00:04"))
-        self.assertEqual(utc_tzlocal(rec.executionStopTime),
-                         add_tzlocal("2016-10-17 20:00:14"))
+        self.assertEqual(utcTzLocal(rec.executionStartTime),
+                         addTzLocal("2016-10-17 20:00:04"))
+        self.assertEqual(utcTzLocal(rec.executionStopTime),
+                         addTzLocal("2016-10-17 20:00:14"))
         self.assertEqual(rec.updateImageSize, 414300)
         self.assertEqual(rec.updateMemoryUsageMb, 81)
         self.assertEqual(rec.updateResidentSetSizeKb, 81996)
@@ -71,8 +71,8 @@ class TestClassifier(lsst.utils.tests.TestCase):
         self.assertEqual(rec.finalMemoryRequestMb, 81)
         self.assertEqual(rec.bytesSent, 25595)
         self.assertEqual(rec.bytesReceived, 1449)
-        self.assertEqual(utc_tzlocal(rec.terminationTime),
-                         add_tzlocal("2016-10-17 20:00:14"))
+        self.assertEqual(utcTzLocal(rec.terminationTime),
+                         addTzLocal("2016-10-17 20:00:14"))
         self.assertEqual(rec.terminationCode, recordslib.terminated.eventCode)
 
     def test2(self):
@@ -83,8 +83,8 @@ class TestClassifier(lsst.utils.tests.TestCase):
         self.assertIn("063.000.000", self.records)
         entries, total, updates = \
             classifier.classify(self.records["063.000.000"])
-        self.assertEqual(utc_tzlocal(total.firstSubmitTime),
-                         add_tzlocal("2016-10-17 19:59:57"))
+        self.assertEqual(utcTzLocal(total.firstSubmitTime),
+                         addTzLocal("2016-10-17 19:59:57"))
         self.assertEqual(total.totalBytesSent, 25595)
         self.assertEqual(total.totalBytesReceived, 1449)
         self.assertEqual(total.submissions, 1)

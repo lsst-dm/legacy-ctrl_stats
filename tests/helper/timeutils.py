@@ -2,7 +2,7 @@ import datetime
 from dateutil import parser, tz
 
 
-def utc_tzlocal(dateVal):
+def utcTzLocal(dateVal):
     dt = parser.parse(dateVal)
     utc = dt.replace(tzinfo=tz.tzutc())
     local = utc.astimezone(tz.tzlocal())
@@ -10,7 +10,7 @@ def utc_tzlocal(dateVal):
     return stamp
 
 
-def add_tzlocal(dateVal):
+def addTzLocal(dateVal):
     dt = parser.parse(dateVal)
     dt = dt.replace(tzinfo=tz.tzlocal())
     stamp = dt.strftime('%Y-%m-%d %H:%M:%S%z')
@@ -18,8 +18,8 @@ def add_tzlocal(dateVal):
 
 
 def assertTimeEqual(utctimestamp, dateString):
-    assertEqual(utc_tzlocal(utctimestamp), add_tzlocal(dateString))
+    assertEqual(utcTzLocal(utctimestamp), addTzLocal(dateString))
 
 
 if __name__ == '__main__':
-    print(utc_tzlocal(1476752397))
+    print(utcTzLocal(1476752397))
