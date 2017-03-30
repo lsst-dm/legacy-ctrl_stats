@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `totals` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `condorId` varchar(24) default NULL,
-  `dagNode` varchar(10) default NULL,
+  `dagNode` varchar(80) default NULL,
   `executionHost` varchar(80) default NULL,
   `slotName` varchar(10) default NULL,
   `submitTime` datetime default NULL,

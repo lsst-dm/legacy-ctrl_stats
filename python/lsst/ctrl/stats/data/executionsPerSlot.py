@@ -34,9 +34,9 @@ class ExecutionsPerSlot(object):
 
     def __init__(self, dbm):
         self.dbm = dbm
-        query = "select concat(executionHost, '/', slotName) as slot, count(*) "
-        query = query + "as timesUsed from submissions where dagNode != 'A' and dagNode != 'B' "
-        query = query + "group by executionHost, slotName;"
+        query = "select concat(executionHost, '/', slotName) as slot, \
+count(*) as timesUsed from submissions where dagNode != 'A' and \
+dagNode != 'B' and slotName != '' group by executionHost, slotName;"
 
         # results from the database query
         self.results = self.dbm.execCommandN(query)

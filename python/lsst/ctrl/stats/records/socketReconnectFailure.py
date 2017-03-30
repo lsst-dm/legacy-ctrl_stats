@@ -42,5 +42,6 @@ class SocketReconnectFailure(Record):
         # the reason for the failure
         self.reason = lines[1].strip()+";"+lines[2].strip()
 
+
 eventClass = SocketReconnectFailure
 eventCode = "024"

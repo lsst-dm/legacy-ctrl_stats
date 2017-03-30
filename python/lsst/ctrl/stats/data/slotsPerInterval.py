@@ -20,11 +20,11 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 from builtins import range
-from lsst.ctrl.stats.data.coresPer import CoresPer
+from lsst.ctrl.stats.data.slotsPer import SlotsPer
 
 
-class CoresPerInterval(CoresPer):
-    """Count the number of cores that are active during a specific interval
+class SlotsPerInterval(SlotsPer):
+    """Count the number of slots that are active during a specific interval
 
     Parameters
     ----------
@@ -40,9 +40,10 @@ class CoresPerInterval(CoresPer):
         # the database object to query
         self.dbm = dbm
 
-        query = "select UNIX_TIMESTAMP(MIN(executionStartTime)), UNIX_TIMESTAMP(MAX(executionStopTime)) "
-        query = query + "from submissions where UNIX_TIMESTAMP(executionStartTime) > 0 and dagNode != 'A' "
-        query = query + "and dagNode != 'B' order by executionStartTime;"
+        query = "select UNIX_TIMESTAMP(MIN(executionStartTime)), \
+UNIX_TIMESTAMP(MAX(executionStopTime)) from submissions where \
+UNIX_TIMESTAMP(executionStartTime) > 0 and dagNode != 'A' and \
+dagNode != 'B' and slotName != '' order by executionStartTime;"
 
         results = self.dbm.execCommandN(query)
         startTime = results[0][0]
@@ -50,7 +51,7 @@ class CoresPerInterval(CoresPer):
 
         # computed values
         self.values = []
-        # cycle through the seconds, counting the number of cores being used
+        # cycle through the seconds, counting the number of slots being used
         # during each second
         last = startTime
         if (startTime+interval > stopTime):
@@ -65,7 +66,8 @@ class CoresPerInterval(CoresPer):
 
             for i in range(length):
                 ent = entries.getEntry(i)
-                entryRangeSet = set(range(ent.executionStartTime, ent.executionStopTime+1))
+                entryRangeSet = set(range(ent.executionStartTime,
+                                    ent.executionStopTime+1))
                 if (len(intervalRangeSet & entryRangeSet) > 0):
                     x = x + 1
 
@@ -80,10 +82,10 @@ class CoresPerInterval(CoresPer):
             else:
                 nextTime = nextTime+interval
 
-        maximumCores, timeFirstUsed, timeLastUsed = self.calculateMax()
-        # the maximum number of cores use
-        self.maximumCores = maximumCores
-        # the first time at which a core was used for this job
+        maximumSlots, timeFirstUsed, timeLastUsed = self.calculateMax()
+        # the maximum number of slots used
+        self.maximumSlots = maximumSlots
+        # the first time at which a slot was used for this job
         self.timeFirstUsed = timeFirstUsed
-        # the last time at which a core was used for this job
+        # the last time at which a slot was used for this job
         self.timeLastUsed = timeLastUsed

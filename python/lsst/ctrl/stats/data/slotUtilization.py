@@ -22,7 +22,7 @@
 from builtins import object
 
 
-class DbCoreInfo(object):
+class DbSlotInfo(object):
     """Class to hold information about the host, slot and the time it started
     """
 
@@ -35,7 +35,7 @@ class DbCoreInfo(object):
         self.executionStartTime = info[2]
 
 
-class CoreUtilization(object):
+class SlotUtilization(object):
     """Get a listing of all the times at with a core is used.
 
     Paramaters
@@ -47,16 +47,18 @@ class CoreUtilization(object):
     def __init__(self, dbm):
         self.dbm = dbm
 
-        query = "select executionHost, slotName, min(UNIX_TIMESTAMP(executionStartTime)) from "
-        query = query + "submissions where dagNode !='A' and dagNode != 'B' and executionStartTime != '0000-00-00 00:00:00' group by executionHost, "
-        query = query + "slotName order by min(UNIX_TIMESTAMP(executionStartTime))"
+        query = "select executionHost, slotName, \
+min(UNIX_TIMESTAMP(executionStartTime)) from submissions where \
+dagNode !='A' and dagNode != 'B' and slotName != '' and \
+executionStartTime != '0000-00-00 00:00:00' group by executionHost, \
+slotName order by min(UNIX_TIMESTAMP(executionStartTime))"
 
         results = self.dbm.execCommandN(query)
         # the list of all database records returned
         self.entries = []
         for res in results:
-            coreInfo = DbCoreInfo(res)
-            self.entries.append(coreInfo)
+            slotInfo = DbSlotInfo(res)
+            self.entries.append(slotInfo)
 
     def getFirstTime(self):
         """
@@ -70,7 +72,7 @@ class CoreUtilization(object):
         """
         return self.entries[-1].executionStartTime
 
-    def coresUtilized(self):
+    def slotsUtilized(self):
         """
         the maximum of cores that were utilitized
         """

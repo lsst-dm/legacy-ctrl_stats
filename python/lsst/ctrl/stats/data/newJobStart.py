@@ -64,14 +64,15 @@ class NewJobStart(object):
     def __init__(self, dbm):
         self.dbm = dbm
 
-        query = "select dagNode, executionHost, slotName, UNIX_TIMESTAMP(executionStartTime), "
-        query = query + "UNIX_TIMESTAMP(terminationTime) from submissions where "
-        query = query + "executionStartTime != 0 and dagNode != 'A' and "
-        query = query + "dagNode !='B' and slotName !='' order by executionHost, slotName, "
-        query = query + "executionStartTime;"
+        query = "select dagNode, executionHost, slotName, \
+UNIX_TIMESTAMP(executionStartTime), UNIX_TIMESTAMP(terminationTime) \
+from submissions where executionStartTime != 0 and dagNode != 'A' and \
+dagNode !='B' and slotName !='' order by executionHost, slotName, \
+executionStartTime;"
 
         results = self.dbm.execCommandN(query)
-        # list of DBStartInfo record representing the results of the new job start query
+        # list of DBStartInfo record representing the results of the new
+        # job start query
         self.entries = []
         for res in results:
             startInfo = DbStartInfo(res)
@@ -84,7 +85,8 @@ class NewJobStart(object):
         """
         mylist = []
         for ent in self.entries:
-            mylist.append((ent.executionHost+"/"+ent.slotName, [ent.executionStartTime, ent.terminationTime]))
+            mylist.append((ent.executionHost + "/"+ent.slotName,
+                          [ent.executionStartTime, ent.terminationTime]))
         d = defaultdict(list)
         for k, v in mylist:
             d[k].append(v)

@@ -38,5 +38,6 @@ class GlobusSubmitFailed(Record):
     def __init__(self, year, lines):
         Record.__init__(self, year, lines)
 
+
 eventClass = GlobusSubmitFailed
 eventCode = "018"

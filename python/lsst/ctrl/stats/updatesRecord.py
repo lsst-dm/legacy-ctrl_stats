@@ -37,7 +37,7 @@ class UpdatesRecord(DbRecord):
         # host where this job was executing
         self.executionHost = None
         # time stamp of update
-        self.timestamp = "0000-00-00 00:00:00"
+        self.utctimestamp = 0
         # image size of job
         self.imageSize = 0
         # memory usage of job in MB

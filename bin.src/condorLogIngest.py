@@ -37,38 +37,35 @@ import argparse
 from lsst.ctrl.stats.databaseManager import DatabaseManager
 from lsst.ctrl.stats.logIngestor import LogIngestor
 from lsst.daf.persistence import DbAuth
-import lsst.log as log
-import lsst.utils
 
 standard_library.install_aliases()
 
 
-def run():
+if __name__ == "__main__":
     basename = os.path.basename(sys.argv[0])
 
     parser = argparse.ArgumentParser(prog=basename,
-                                     description='''Takes a list of log files and ingests them into a
-database''',
-                                     epilog='''example:
-condorLogIngest.py -H lsst10 -d testing -f worker.log'''
-                                     )
-    parser.add_argument("-H", "--host", action="store", default=None, dest="host",
-                        help="mysql server host", type=str, required=True)
+                                     description='''Takes a list of log \
+files and ingests them into a database''', epilog='''example:\
+condorLogIngest.py -H lsst10 -d testing -f worker.log''')
+    parser.add_argument("-H", "--host", action="store", default=None,
+                        dest="host", help="mysql server host", type=str,
+                        required=True)
     parser.add_argument("-p", "--port", action="store", default=3306,
                         dest="port", help="mysql server port", type=int)
     parser.add_argument("-d", "--database", action="store", default=None,
-                        dest="database", help="database name", type=str, required=True)
-    parser.add_argument("-m", "--metrics", action="store", default=None, dest="metrics",
-                        help="condor log files", type=str, required=True)
-    parser.add_argument("-f", "--file", action="store", default=None, dest="filenames",
-                        help="condor log files", nargs='+', type=str, required=True)
-    parser.add_argument("-v", "--verbose", action="store_true", dest="verbose", help="verbose")
+                        dest="database", help="database name", type=str,
+                        required=True)
+    parser.add_argument("-m", "--metrics", action="store", default=None,
+                        dest="metrics", help="condor log files", type=str,
+                        required=True)
+    parser.add_argument("-f", "--file", action="store", default=None,
+                        dest="filenames", help="condor log files",
+                        nargs='+', type=str, required=True)
+    parser.add_argument("-v", "--verbose", action="store_true", dest="verbose",
+                        help="verbose")
 
     args = parser.parse_args()
-
-    package = lsst.utils.getPackageDir("ctrl_stats")
-    configPath = os.path.join(package, "etc", "log4j.properties")
-    log.configure(configPath)
 
     host = args.host
     port = args.port
@@ -102,6 +99,3 @@ condorLogIngest.py -H lsst10 -d testing -f worker.log'''
             continue
         logIngestor.ingest(args.metrics, filename)
     dbm.close()
-
-if __name__ == "__main__":
-    run()

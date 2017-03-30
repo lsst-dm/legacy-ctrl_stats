@@ -20,8 +20,6 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 from __future__ import print_function
-from builtins import str
-from builtins import bytes
 from builtins import object
 
 
@@ -45,7 +43,7 @@ class DbRecord(object):
             print(mem, "=", value)
 
     def getInsertQuery(self, tableName):
-        """Create insert string for values for the member variables of the class.
+        """Create insert string for values for member variables of the class.
         @param tableName: the table name in which this record will be put
         """
         members = [attr for attr in dir(self) if not callable(
@@ -54,8 +52,10 @@ class DbRecord(object):
         values = [getattr(self, mem) for mem in members]
         values = ["" if value is None else value for value in values]
 
-        valuePlaceholders = ','.join(['%s']*len(members))  # string like "%s,%s,%s,%s,..."
+        # string like "%s,%s,%s,%s,..."
+        valuePlaceholders = ','.join(['%s']*len(members))
         columns = ",".join(members)
-        cmd = "INSERT INTO {} ({}) VALUES ({})".format(tableName, columns, valuePlaceholders)
+        cmd = "INSERT INTO {} ({}) VALUES ({})".format(tableName, columns,
+                                                       valuePlaceholders)
         # return non-interpolated query and value list
         return cmd, values

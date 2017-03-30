@@ -38,16 +38,16 @@ class SubmissionsRecord(DbRecord):
             self.dagNode = None
 
             # time this job was submitted
-            self.submitTime = None
+            self.submitTime = 0
 
             # host this job ran on
             self.executionHost = None
 
             # time the job started to execute
-            self.executionStartTime = "0000-00-00 00:00:00"
+            self.executionStartTime = 0
 
             # time the job stopped executing
-            self.executionStopTime = "0000-00-00 00:00:00"
+            self.executionStopTime = 0
 
             # image size
             self.updateImageSize = 0
@@ -83,7 +83,7 @@ class SubmissionsRecord(DbRecord):
             self.bytesReceived = 0
 
             # time the job terminated
-            self.terminationTime = "0000-00-00 00:00:00"
+            self.terminationTime = 0
 
             # job termination code
             self.terminationCode = None

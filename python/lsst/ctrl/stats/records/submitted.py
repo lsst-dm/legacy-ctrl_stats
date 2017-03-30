@@ -25,7 +25,8 @@ from .record import Record
 
 # Parses Submitted records of the form:
 #
-# 000 (244585.000.000) 08/20 13:09:28 Job submitted from host: <192.168.1.142:40885>
+# 000 (244585.000.000) 08/20 13:09:28 Job submitted from host: \
+# <192.168.1.142:40885>
 # ...
 #
 
@@ -71,8 +72,10 @@ class Submitted(Record):
         if self.dagNode is None:
             s = "%s condorId=%s" % (self.timestamp, self.condorId)
         else:
-            s = "%s condorId=%s dagNode=%s" % (self.timestamp, self.condorId, self.dagNode)
+            s = "%s condorId=%s dagNode=%s" % (self.timestamp, self.condorId,
+                                               self.dagNode)
         return s
+
 
 eventClass = Submitted
 eventCode = "000"

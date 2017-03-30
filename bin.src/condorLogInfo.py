@@ -45,21 +45,24 @@ def printRecords(records, job, verbose):
     print()
 
 
-def run():
+if __name__ == "__main__":
 
     basename = os.path.basename(sys.argv[0])
 
-    msg = '''example: condorLogInfo.py -c 630.000.000 -f srp_2012_0925_160117/*nodes.log'''
+    msg = '''example: condorLogInfo.py -c 630.000.000 -f \
+srp_2012_0925_160117/*nodes.log'''
     parser = argparse.ArgumentParser(prog=basename,
-                                     description='''A debugging utility to view record groups.  This
-                        is useful in viewing records without having to do a
-                        complete database ingest.''',
-                                     epilog=msg)
-    parser.add_argument("-v", "--verbose", action="store_true", dest="verbose", help="verbose")
-    parser.add_argument("-c", "--condorid", action="store", default=None, dest="condorIds",
-                        help="print only condorId(s)", nargs="+", type=str, required=False)
-    parser.add_argument("-f", "--filenames", action="store", default=None, dest="filenames",
-                        help="condor log files", nargs="+", type=str, required=True)
+                                     description='''A debugging utility to \
+view record groups.  This is useful in viewing records without having to do a \
+complete database ingest.''', epilog=msg)
+    parser.add_argument("-v", "--verbose", action="store_true", dest="verbose",
+                        help="verbose")
+    parser.add_argument("-c", "--condorid", action="store", default=None,
+                        dest="condorIds", help="print only condorId(s)",
+                        nargs="+", type=str, required=False)
+    parser.add_argument("-f", "--filenames", action="store", default=None,
+                        dest="filenames", help="condor log files", nargs="+",
+                        type=str, required=True)
 
     args = parser.parse_args()
 
@@ -80,6 +83,3 @@ def run():
             for job in args.condorIds:
                 if job in records:
                     printRecords(records, job, args.verbose)
-
-if __name__ == "__main__":
-    run()
