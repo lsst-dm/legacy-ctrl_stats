@@ -36,7 +36,12 @@ from lsst.ctrl.stats.data.slotUtilization import SlotUtilization
 
 
 class Report(object):
-    """Report various statistics
+    """Report statistics on different aspects of the HTCondor run.
+   This object's methods can be called individually so one or
+   more of them can be included in reporting utilities.  Used as
+   a whole, these can be used to see how quickly and efficently
+   an HTCondor submission worked so that results in changes in
+   the HTCondor configuration can be analyzed.
     """
 
     def __init__(self, dbm, outputLocalTime=False):
