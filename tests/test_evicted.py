@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #
 # LSST Data Management System
 # Copyright 2008-2013 LSST Corporation.
@@ -27,87 +26,89 @@ import unittest
 import lsst.utils.tests
 import lsst.ctrl.stats.records as recordslib
 from lsst.ctrl.stats.reader import Reader
-from helper.timeutils import utcTzLocal, addTzLocal
+from helper.timeutils import addTzLocal, utcTzLocal
+
+# This is a set of tests for HTCondor user (non-dagman) job logs for a job
+# that was evicted
 
 
 def setup_module(module):
     lsst.utils.tests.init()
 
 
-class TestReader(lsst.utils.tests.TestCase):
+class TestEvicted(lsst.utils.tests.TestCase):
 
     def setUp(self):
         pkgDir = os.path.abspath(os.path.dirname(__file__))
         metrics = os.path.join(pkgDir, "testfiles", "test.metrics")
-        filename = os.path.join(pkgDir, "testfiles", "reader_test.log")
+        filename = os.path.join(pkgDir, "testfiles", "evicted.log")
         reader = Reader(metrics, filename)
         self.records = reader.getRecords()
 
-    def assertTimeEqual(self, utctimestamp, dateString):
-        self.assertEqual(utcTzLocal(utctimestamp), addTzLocal(dateString))
-
     def test1(self):
         # check to see we have the number of records we expect
-        self.assertEqual(len(self.records), 3)
+        self.assertEqual(len(self.records), 1)
 
     def test2(self):
         # check validity of Submitted record
-        self.assertIn("062.000.000", self.records)
-        rec = self.records["062.000.000"][0]
+        self.assertIn("244585.000.000", self.records)
+        rec = self.records["244585.000.000"][0]
         self.assertEqual(rec.__class__.__name__, "Submitted")
-        self.assertEqual(rec.dagNode, "A1")
         self.assertEqual(rec.event, recordslib.submitted.eventCode)
 
     def test3(self):
         # check validity of Executing record
-        self.assertIn("062.000.000", self.records)
-        rec = self.records["062.000.000"][1]
+        self.assertIn("244585.000.000", self.records)
+        rec = self.records["244585.000.000"][1]
         self.assertEqual(rec.__class__.__name__, "Executing")
         self.assertEqual(rec.event, recordslib.executing.eventCode)
-        self.assertEqual(rec.executingHostAddr, "141.142.225.136:41156")
+        self.assertEqual(rec.executingHostAddr, "141.142.237.121:47727")
 
     def test4(self):
         # check validity of first Updated record
-        self.assertIn("062.000.000", self.records)
-        rec = self.records["062.000.000"][2]
+        self.assertIn("244585.000.000", self.records)
+        rec = self.records["244585.000.000"][2]
         self.assertEqual(rec.__class__.__name__, "Updated")
         self.assertEqual(rec.event, recordslib.updated.eventCode)
-        self.assertEqual(rec.imageSize, 272192)
-        self.assertEqual(rec.memoryUsageMb, 40)
-        self.assertEqual(rec.residentSetSizeKb, 40640)
-        self.assertTimeEqual(rec.utctimestamp, "2016-10-17 20:00:07")
+        self.assertEqual(rec.imageSize, 467532)
+        self.assertEqual(rec.memoryUsageMb, 10)
+        self.assertEqual(rec.residentSetSizeKb, 9856)
+        self.assertEqual(utcTzLocal(rec.utctimestamp),
+                         addTzLocal("2016-08-20 13:09:37"))
 
     def test5(self):
         # check validity of second Updated record
-        self.assertIn("062.000.000", self.records)
-        rec = self.records["062.000.000"][3]
+        self.assertIn("244585.000.000", self.records)
+        rec = self.records["244585.000.000"][3]
         self.assertEqual(rec.__class__.__name__, "Updated")
         self.assertEqual(rec.event, recordslib.updated.eventCode)
 
     def test6(self):
         # check validity of Terminated record
-        self.assertIn("062.000.000", self.records)
-        rec = self.records["062.000.000"][4]
-        self.assertEqual(rec.__class__.__name__, "Terminated")
-        self.assertEqual(rec.event, recordslib.terminated.eventCode)
-        self.assertEqual(rec.memoryRequest, 40)
-        self.assertEqual(rec.memoryUsage, 40)
-        self.assertEqual(rec.runBytesReceived, 1449)
-        self.assertEqual(rec.runBytesSent, 25594)
-        self.assertEqual(rec.sysRunLocalUsage, 0)
-        self.assertEqual(rec.sysRunRemoteUsage, 1)
-        self.assertEqual(rec.sysTotalLocalUsage, 0)
-        self.assertEqual(rec.sysTotalRemoteUsage, 1)
-        self.assertTimeEqual(rec.utctimestamp, "2016-10-17 20:00:14")
-        self.assertEqual(rec.totalBytesReceived, 1449)
-        self.assertEqual(rec.totalBytesSent, 25594)
+        self.assertIn("244585.000.000", self.records)
+        rec = self.records["244585.000.000"][4]
+        self.assertEqual(rec.__class__.__name__, "Evicted")
+        self.assertEqual(rec.event, recordslib.evicted.eventCode)
+        self.assertEqual(rec.memoryRequest, 1)
+        self.assertEqual(rec.memoryUsage, 41)
+        self.assertEqual(rec.runBytesReceived, 0)
+        self.assertEqual(rec.runBytesSent, 0)
+        self.assertEqual(utcTzLocal(rec.utctimestamp),
+                         addTzLocal("2016-08-20 13:12:55"))
         self.assertEqual(rec.userRunLocalUsage, 0)
-        self.assertEqual(rec.userRunRemoteUsage, 1)
-        self.assertEqual(rec.userTotalLocalUsage, 0)
-        self.assertEqual(rec.userTotalRemoteUsage, 1)
+        self.assertEqual(rec.userRunRemoteUsage, 0)
+
+    def test7(self):
+        # check validity of job aborted record
+        self.assertIn("244585.000.000", self.records)
+        rec = self.records["244585.000.000"][5]
+        self.assertEqual(rec.__class__.__name__, "Aborted")
+        self.assertEqual(utcTzLocal(rec.utctimestamp),
+                         addTzLocal("2016-08-20 13:12:55"))
+        self.assertEqual(rec.reason, "via condor_rm (by user srp)")
 
 
-class ReaderMemoryTestCase(lsst.utils.tests.MemoryTestCase):
+class EvictedMemoryTestCase(lsst.utils.tests.MemoryTestCase):
     pass
 
 
